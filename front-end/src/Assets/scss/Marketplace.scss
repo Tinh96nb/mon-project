@@ -1,0 +1,22 @@
+.categories li {
+  display: inline-block;
+}
+
+.categories li a {
+  color: #606060;
+  padding: 8px 20px;
+  display: block;
+  border: 1px solid #606060;
+  margin-right: 10px;
+  transition: all .3s;
+}
+
+.categories li a:hover {
+  background: #606060;
+  color: #fff;
+  transition: all .3s;
+}
+
+.categories-area {
+  padding: 50px 0;
+}

@@ -1,0 +1,512 @@
+
+@import 'base';
+@import 'colors';
+
+.black-bg{
+  background: $blackBg;
+}
+
+.section-padding2{
+  padding: 80px 0;
+}
+
+.header{
+  padding: 15px 0;
+  transition: all .3s;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.header.header_sticky{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+    transform: translate3d(0,0,0);
+    z-index: 111;
+    -webkit-animation-name: fade-in-down;
+    animation-name: fade-in-down;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    background-color:#000;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  z-index: 99;
+}
+
+@-webkit-keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0,-50px,0);
+    transform: translate3d(0,-50px,0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+@keyframes fade-in-down {
+  0% {
+    
+    -webkit-transform: translate3d(0,-50px,0);
+    transform: translate3d(0,-50px,0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+.fade-in-down {
+  -webkit-animation-name: fade-in-down;
+  animation-name: fade-in-down;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+/*Header area css*/
+
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+}
+
+.search-bar .form-group {
+  margin-bottom: 0;
+}
+
+.main-menu li a {
+  padding: 10px;
+  color: $whiteColor;
+  font-weight: 500;
+}
+
+.main-menu li a:hover {
+    color: $orangeColor;
+}
+
+.main-menu ul li:last-child {
+    color: $blackColor;
+}
+
+.main-menu li{
+  display: inline-block;
+  &:last-child{
+    margin-left:8px;
+    a{
+      color: $blackColor;
+      background: $whiteBg;
+      border-radius:30px;
+      padding: 10px 20px;
+      border: 1.2px solid transparent;
+      transition: all .3s;
+      &:hover{
+        color: $whiteColor;
+        background: $blackBg;
+        transition: all .3s;
+        border: 1.2px solid $whiteColor;
+      }
+    }
+  }
+}
+
+
+/*Home welcome area css*/
+
+
+.wel-title {
+  h1 {
+    font-size: 45px;
+    font-weight: 800;
+  }
+  h4 {
+    font-weight: 800;
+    font-size: 18px;
+    margin-top: 25px;
+  }
+  h2 {
+    font-size: 36px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    img {
+      padding-right: 9px;
+    }
+    
+  }
+  h5 {
+    font-size: 18px;
+    font-weight: 800;
+  }
+  
+  
+}
+
+
+small.title-top {
+  font-size: 16px;
+  font-weight: 300;
+  display: inline-block;
+  padding: 5px 10px;
+  background: $grayBg;
+  border-radius: 30px;
+  box-shadow: 0 2px 4px $grayColor;
+  margin-bottom: 30px;
+  img {
+    padding-right: 5px;
+  }
+  
+}
+
+a.cbtn {
+  background: $blackBg;
+  padding: 10px 50px;
+  border-radius: 30px;
+  font-weight: 800;
+  display: inline-block;
+}
+
+.button-group a:last-child {
+  margin-left: 20px;
+}
+
+.button-group {
+  margin-top: 45px;
+}
+
+a.cbtn.cbtn-black {
+  color: $whiteColor;
+  border: 2px solid $blackColor;
+  transition: all .3s;
+}
+
+a.cbtn.cbtn-white {
+  color: $blackColor;
+  background: $whiteBg;
+  border: 2px solid $blackColor;
+  transition: all .3s;
+  &:hover {
+    background: $blackBg;
+    color: #fff;
+    transition: all .3s;
+  }
+}
+
+
+a.cbtn.cbtn-black{
+  &:hover {
+    background: $whiteBg;
+    color: $blackColor;
+    transition: all .3s;
+  }
+}
+
+
+
+
+/*Creators area css*/
+.creator_list {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 100%;
+}
+
+.creatorImgs {
+  .bigImg {
+    border-radius: 50%;
+  }
+}
+
+img.smallImg {
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    z-index: 3;
+    border: 1px solid $whiteColor;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.creatorImgs {
+    margin: 13px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.creator_link {
+  a {
+    color: #6c757d;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
+    display: block;
+  }
+}
+
+
+/*Portfolio area css*/
+
+.creator_list {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 100%;
+}
+
+.creatorImgs {
+  .bigImg {
+    border-radius: 50%;
+}
+
+}
+img.smallImg {
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    z-index: 3;
+    border: 1px solid $whiteColor;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.creatorImgs {
+    margin: 13px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.creatorImgs {
+  a {
+    color: #6c757d;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
+    display: block;
+}
+}
+
+.portfolio-area {
+    padding: 80px 0 50px;
+}
+
+.portfolio_content {
+    background: $grayBg;
+    padding: 20px;
+    border-radius: 0 0 10px 10px;
+    h5 {
+      font-size: 15px;
+      color: $blackColor;
+      font-weight: 400;
+  }
+  h1 {
+    color: $blackColor;
+    font-size: 18px;
+    font-weight: 700;
+    img {
+      padding-right: 5px;
+    }
+    span {
+      color: #626161;
+      font-size: 14px;
+    }
+  }
+
+}
+
+
+
+.author {
+  margin-top: 35px;
+  a {
+    font-size: 14px;
+    color: $blackColor;
+    font-weight: 500;
+  }
+  img {
+    padding-right: 5px;
+  }
+  
+}
+
+
+
+/*Footer area css*/
+
+.footer-area{
+  padding: 20px 0;
+}
+
+.footer-menu {
+  li {
+    a{
+      color: $whiteColor;
+      font-size: 14px;
+      display: inline-block;
+      margin: 0 10px;
+    }
+  }
+}
+
+
+
+/*Portfolio css*/
+.single_portfolio {
+  margin-bottom: 30px;
+  .portfolio_img{
+    max-height: 350px;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+    img {
+      transition: all .3s;
+      transform: scale(1);
+    }
+  }
+  &:hover {
+    .portfolio_img {
+      img {
+        transition: all .3s;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+
+
+
+/*Common css*/
+
+.title {
+  h1{
+    font-weight: 300;
+    font-size: 40px;
+    color: $blackColor;
+    margin-bottom: 40px;
+    span{
+      font-size: 20px;
+    }
+  }
+}
+
+
+
+.upload_btn{
+
+
+  .file {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .file > input[type='file'] {
+    display: none
+  }
+  
+  .file > label {
+    font-size: 1rem;
+    font-weight: 300;
+    cursor: pointer;
+    outline: 0;
+    user-select: none;
+    border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+    border-style: solid;
+    border-radius: 4px;
+    border-width: 1px;
+    background-color: hsl(0, 0%, 100%);
+    color: hsl(0, 0%, 29%);
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .file > label:hover {
+    border-color: hsl(0, 0%, 21%);
+  }
+  
+  .file > label:active {
+    background-color: hsl(0, 0%, 96%);
+  }
+  
+  .file > label > i {
+    padding-right: 5px;
+  }
+  
+}
+
+
+.creator-media-upload{
+
+
+  .file {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .file > input[type='file'] {
+    display: none
+  }
+  
+  .file > label {
+    font-size: 1rem;
+    font-weight: 300;
+    cursor: pointer;
+    outline: 0;
+    -webkit-user-select: none;
+    user-select: none;
+    border-color: #d8d8d8 #d1d1d1 #bababa;
+    border-style: solid;
+    border-radius: 4px;
+    border-width: 1px;
+    background-color: white;
+    color: #4a4a4a;
+    padding-left: 25px;
+    padding-right: 35px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .file > label:hover {
+    border-color: hsl(0, 0%, 21%);
+  }
+  
+  .file > label:active {
+    background-color: hsl(0, 0%, 96%);
+  }
+  
+  .file > label > i {
+    padding-right: 5px;
+  }
+  
+}
+
+@import 'Details';
+@import 'Marketplace';
+@import 'CreatorForm';
+@import 'ProfileForm';
+@import 'Responsive';

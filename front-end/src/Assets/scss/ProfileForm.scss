@@ -1,0 +1,42 @@
+.edit-form-area {
+  padding: 80px 0;
+}
+
+.upload_logo.text-center p {
+  font-size: 18px;
+  font-weight: 500;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.upload_logo.text-center img {
+  margin-bottom: 20px;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.upload_logo.text-center {
+  margin-bottom: 5px;
+}
+
+.edit-form-area .upload_btn {
+  margin-bottom: 50px;
+}
+
+.edit_form input, .edit_form textarea {
+  padding: 30px 15px;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+button.btn.btn-primary {
+  border-radius: 7px;
+  background: #000;
+  border: none;
+  padding: 14px 50px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 0;
+}

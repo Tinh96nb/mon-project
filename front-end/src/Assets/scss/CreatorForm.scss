@@ -1,0 +1,171 @@
+.creator-form-area {
+  padding: 80px 0;
+}
+
+.creator-form-details p {
+  margin-top: 12px;
+}
+
+.creator-form-details h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.creator-form-details h1 {
+  color: #4e5058;
+  font-size: 36px;
+  line-height: 46px;
+}
+
+.creator-media-upload {
+  margin: 40px 0;
+}
+
+label svg {
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+.creator-media-upload .file{
+  justify-content: start;
+}
+
+
+
+.creator-form-area {
+  padding: 80px 0;
+}
+
+.creator-form-details p {
+  margin-top: 12px;
+}
+
+.creator-form-details h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.creator-form-details h1 {
+  color: #4e5058;
+  font-size: 36px;
+  line-height: 46px;
+}
+
+.creator-media-upload {
+  margin: 40px 0;
+}
+
+label svg {
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+.creator-form label {
+  color: #000;
+  font-weight: 500;
+}
+
+.creator-form input, .creator-form textarea {
+  padding: 30px 15px;
+  border-radius: 0;
+}
+
+
+.creator-btn-area h1 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.creator-btn-area {
+  margin-top: 35px;
+}
+
+.creator-btn-area li {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.creator-btn-area li span {
+  float: right;
+  font-weight: 600;
+}
+
+
+
+
+
+.creator-form-area {
+  padding: 80px 0;
+}
+
+.creator-form-details p {
+  margin-top: 12px;
+}
+
+.creator-form-details h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.creator-form-details h1 {
+  color: #4e5058;
+  font-size: 36px;
+  line-height: 46px;
+}
+
+.creator-media-upload {
+  margin: 40px 0;
+}
+
+label svg {
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+.creator-form label {
+  color: #000;
+  font-weight: 500;
+}
+
+.creator-form input, .creator-form textarea {
+  padding: 30px 15px;
+  border-radius: 0;
+  margin-bottom: 30px;
+}
+
+.creator-btn-area h1 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.creator-btn-area {
+  margin-top: 35px;
+}
+
+.creator-btn-area li {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.creator-btn-area li span {
+  float: right;
+  font-weight: 600;
+}
+
+button.Creator-submit-btn.btn.btn-primary {
+  border-radius: 7px;
+  background: #000;
+  border: none;
+  padding: 14px 50px;
+  font-size: 18px;
+  border: 1px solid transparent;
+  transition: all .3;
+  font-weight: 600;
+  margin-top: 30px;
+  &:hover, &:focus{
+    transition: all .3;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "DetailsHeroImg" : "bg/Detail.jpg",
+  "title" : "Flowers - Chrysanthemum",
+  "pera" : "The Chrysanthemum is a flower that represents feelings of happiness, longevity and joy. The bright colors displayed by the flower often break the dreariness of life and invokes dreaming of a better tomorrow.",
+  "currentPrice" : "Current price",
+  "piceValue" : "3.0251 MON",
+  "priceImg" : "icons/main-icon.png",
+  "priceValueSpan" : "$10,653.65",
+  "buttonText" : "Buy now",
+  "buttonLink" : "#",
+  "Creator" : "Jhon Doe",
+  "Edition" : "6 of 10",
+  "address": "0x2a46f2...bf0756",
+  "token": "0x4C8bC5...E64D77",
+  "chain" : "Binance Smart Chain"
+}
