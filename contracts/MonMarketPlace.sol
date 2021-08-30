@@ -66,6 +66,8 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         _tokenPrices[tokenId] = 0;
         _tokens = _removeFromTokens(tokenId);
         
+        emit CancelOrder(tokenId);
+
         return true;
     }
     
@@ -171,6 +173,7 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         return result;
     }
     
-    event NewSellOrderCreated(address indexed seller, uint256 time, uint256 tokenId, uint256 price);
+    event CancelOrder(uint256 indexed tokenId);
     event Purchased(address indexed buyer, uint256 tokenId, uint256 price);
+    event NewSellOrderCreated(address indexed seller, uint256 time, uint256 tokenId, uint256 price);
 }
