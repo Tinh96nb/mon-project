@@ -14,7 +14,7 @@ contract MonNFT is ERC721URIStorage, Ownable{
     //Mapping tokenId to fee copyright
     mapping(uint256 => uint256) internal _tokenFeeCopyrights;
 
-    constructor(string memory tokenName, string memory symbol) ERC721(tokenName, symbol) {
+    constructor() ERC721("MON", "MONNFT"){
         _maxFeeCopyright = 5000; // 5%
     }
 
@@ -35,6 +35,9 @@ contract MonNFT is ERC721URIStorage, Ownable{
         require(fee <= _maxFeeCopyright, "Fee must be smaller max fee!");
 
         _tokenFeeCopyrights[tokenId] = fee;
+
+        emit SetFeeCoppyRight(tokenId, fee);
+
         return fee;
     }
 
@@ -49,4 +52,6 @@ contract MonNFT is ERC721URIStorage, Ownable{
     function getMaxFreeCopyright() public view returns(uint){
         return _maxFeeCopyright;
     }
+
+    event SetFeeCoppyRight(uint256 indexed tokenId, uint256 feePercent);
 }
