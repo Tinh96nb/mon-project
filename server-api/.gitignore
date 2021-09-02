@@ -1,0 +1,14 @@
+node_modules
+package-lock.json
+yarn.lock
+.env
+data.txt
+public/upload/user/*
+public/upload/kyc/*
+public/upload/nft/*
+public/upload/collection/*
+.gitlab-ci.yml
+!public/upload/collection/.gitkeep
+!public/upload/kyc/.gitkeep
+!public/upload/user/.gitkeep
+!public/upload/nft/.gitkeep
