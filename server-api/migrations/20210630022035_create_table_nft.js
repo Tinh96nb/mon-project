@@ -10,6 +10,7 @@ exports.up = async function (knex) {
       table.string('description')
       table.string('media').notNullable()
       table.string('mine_type').notNullable()
+      table.string('metadata')
       table.string('price')
       table.float('feeCopyright').defaultTo(0);
       table.string('unit').defaultTo("MON")

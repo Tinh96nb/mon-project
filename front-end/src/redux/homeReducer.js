@@ -1,27 +1,13 @@
-import { request } from "utils/api/axios";
-import API_URL from "utils/api/url";
-
 const SET_REDUX = 'user/SET_REDUX'
 
 const initialState = {
   userAddress: null,
-  authChecked: false,
-  me: null,
   web3: null,
+  priceToken: 0.5,
   contractToken: null,
   contractNFT: null,
   contractMarket: null,
 }
-
-// export function postLogin(parameters, cb) {
-//   return (dispatch) => dispatch(requestAxios(request.postUserMe()))
-//     .then((response) => {
-//       dispatch({
-//         type: SET_REDUX,
-//         payload: { me: response.profile, authChecked: true }
-//       })
-//     })
-// }
 
 export function setAddress(address) {
   return (dispatch) => {
@@ -36,11 +22,10 @@ export function setEnvContract(obj) {
   return (dispatch) => {
     dispatch({
       type: SET_REDUX,
-      payload: { obj }
+      payload: obj
     })
   }
 }
-
 
 export const homeReducer = (state = initialState, action) => {
   const { type, payload = {} } = action

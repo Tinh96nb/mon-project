@@ -98,7 +98,20 @@
 .main-menu ul li:last-child {
     color: $blackColor;
 }
-
+.main-menu .user-pro {
+  color: #fff;
+  .info-tab {
+    float: left;
+  }
+  .avt {
+    float: right;
+    img {
+      height: 32px;
+      width: 32px;
+      border-radius: 16px;
+    }
+  }
+}
 .main-menu li{
   display: inline-block;
   &:last-child{
@@ -463,10 +476,6 @@ img.smallImg {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .file > input[type='file'] {
-    display: none
   }
   
   .file > label {

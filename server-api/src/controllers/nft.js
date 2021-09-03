@@ -1,3 +1,5 @@
+const fs = require("fs");
+const { NFTStorage, File } = require('nft.storage');
 const nftModel = require("../models/nft");
 
 const mint = async (ctx, next) => {
@@ -22,12 +24,26 @@ const mint = async (ctx, next) => {
   Object.keys(schema).forEach((field) => {
     if (body[field] && body[field] !== undefined) data[field] = body[field];
   });
-  if (file) data.media = "/nft/" + file.filename;
-  else {
+  if (file) {
+    data.media = "/nft/" + file.filename;
+    data.mine_type = file.mimetype;
+  } else {
     ctx.body = { media: { params: "media", msg: "media is required!" } };
     ctx.status = 400;
     return;
   }
+  const buffer = fs.readFileSync(file.path);
+  const client = new NFTStorage({ token: process.env.TOKEN_URI })
+  const metadata = await client.store({
+    name: data.name,
+    description: data.description,
+    image: new File(
+      [buffer],
+      file.filename,
+      { type: file.mimetype }
+    ),
+  })
+  data.metadata = metadata ? metadata.url: ''
   const { address } = ctx.state.user;
   data.owner = address;
   const res = await nftModel.mintNft(data);
@@ -71,15 +87,13 @@ const updateNft = async (ctx, next) => {
 
 const detailNft = async (ctx) => {
   const { tokenId } = ctx.params;
-  const { call_by } = ctx.request.query
-  const nft = await nftModel.getByTokenId(tokenId, call_by);
+  const nft = await nftModel.getByTokenId(tokenId);
   ctx.body = nft;
 };
 
 const listNft = async (ctx, next) => {
   const {
     category,
-    collection,
     name,
     owner,
     status,
@@ -87,8 +101,6 @@ const listNft = async (ctx, next) => {
     priceTo,
     page,
     limit,
-    call_by,
-    approve_price,
     sort_by = "id",
     order_by = "desc",
   } = ctx.request.query;
@@ -96,19 +108,15 @@ const listNft = async (ctx, next) => {
     ['owner', owner],
     ['status', status],
     ['category_id', 'in', category ? category.split(",") : null],
-    ['collection_id', 'in', collection ? collection.split(",") : null],
     ['name', 'like', name ? `%${name}%` : null],
     ['price', '<=', priceTo],
     ['price', '>=', priceFrom],
   ];
-  if (approve_price !== 'all') {
-    conditions.push(['approve_price', 1]);
-  }
   const orderBy = {
     field: sort_by,
     type: order_by,
   };
-  const nft = await nftModel.getList(conditions, orderBy, limit, page, call_by);
+  const nft = await nftModel.getList(conditions, orderBy, limit, page);
   ctx.body = nft;
   return next();
 };

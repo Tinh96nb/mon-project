@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "migrate": "./node_modules/.bin/knex migrate:latest",
-    "start": "pm2 start src/index.js --ignore-watch='public node_modules src/events' --name=mon-api",
+    "start": "pm2 start src/index.js --watch --ignore-watch='public node_modules src/events' --name=mon-api",
     "stop": "pm2 stop mon-api",
     "log": "pm2 log mon-api"
   },
@@ -25,6 +25,7 @@
     "koa-static": "5.0.0",
     "moment": "2.29.1",
     "mysql": "2.18.1",
+    "nft.storage": "3.2.0",
     "sqlite3": "5.0.2",
     "web3": "1.3.6"
   },

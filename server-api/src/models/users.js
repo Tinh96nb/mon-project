@@ -52,7 +52,7 @@ const getInfo = async (condition) => {
   }
   const followers = await knex('favorites').count('id as num').where('to', user.address).first();
   const followings = await knex('favorites').count('id as num').where('user', user.address).first();
-  const amountNFT = await knex('nfts').count('id as num').where('owner', address).first();
+  const amountNFT = await knex('nfts').count('id as num').where('owner', user.address).first();
   return {
     ...user,
     followers: followers.num,

@@ -73,64 +73,9 @@ const historyTransfer = async (tokenId, range) => {
     })
   );
   return result;
-};
-
-const createBid = async (tokenId, bider, price, txid) => {
-  try {
-    const auctionActive = await knex('auctions')
-      .where({ token_id: tokenId, status: statusAuction.active })
-      .first();
-    if (!auctionActive) {
-      return {
-        success: false,
-        message: 'Not have auction active!',
-        data: null,
-      };
-    }
-    await knex('bids').insert({
-      auction_id: auctionActive.id,
-      owner: bider,
-      price: web3.utils.fromWei(price, 'ether'),
-      txid
-    });
-    return {
-      success: true,
-      message: 'Create bid success!',
-      data: [tokenId, bider, price],
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: 'Create bid fail!',
-      data: error.message,
-    };
-  }
-};
-
-const listBidCurrent = async (tokenId) => {
-  const auctionActive = await knex('auctions')
-    .where({ token_id: tokenId, status: statusAuction.active })
-    .first();
-  if (auctionActive) {
-    const bids = await knex('bids').where('auction_id', auctionActive.id);
-    const result = await Promise.all(
-      bids.map(async (bid) => {
-        const from = await knex('users').where('address', bid.owner).first();
-        return {
-          ...bid,
-          owner_username: from ? from.username : '',
-          owner_avatar: from ? from.avatar : '',
-        };
-      })
-    );
-    return result;
-  }
-  return [];
-};
+}
 
 module.exports = {
   historyTransfer,
-  createHistory,
-  listBidCurrent,
-  createBid,
+  createHistory
 };

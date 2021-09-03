@@ -28,6 +28,16 @@ label svg {
 
 .creator-media-upload .file{
   justify-content: start;
+  position: relative;
+  > input[type='file'] {
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+  }
 }
 
 
@@ -127,10 +137,13 @@ label svg {
   font-weight: 500;
 }
 
-.creator-form input, .creator-form textarea {
+.creator-form input, .creator-form textarea, .creator-form select {
   padding: 30px 15px;
   border-radius: 0;
   margin-bottom: 30px;
+}
+.creator-form select {
+  height: auto !important;
 }
 
 .creator-btn-area h1 {

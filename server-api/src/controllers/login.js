@@ -16,9 +16,8 @@ const login = async (ctx, next) => {
     ctx.body = { message: 'Not found user!' };
     return;
   }
-
   // verify signature
-  const msgBufferHex = bufferToHex(Buffer.from(user.nonce, 'utf8'));
+  const msgBufferHex = bufferToHex(Buffer.from(String(user.nonce), 'utf8'));
   const address = recoverPersonalSignature({
     data: msgBufferHex,
     sig: signature,

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Container, Row, Col} from 'react-bootstrap'
-import Title from '../Components/UI/Title'
+import Title from './UI/Title'
 import Creators from '../DemoData/CreatorsData.json'
 import {Link} from 'react-router-dom'
 

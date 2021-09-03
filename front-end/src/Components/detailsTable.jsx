@@ -2,7 +2,7 @@ import React from 'react'
 import {Container, Row, Col,Tabs, Tab } from 'react-bootstrap'
 import UsertableData from '../DemoData/UserTableData.json'
 
-import DataTable from '../Components/UI/DataTable'
+import DataTable from './UI/DataTable'
 const detailsTable = () => {
   return (
     <>

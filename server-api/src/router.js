@@ -3,7 +3,6 @@ const Router = require('koa-router');
 const userController = require('./controllers/user');
 const nftController = require('./controllers/nft');
 const cateController = require('./controllers/category');
-const summaryController = require('./controllers/nft_summary');
 const transferController = require('./controllers/nft_transfer');
 const loginController = require('./controllers/login');
 

@@ -152,8 +152,7 @@ const Header = () => {
                 <Col lg="5" md="3" className="align-items-center d-none d-md-block">
                   <div className="search-bar">
                     <Form>
-                      <Form.Group controlId="formBasicEmail">
-                        
+                      <Form.Group controlId="searchMobile">
                         <Form.Control type="Search" placeholder="Search" />
                         
                       </Form.Group>
@@ -200,7 +199,7 @@ const Header = () => {
             <FaTimes />
           </div>
           <Form>
-              <Form.Group controlId="formBasicEmail">
+              <Form.Group controlId="search">
                 
                 <Form.Control type="Search" placeholder="Search" />
                 
