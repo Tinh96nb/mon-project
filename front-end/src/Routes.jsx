@@ -10,16 +10,16 @@ const Marketplace = lazy(() => import("Pages/Marketplace"));
 
 const routers = () => {
   return (
-      <Suspense fallback={<div>Loading...</div>}>
-    <Switch>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/mint" component={MintNFT} />
-        <Route exact path="/creator" component={Colletion} />
-        <Route exact path="/detail" component={details} />
+        <Route exact path="/creator/:address" component={Colletion} />
+        <Route exact path="/detail/:tokenId" component={details} />
         <Route exact path="/edit-profile" component={EditProfile} />
         <Route exact path="/marketplace" component={Marketplace} />
-    </Switch>
-      </Suspense>
+      </Switch>
+    </Suspense>
   );
 };
 

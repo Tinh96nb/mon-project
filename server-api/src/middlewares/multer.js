@@ -13,7 +13,7 @@ const upload = (folder = '') => {
     },
   });
   const limits = {
-    fileSize: 1024 * 1024 * 20,
+    fileSize: 1024 * 1024 * 30
   };
   const uploader = multer({ storage, limits });
   return uploader;

@@ -28,7 +28,7 @@ const mint = async (ctx, next) => {
     data.media = "/nft/" + file.filename;
     data.mine_type = file.mimetype;
   } else {
-    ctx.body = { media: { params: "media", msg: "media is required!" } };
+    ctx.body = { media: { param: "media", msg: "This field is required!" } };
     ctx.status = 400;
     return;
   }

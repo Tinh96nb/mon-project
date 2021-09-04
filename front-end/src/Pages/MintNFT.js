@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -10,27 +10,95 @@ import {
 } from "react-bootstrap";
 import { FaRegImages } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { mintNFT } from "redux/nftReducer";
+import { getCategories, mintNFT } from "redux/nftReducer";
+import toast from 'Components/Toast';
+import { useHistory } from "react-router-dom";
 
 const CreatorForm = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [file, setFile] = useState('');
   const [name, setName] = useState('');
   const [des, setDes] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
+  const [approveNFT, setApprove] = useState(false);
+  const [fee, setFee] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [textStep, setTextStep] = useState('Create');
 
-  // @ts-ignore
-  const { userAddress } = useSelector((store) => store.home)
+  const { userAddress, contractNFT, contractMarket, priceToken } = useSelector((store) => store.home)
+  const { categories } = useSelector((store) => store.nft)
 
   const setImage = (event) => {
     if (event.target.files && event.target.files[0]) {
+      if (event.target.files[0].size >=(1024 * 1024 * 30)) {
+        toast.error({message: "File NFT too big!"})
+        return;
+      }
       setFile(event.target.files[0]);
     }
   };
 
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [])
+
+  useEffect(() => {
+    if (contractNFT) {
+      contractNFT.methods
+      .isApprovedForAll(userAddress, process.env.REACT_APP_CONTRACT_MARKET)
+      .call()
+      .then((res) => setApprove(res))
+    }
+  }, [contractNFT])
+
+  useEffect(() => {
+    if (contractMarket) {
+      contractMarket.methods
+      .getFeePercent()
+      .call()
+      .then((res) => setFee((res/1000)))
+    }
+  }, [contractMarket])
+
+  const confirmSell = (tokenId) => {
+    const callContract = () => {
+      contractMarket.methods
+      .createSellOrder(tokenId, price)
+      .send({from: userAddress})
+      .then((res) => {
+        toast.success("Creat NFT successfully!")
+        history.push(`/creator/${userAddress}`)
+      })
+      .catch(() => {
+        setLoading(false);
+        setTextStep('Create');
+        toast.error({message: "You not confirm transaction!"})
+      })
+    }
+    if (!approveNFT) {
+      setTextStep('Approve...');
+      contractNFT.methods
+      .setApprovalForAll(process.env.REACT_APP_CONTRACT_MARKET, true)
+      .send({from: userAddress})
+      .then((res) => {
+        setTextStep('Selling...');
+        callContract();
+      })
+      .catch(() => {
+        setLoading(false);
+        setTextStep('Create');
+        toast.error({message: "You not confirm transaction!"})
+      })
+    } else callContract();
+  }
+
   const submit = async () => {
+    if (!file) return toast.error({message: "File NFT is missing!"})
+    setLoading(true);
+    setTextStep('Creating...')
     const idToken = Math.round(new Date().getTime() / 1000);
     const formData = new FormData();
     formData.append("token_id", idToken.toString());
@@ -39,8 +107,19 @@ const CreatorForm = () => {
     formData.append("category_id", category);
     formData.append("owner", userAddress);
     formData.append("media", file);
-    dispatch(mintNFT(formData));
+    const cb = (tokenId) => {
+      if (tokenId) {
+        setTextStep('Selling...')
+        confirmSell(tokenId);
+      } else {
+        setLoading(false);
+        setTextStep('Create');
+      }
+    }
+    dispatch(mintNFT(formData, cb));
   }
+
+  const userReceived = +parseFloat(+price-(+price/100*fee)).toFixed(2);
   return (
     <>
       <div className="creator-form-area">
@@ -68,34 +147,42 @@ const CreatorForm = () => {
                 </div>
               </div>
 
-              <div className="creator-form">
+              <form
+                className="creator-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submit()
+                }}
+              >
                 <Form.Group>
                   <Form.Label>NFT name *</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Item name"
                     onChange={(e) => setName(e.target.value)}
+                    required={true}
                   />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Description *</Form.Label>
                   <Form.Control
                     as="textarea"
+                    required={true}
                     rows={10}
                     onChange={(e) => setDes(e.target.value)}
                     placeholder="Provide a detailed description of your item. (max 300 characters)"
                   />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Category *</Form.Label>
+                  <Form.Label>Category</Form.Label>
                   <Form.Control
                     as="select"
                     onChange={(e) => setCategory(e.target.value)}
                   >
                     <option>Select category</option>
-                    <option value="1">Dictamen</option>
-                    <option value="2">Constancia</option>
-                    <option value="3">Complemento</option>
+                    {categories.map((cate, index) => {
+                      return <option key={index} value={cate.id}>{cate.name}</option>
+                    })}
                   </Form.Control>
                 </Form.Group>
                 <label htmlFor="basic-url">
@@ -117,7 +204,7 @@ const CreatorForm = () => {
                   <FormControl
                     type="number"
                     required={true}
-                    placeholder="Ammount"
+                    placeholder="Amount"
                     onChange={(e) => setPrice(e.target.value)}
                   />
                 </InputGroup>
@@ -128,10 +215,13 @@ const CreatorForm = () => {
                       <h1>Fees when sale</h1>
                       <ul>
                         <li>
-                          Service Fee: <span>2.5%</span>
+                          Service Fee: <span>{fee}%</span>
                         </li>
                         <li>
-                          You will receive:<span>$1.0000</span>
+                          You will receive:
+                          <span>
+                            {userReceived} MON - ${+parseFloat(userReceived*priceToken).toFixed(2)}
+                          </span>
                         </li>
                       </ul>
                     </Col>
@@ -139,12 +229,13 @@ const CreatorForm = () => {
                   <Button
                     className="Creator-submit-btn"
                     type="submit"
-                    onClick={() => submit()}
+                    disabled={loading}
                   >
-                    Create
+                    {loading && <div className="loader"></div>}
+                    {textStep}
                   </Button>
                 </div>
-              </div>
+              </form>
             </Col>
           </Row>
         </Container>

@@ -5,11 +5,10 @@ const API_URL = {
     PUT: "/users",
   },
   CATEGORY: {
-    GET_ALL: "/categories",
-    DETAILS_CATEGORY: "/categories",
+    GET_ALL: "/categories"
   },
   NFT: {
-    GET: () => `/nfts`,
+    GET: "/nfts",
     CREATE: () => "/nfts/mint",
     DETAIL: (tokenId) => `/nfts/${tokenId}`,
     HISTORY_TRADE: "/nfts/history",

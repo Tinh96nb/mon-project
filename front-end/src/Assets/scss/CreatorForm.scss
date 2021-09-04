@@ -164,7 +164,10 @@ label svg {
   float: right;
   font-weight: 600;
 }
-
+.file-info {
+  margin-left: 10px;
+  font-style: italic;
+}
 button.Creator-submit-btn.btn.btn-primary {
   border-radius: 7px;
   background: #000;
@@ -176,9 +179,11 @@ button.Creator-submit-btn.btn.btn-primary {
   font-weight: 600;
   margin-top: 30px;
   &:hover, &:focus{
-    transition: all .3;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    &:not([disabled]) {
+      transition: all .3;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+    }
   }
 }
