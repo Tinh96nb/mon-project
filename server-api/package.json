@@ -6,7 +6,8 @@
     "migrate": "./node_modules/.bin/knex migrate:latest",
     "start": "pm2 start src/index.js --watch --ignore-watch='public node_modules src/events' --name=mon-api",
     "stop": "pm2 stop mon-api",
-    "log": "pm2 log mon-api"
+    "log": "pm2 log mon-api",
+    "event": "pm2 start src/events/index.js --name=event --max-memory-restart 100M"
   },
   "dependencies": {
     "@koa/cors": "3.1.0",

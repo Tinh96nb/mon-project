@@ -36,7 +36,7 @@ const historyTable = ({ histories }) => {
                                 {history?.to && <img src={avtTo} alt={history?.to?.username} />}
                                 {history?.to?.username || displayAddress(history?.to?.address)}
                               </td>
-                              <td>{history.price} MON</td>
+                              <td>{history.price || 0} MON</td>
                               <td>{history.type === 0 ? "Minted" : "Transfer"}</td>
                               <td>
                                 {UTCTimeToTime(history.created_at)}

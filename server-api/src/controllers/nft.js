@@ -10,8 +10,7 @@ const mint = async (ctx, next) => {
   const schema = {
     token_id: { notEmpty: true, errorMessage: 'This field is required!'},
     name: { notEmpty: true, errorMessage: 'This field is required!'},
-    description: { notEmpty: true, errorMessage: 'This field is required!'},
-    category_id: { notEmpty: true, errorMessage: 'This field is required!'}
+    description: { notEmpty: true, errorMessage: 'This field is required!'}
   };
 
   ctx.checkBody(schema);

@@ -1,5 +1,6 @@
 const knex = require('./connect');
 const userModel = require("./users");
+const { web3 } = require('../helper/web3');
 
 const { statusNft, eventHistoryNFT } = require('../helper/const');
 
@@ -30,14 +31,14 @@ const verifyNft = async (tokenId, owner, txid) => {
       return {
         success: false,
         message: 'NFT is verified!',
-        data: {},
+        data: {tokenId},
       };
     }
     await knex('nfts').where({ token_id: tokenId }).update({ status: statusNft.verified });
     await knex('nft_histories').insert({
       token_id: tokenId,
       to: nft.owner,
-      event: eventHistoryNFT.listing,
+      type: eventHistoryNFT.listing,
       txid
     });
     return {
@@ -96,6 +97,32 @@ const transferNFT = async (tokenId, from, to, txid) => {
   }
 };
 
+const confirmPriceSell = async (tokenId, seller, price) => {
+  try {
+    const nft = await knex('nfts').where({ token_id: tokenId, owner: seller }).first();
+    if (!nft) {
+      return {
+        success: false,
+        message: 'Not found NFT!',
+        data: {tokenId},
+      };
+    }
+    await knex('nfts').where({ token_id: tokenId })
+      .update({ status: statusNft.selling, price: web3.utils.fromWei(price, "ether") })
+    return {
+      success: true,
+      message: 'Confirm price done!',
+      data: tokenId,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Error transfer nft!',
+      data: error.message,
+    };
+  }
+}
+
 const getByTokenId = async (tokenId) => {
   const nfts = await knex('nfts').select().where('token_id', tokenId);
   if (!nfts) return null;
@@ -151,9 +178,10 @@ const addProperty = async (listNft = []) => {
       const category = await knex('categories').where('id', nft.category_id).first();
       const author = await userModel.getInfo({ address: nft.author });
       const owner = await userModel.getInfo({ address: nft.owner });
-      const numHis = await knex('nft_histories').count('id as num').where('token_id', nft.token_id).first();
+      const numHis = await knex('nft_histories').count('id as num')
+        .where('token_id', nft.token_id)
+        .whereRaw(`type != ${eventHistoryNFT.listing}`).first();
       const totalVol = await knex('nft_histories').sum('price as sum').where('token_id', nft.token_id).first();
-
       return {
         ...nft,
         author,
@@ -212,5 +240,6 @@ module.exports = {
   updateNft,
   verifyNft,
   getList,
-  transferNFT
+  transferNFT,
+  confirmPriceSell
 };

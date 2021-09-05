@@ -10,7 +10,7 @@ const toDisplayNumber = (amount) => {
   return parts.join(".");
 }
 
-const parseFromBNString = (valueString, decimals = 9) => {
+const parseFromBNString = (valueString, decimals = 18) => {
   if (!valueString) return 0;
   const valueLength = valueString.length;
   while (valueString.length < decimals)
@@ -18,7 +18,7 @@ const parseFromBNString = (valueString, decimals = 9) => {
   return parseFloat(valueString.substring(0, valueLength - decimals) + "." + valueString.substring(valueLength - decimals, valueLength));
 }
 
-const displayFromBNString = (valueString, decimals = 9) => {
+const displayFromBNString = (valueString, decimals = 18) => {
   if (!valueString || valueString === "0") return "0";
   const valueLength = valueString.length;
   if (valueString.length === decimals) {

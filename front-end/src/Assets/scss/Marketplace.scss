@@ -2,16 +2,21 @@
   display: inline-block;
 }
 
-.categories li a {
+.categories li button {
   color: #606060;
   padding: 8px 20px;
   display: block;
   border: 1px solid #606060;
   margin-right: 10px;
   transition: all .3s;
+  background: #fff;
 }
 
-.categories li a:hover {
+.categories li button.active {
+  background: #606060;
+  color: #fff;
+}
+.categories li button:hover {
   background: #606060;
   color: #fff;
   transition: all .3s;

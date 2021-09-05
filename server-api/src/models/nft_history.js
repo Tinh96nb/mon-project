@@ -1,6 +1,7 @@
 const knex = require('./connect');
 const { web3 } = require('../helper/web3');
-const { statusNft } = require('../helper/const');
+const userModel = require("./users");
+const { statusNft, eventHistoryNFT } = require('../helper/const');
 
 const createHistory = async (buyer, tokenId, price, txid) => {
   try {
@@ -8,11 +9,10 @@ const createHistory = async (buyer, tokenId, price, txid) => {
     if (!nft || +nft.status === statusNft.verified) {
       return {
         success: false,
-        message: 'Owner not set sell or aution',
+        message: 'NFT status is not selling',
         data: {tokenId},
       };
     }
-
     const getTo = await knex('users').where({address: buyer}).first();
     if (!getTo) {
       await userModel.createUser({address: buyer});
@@ -20,15 +20,13 @@ const createHistory = async (buyer, tokenId, price, txid) => {
 
     await knex('nfts').where({ token_id: tokenId }).update({
       owner: buyer,
-      status: statusNft.verified,
-      approve_price: null,
-      collection_id: null,
+      status: statusNft.verified
     });
     await knex('nft_histories').insert({
       token_id: tokenId,
       from: nft.owner,
       to: buyer,
-      event: nft.status,
+      type: eventHistoryNFT.sale,
       price: web3.utils.fromWei(price, "ether"),
       txid
     });

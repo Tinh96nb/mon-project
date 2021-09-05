@@ -1,7 +1,18 @@
-import React from 'react'
+import { useEffect } from 'react'
 import {Container, Row, Col} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCategories, setCateFilter } from 'redux/nftReducer'
+
 const Categories = () => {
+  const dispatch = useDispatch();
+
+  const {categories, selectCate} = useSelector((state) => state.nft)
+
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [])
+
+  console.log(selectCate);
   return (
     <>
       <div className="categories-area">
@@ -10,13 +21,26 @@ const Categories = () => {
           <Col>
             <div className="categories">
               <ul>
-                <li><Link to="#">All</Link></li>
-                <li><Link to="#">Photography</Link></li>
-                <li><Link to="#">Celebrities</Link></li>
-                <li><Link to="#">Games</Link></li>
-                <li><Link to="#">Sport</Link></li>
-                <li><Link to="#">Music</Link></li>
-                <li><Link to="#">Crypto</Link></li>
+                <li>
+                  <button
+                    className={!selectCate ? 'active' : ''}
+                    type="button"
+                    onClick={() => dispatch(setCateFilter(null))}
+                  >
+                    All
+                  </button>
+                </li>
+                {categories.map((cate, i) => {
+                  return <li key={i}>
+                    <button
+                      className={cate.id === selectCate ? 'active' : ''}
+                      type="button"
+                      onClick={() => dispatch(setCateFilter(cate.id))}
+                    >
+                        {cate.name}
+                    </button>
+                  </li>
+                })}
               </ul>
             </div>
           </Col>

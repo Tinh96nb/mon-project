@@ -1,48 +1,79 @@
-import React from 'react'
-import {Container, Row, Col} from 'react-bootstrap'
-import Title from './UI/Title'
-import PortfolioData from '../DemoData/PortfolioData.json'
-import {Link} from 'react-router-dom'
+import { Container, Row, Col } from "react-bootstrap";
+import Title from "./UI/Title";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getListNFT } from "redux/nftReducer";
+import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
+
 const Portfolio = () => {
+  const dispatch = useDispatch();
+
+  const { list } = useSelector((state) => state.nft);
+  const { priceToken } = useSelector((state) => state.home);
+
+  useEffect(() => {
+    dispatch(getListNFT({}));
+  }, []);
+
   return (
     <>
       <div className="portfolio-area">
-       <Container>
-         <Row>
-           <Col>
-           <Title title={PortfolioData.title} titleSpan={PortfolioData.titleSpan} />
-           
-           </Col>
-         </Row>
+        <Container>
+          <Row>
+            <Col>
+              <Title
+                title="Featured artworks"
+                // titleSpan={"(View all artworks)"}
+              />
+            </Col>
+          </Row>
+          <Row>
+            {list.map((nft, i) => {
+              const avt = nft.owner.avatar
+                ? getFile(nft.owner.avatar)
+                : "/assets/img/user/avatar.jpg";
+              const media = nft.media
+                ? getFile(nft.media)
+                : "/assets/img/portfolio/avatar.jpg";
+              return (
+                <Col sm="6" lg="4" key={i}>
+                  <div className="single_portfolio">
+                    <Link to={`/detail/${nft.token_id}`}>
+                      <div className="portfolio_img">
+                        <img src={media} alt={nft.name} />
+                      </div>
+                    </Link>
 
-         <Row>
-           {
-             PortfolioData.portfolioItems.map((item, i) => 
-               <Col sm="6" lg="4" key={i}>
-                 <div className="single_portfolio">
-                 <div className="portfolio_img">
-                    <img  src={process.env.PUBLIC_URL +`/assets/img/${item.portfolioImg}`} alt="" />
-                  </div>
-
-                  <div className="portfolio_content">
-                    <h5>{item.portfolioTag}</h5>
-                    <h1 className="portfolio_title"><img src={process.env.PUBLIC_URL + `/assets/img/${item.portfolioTitleImg}`} alt="" /> {item.portfolioTitle} <span>{item.portfolioTitleSpan}</span></h1>
-                    <div className="author">
-                      <img src={process.env.PUBLIC_URL + `/assets/img/${item.authorImg}`} alt="" />
-                      <Link to={item.authorLink}>{item.author}</Link>
+                    <div className="portfolio_content">
+                      <h5>{nft.name}</h5>
+                      <h1 className="portfolio_title">
+                        <img src="/assets/img/icons/main-icon.png" />{" "}
+                        {nft.price
+                          ? toDisplayNumber(+parseFloat(nft.price).toFixed(2))
+                          : 0}{" "}
+                        MON{" "}
+                        <span>
+                          ${toDisplayNumber(nft ? +nft?.price * priceToken : 0)}
+                        </span>
+                      </h1>
+                      <div className="author">
+                        <img src={avt} alt={nft.owner.address} />
+                        <Link to={`/creator/${nft?.owner?.address}`}>
+                          {nft?.owner?.username ||
+                            displayAddress(nft?.owner?.address)}
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                 </div>
-               </Col>
-              
-             )
-           }
-         </Row>
-
-       </Container>
+                </Col>
+              );
+            })}
+          </Row>
+        </Container>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Portfolio
+export default Portfolio;

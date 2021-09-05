@@ -3,7 +3,6 @@ const fs = require('fs').promises;
 const path = require('path');
 const nftModel = require("../models/nft");
 const historyModel = require("../models/nft_history");
-const TOKENABI = require('../abi/BNU_ABI.json')
 
 const EventEmitter = require("events");
 const event = new EventEmitter();
@@ -12,8 +11,7 @@ const { contract, web3 } = require("../helper/web3");
 const EVENT = {
   minNFT: "MIN_NFT",
   buy: "BUY",
-  bid: "BID",
-  exchange: "EXCHANGE"
+  createSell: "CREATE_SELL"
 }
 
 const fileName = path.resolve(__dirname, 'data.txt');
@@ -25,8 +23,7 @@ async function init() {
   const {
     [EVENT.minNFT]: blockMint,
     [EVENT.buy]: blockBuy,
-    [EVENT.bid]: blockBid,
-    [EVENT.exchange]: blockExchange,
+    [EVENT.createSell]: blockSell,
   } = objBlock
 
   // event trasfer
@@ -63,39 +60,22 @@ async function init() {
       })
   }
 
-  // event bid
-  if (+blockBid === 0) {
-    objBlock[EVENT.bid] = latest;
+  // event create sell
+  if (+blockSell === 0) {
+    objBlock[EVENT.createSell] = latest;
     await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockBid !== +latest) {
-    contract().auction 
-      .getPastEvents("NewPlaceSetted", {
-        fromBlock: +blockBid+1,
+  } else if (+blockSell !== +latest) {
+    contract().market 
+      .getPastEvents("NewSellOrderCreated", {
+        fromBlock: +blockSell+1,
         toBlock: 'latest'
       })
       .then(async (events) => {
-        if (events.length) event.emit(EVENT.bid, events)
-        objBlock[EVENT.bid] = latest;
+        if (events.length) event.emit(EVENT.createSell, events)
+        objBlock[EVENT.createSell] = latest;
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
-
-  // event exchange
-  if (+blockExchange === 0) {
-    objBlock[EVENT.exchange] = latest;
-    await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockExchange !== +latest) {
-    contract().deployer 
-      .getPastEvents("NftTokenDeployed", {
-        fromBlock: +blockExchange+1,
-        toBlock: 'latest'
-      })
-      .then(async (events) => {
-        if (events.length) event.emit(EVENT.exchange, events)
-        objBlock[EVENT.exchange] = latest;
-        await fs.writeFile(fileName, JSON.stringify(objBlock));
-      })
-    }
   await sleep(2000);
   init();
 };
@@ -121,28 +101,12 @@ event.on(EVENT.buy, async (events) => {
   }
 });
 
-event.on(EVENT.bid, async (events) => {
-  for (let index = 0; index < events.length; index++) {
-    const { returnValues, transactionHash } = events[index];
-    const { tokenId, account, price } = returnValues;
-    const res = await historyModel.createBid(tokenId, account, price, transactionHash)
-    console.log(res);
-  }
-});
-
-event.on(EVENT.exchange, async (events) => {
+event.on(EVENT.createSell, async (events) => {
   for (let index = 0; index < events.length; index++) {
     const { returnValues } = events[index];
-    const { tokenId, tokenAddress, symbol, pairToAddress } = returnValues;
-    const contract = new web3.eth.Contract(TOKENABI, pairToAddress);
-    try {
-      const pairSymbol = await contract.methods.symbol().call();
-      if (!pairSymbol) return;
-      const res = await nftModel.verifyExchange(tokenId, symbol, tokenAddress, pairSymbol)
-      console.log(res);
-    } catch (error) {
-      console.log("Error orderbook.");
-    }
+    const { tokenId, seller, price } = returnValues;
+    const res = await nftModel.confirmPriceSell(tokenId, seller, price)
+    console.log(res);
   }
 });
 

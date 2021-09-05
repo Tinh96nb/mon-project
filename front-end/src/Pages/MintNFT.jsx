@@ -65,13 +65,13 @@ const CreatorForm = () => {
 
   const confirmSell = (tokenId) => {
     const callContract = () => {
-      const realPrice = web3.utils.toWei(price, "gwei");
+      const realPrice = web3.utils.toWei(price, "ether");
       contractMarket.methods
       .createSellOrder(tokenId, realPrice)
       .send({from: userAddress})
       .then((res) => {
         toast.success("Creat NFT successfully!")
-        history.push(`/creator/${userAddress}`)
+        history.push(`/detail/${tokenId}`)
       })
       .catch(() => {
         setLoading(false);
