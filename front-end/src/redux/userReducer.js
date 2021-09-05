@@ -76,7 +76,7 @@ export const getAllowance = () => {
     const { userAddress, contractToken } = getStore().home;
     contractToken &&
       contractToken.methods
-        .allowance(userAddress, process.env.REACT_APP_ADDRESS_CONTRACT_STAKING)
+        .allowance(userAddress, process.env.REACT_APP_CONTRACT_MARKET)
         .call()
         .then((result) => {
           dispatch({type: SET_REDUX, payload: {allowance: parseFromBNString(result)}});
@@ -85,11 +85,10 @@ export const getAllowance = () => {
   };
 };
 
-export const setMAxAllowance = () => {
+export const setMAxAllowance = (cb) => {
   return (dispatch, getStore) => {
     const { userAddress, contractToken, web3} = getStore().home;
     const maxUnit = Math.pow(10, 20);
-
     contractToken &&
       contractToken.methods
       .approve(
@@ -97,10 +96,11 @@ export const setMAxAllowance = () => {
         web3.utils.toWei(maxUnit.toString(), 'ether'),
       )
       .send({ from: userAddress })
-        .then((result) => {
+        .then(() => {
           dispatch({type: SET_REDUX, payload: {allowance: maxUnit}});
+          cb(true)
         })
-        .catch(() => console.log);
+        .catch(() => cb(false));
   };
 };
 

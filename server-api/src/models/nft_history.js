@@ -1,7 +1,6 @@
 const knex = require('./connect');
-const { contract, web3 } = require('../helper/web3');
-const { eventHistoryNFT, statusAuction, statusNft } = require('../helper/const');
-const moment = require('moment');
+const { web3 } = require('../helper/web3');
+const { statusNft } = require('../helper/const');
 
 const createHistory = async (buyer, tokenId, price, txid) => {
   try {
@@ -47,29 +46,17 @@ const createHistory = async (buyer, tokenId, price, txid) => {
   }
 };
 
-const historyTransfer = async (tokenId, range) => {
-  const query = knex('nft_histories').where('token_id', tokenId);
-  if (range) {
-    const startDate = moment();
-    const [amount, type] = range.split(',');
-    startDate.subtract(amount, type);
-    query.where('created_at', '>=', startDate.format('YYYY-MM-DD'));
-  }
-  const data = await query;
+const historyTransfer = async (tokenId) => {
+  const histories = await knex('nft_histories').where('token_id', tokenId).orderBy('created_at', 'desc');
   const result = await Promise.all(
-    data.map(async (history) => {
+    histories.map(async (history) => {
       const from = await knex('users').where('address', history.from).first();
       const to = await knex('users').where('address', history.to).first();
-      let data = {
+      return {
         ...history,
-        from: from ? from : {},
-        to: to ? to : {},
+        from: from ? from : null,
+        to: to ? to : null,
       };
-      if (history.event == eventHistoryNFT.auction && history.ref_id) {
-        const auction = await knex('auctions').where({ id: history.ref_id }).first();
-        data = { ...data, auction: auction };
-      }
-      return data;
     })
   );
   return result;

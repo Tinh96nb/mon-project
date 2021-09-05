@@ -28,7 +28,7 @@ const CreatorForm = () => {
   const [loading, setLoading] = useState(false);
   const [textStep, setTextStep] = useState('Create');
 
-  const { userAddress, contractNFT, contractMarket, priceToken } = useSelector((store) => store.home)
+  const { userAddress, contractNFT, contractMarket, priceToken, web3 } = useSelector((store) => store.home)
   const { categories } = useSelector((store) => store.nft)
 
   const setImage = (event) => {
@@ -59,14 +59,15 @@ const CreatorForm = () => {
       contractMarket.methods
       .getFeePercent()
       .call()
-      .then((res) => setFee((res/1000)))
+      .then((res) => setFee((+res/1000)))
     }
   }, [contractMarket])
 
   const confirmSell = (tokenId) => {
     const callContract = () => {
+      const realPrice = web3.utils.toWei(price, "gwei");
       contractMarket.methods
-      .createSellOrder(tokenId, price)
+      .createSellOrder(tokenId, realPrice)
       .send({from: userAddress})
       .then((res) => {
         toast.success("Creat NFT successfully!")
@@ -192,13 +193,7 @@ const CreatorForm = () => {
                 <InputGroup className="mb-3">
                   <InputGroup.Prepend>
                     <InputGroup.Text>
-                      <img
-                        src={
-                          process.env.PUBLIC_URL +
-                          `/assets/img/icons/main-icon.png`
-                        }
-                        alt=""
-                      />
+                      <img src="/assets/img/icons/main-icon.png" alt="icon"/>
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl
@@ -220,7 +215,7 @@ const CreatorForm = () => {
                         <li>
                           You will receive:
                           <span>
-                            {userReceived} MON - ${+parseFloat(userReceived*priceToken).toFixed(2)}
+                            {userReceived} MON - ${+parseFloat(+userReceived*+priceToken).toFixed(2)}
                           </span>
                         </li>
                       </ul>

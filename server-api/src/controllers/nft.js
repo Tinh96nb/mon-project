@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { NFTStorage, File } = require('nft.storage');
 const nftModel = require("../models/nft");
+const historyModel = require("../models/nft_history");
 
 const mint = async (ctx, next) => {
   const { body, file } = ctx.req;
@@ -91,6 +92,13 @@ const detailNft = async (ctx) => {
   ctx.body = nft;
 };
 
+const nftHistory = async (ctx, next) => {
+  const { tokenId } = ctx.params;
+  const res = await historyModel.historyTransfer(tokenId);
+  ctx.body = res
+  return next()
+}
+
 const listNft = async (ctx, next) => {
   const {
     category,
@@ -121,4 +129,4 @@ const listNft = async (ctx, next) => {
   return next();
 };
 
-module.exports = { mint, updateNft, detailNft, listNft };
+module.exports = { mint, nftHistory, detailNft, listNft };

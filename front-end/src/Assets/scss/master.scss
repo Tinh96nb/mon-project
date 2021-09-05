@@ -141,10 +141,12 @@ button {
   }
   .avt {
     float: right;
+    margin-left: 5px;
     img {
-      height: 32px;
-      width: 32px;
-      border-radius: 16px;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
     }
   }
 }
@@ -549,7 +551,18 @@ img.smallImg {
   }
   
 }
-
+.mainNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .balance {
+    font-size: 13px;
+  }
+  .info {
+    font-size: 12px;
+    font-style: italic;
+  }
+}
 @import 'Details';
 @import 'Marketplace';
 @import 'CreatorForm';

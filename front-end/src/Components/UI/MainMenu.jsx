@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchUser, getBalance } from 'redux/userReducer'
-import { getFile } from 'utils/hepler'
+import { displayAddress, getFile, toDisplayNumber } from 'utils/hepler'
 
 const MainMenu = (props) => {
   const { userAddress, contractToken } = useSelector((store) => store.home)
@@ -23,12 +23,14 @@ const MainMenu = (props) => {
   }, [userAddress, contractToken])
 
   const renderUser = () => {
-    const avt = me && me.avatar ? getFile(me.avatar) : '/assets/img/icons/upload-top-logo.png';
+    const avt = me && me.avatar ? getFile(me.avatar) : '/assets/img/user/avatar.jpg';
     return <div className="user-pro">
       <div className="info-tab">
-        <div className="balance">{balance} MON</div>
+        <div className="balance">
+          {toDisplayNumber(+parseFloat(balance).toFixed(2))} MON
+        </div>
         <div className="info">
-          {userAddress.substring(0, 5)+'...'+userAddress.substring(userAddress.length -4, userAddress.length)}
+          {displayAddress(userAddress)}
         </div>
       </div>
       <div className="avt">
@@ -37,20 +39,18 @@ const MainMenu = (props) => {
     </div>
   }
   return (
-    <>
-      <ul className="mainNav">
-        <li><Link to="/marketplace">Marketplace</Link></li>
-        <li><Link to="/details">Creators</Link></li>
-        <li>
-          {userAddress
-          ? renderUser()
-          : <a style={{cursor: "pointer"}} onClick={() => props.setConnect()}>
-              Connect
-            </a>
-          }
-        </li>
-      </ul>
-    </>
+    <ul className="mainNav">
+      <li><Link to="/marketplace">Marketplace</Link></li>
+      <li><Link to="/mint">Create</Link></li>
+      <li>
+        {userAddress
+        ? renderUser()
+        : <a style={{cursor: "pointer"}} onClick={() => props.setConnect()}>
+            Connect
+          </a>
+        }
+      </li>
+    </ul>
   )
 }
 

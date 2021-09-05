@@ -2,7 +2,7 @@ import moment from "moment";
 
 const getFile = (link) => {
   const staticURL = process.env.REACT_APP_STATIC_FILE_URI;
-  return `${staticURL}/${link}`;
+  return `${staticURL}/upload${link}`;
 }
 const toDisplayNumber = (amount) => {
   var parts = amount.toString().split(".");
@@ -33,4 +33,12 @@ const unixTimeToTime = (unixTime, format = "YYYY-MM-DD HH:MM:ss") => {
   return moment.unix(+unixTime).format(format);
 }
 
-export { toDisplayNumber, displayFromBNString, parseFromBNString, unixTimeToTime, getFile };
+const UTCTimeToTime = (UTC, format = "YYYY-MM-DD HH:MM:ss") => {
+  return moment(UTC).format(format);
+}
+
+const displayAddress = (address, display1 = 5, display2 = 4) => {
+  if (!address || !address.length) return '';
+  return address.substring(0, display1)+'...'+address.substring(address.length - display2, address.length)
+}
+export { toDisplayNumber, displayFromBNString, parseFromBNString, unixTimeToTime, getFile, displayAddress, UTCTimeToTime };

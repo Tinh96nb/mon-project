@@ -11,7 +11,7 @@ const API_URL = {
     GET: "/nfts",
     CREATE: () => "/nfts/mint",
     DETAIL: (tokenId) => `/nfts/${tokenId}`,
-    HISTORY_TRADE: "/nfts/history",
+    HISTORY_TRADE: (tokenId) => `/nfts/history/${tokenId}`,
   },
 };
 

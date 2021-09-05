@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 import "./interface/IMonNFT.sol";
@@ -47,7 +46,7 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         _tokenPrices[tokenId] = price;
         _tokens.push(tokenId);
         
-        emit NewSellOrderCreated(_msgSender(), _now(), tokenId, price);
+        emit NewSellOrderCreated(_msgSender(), block.timestamp, tokenId, price);
         
         return true;
     }
@@ -109,7 +108,7 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
      */ 
     function purchase(uint tokenId) external override returns(uint){
         address tokenOwner = _tokenOwners[tokenId];
-        require(tokenOwner != address(0),"Token has not been added");
+        require(tokenOwner != address(0), "Token has not been added");
         
         uint256 tokenPrice = _tokenPrices[tokenId];
         
@@ -121,7 +120,7 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
             uint256 feePercent = getFeePercent();
             if(feePercent > 0){
                 feeAmount = tokenPrice * feePercent / 100 / MULTIPLIER;
-                require(monTokenContract.transfer(_owner, feeAmount));
+                require(monTokenContract.transfer(owner(), feeAmount));
             }
             // fee for author
             uint256 feeCopyright = 0;
@@ -137,7 +136,7 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         }
         
         //Transfer monNFT from contract to sender
-        getMonNFT().transferFrom(address(this),_msgSender(), tokenId);
+        getMonNFT().transferFrom(address(this), _msgSender(), tokenId);
         
         _marketHistories[tokenId].push(MarketHistory({
             buyer: _msgSender(),

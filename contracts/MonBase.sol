@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./core/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interface/IMonNFT.sol";
 
 contract MonBase is Ownable, IERC721Receiver{
@@ -18,7 +18,7 @@ contract MonBase is Ownable, IERC721Receiver{
     constructor(address monTokenAddress, address monNFTAddress){
         _monToken = IERC20(monTokenAddress);
         _monNFT = IMonNFT(monNFTAddress);
-        _feePercent = 10000;    //10%
+        _feePercent = 5000;    //5%
     }
     
     /**

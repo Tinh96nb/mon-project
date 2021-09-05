@@ -3,7 +3,6 @@ const Router = require('koa-router');
 const userController = require('./controllers/user');
 const nftController = require('./controllers/nft');
 const cateController = require('./controllers/category');
-const transferController = require('./controllers/nft_transfer');
 const loginController = require('./controllers/login');
 
 const { upload } = require('./middlewares/multer');
@@ -26,8 +25,7 @@ module.exports = function () {
   router.get('/nfts', nftController.listNft);
   router.post('/nfts/mint', isAuth, nftUploader.single('media'), nftController.mint);
   router.get('/nfts/:tokenId', nftController.detailNft);
-  // router.put('/nfts/:tokenId', isAuth, nftController.updateNft)
-  router.get('/nfts/history/:tokenId', transferController.nftHistory);
+  router.get('/nfts/history/:tokenId', nftController.nftHistory);
 
   // categories
   router.get('/categories', cateController.list);

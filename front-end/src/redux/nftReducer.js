@@ -1,6 +1,7 @@
 import toast from "Components/Toast";
 import { requestToken, request } from "utils/api/axios";
 import API_URL from "utils/api/url";
+import { parseFromBNString } from "utils/hepler";
 import { postLogin } from "./userReducer";
 
 const SET_REDUX = "user/SET_REDUX";
@@ -9,6 +10,7 @@ const initialState = {
   detail: null,
   list: [],
   categories: [],
+  histories: []
 };
 
 export function mintNFT(formData, callback = null) {
@@ -60,6 +62,31 @@ export function getCategories() {
       ({ data }) => {
         if (data)
           dispatch({ type: SET_REDUX, payload: { categories: data } });
+      }
+    );
+  };
+}
+
+export function getDetail(tokenId) {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.NFT.DETAIL(tokenId), data: {} }).then(
+      ({ data }) => {
+        if (data) {
+          data.price = data.price ? parseFromBNString(data.price) : 0
+          dispatch({ type: SET_REDUX, payload: { detail: data } });
+        }
+      }
+    );
+  };
+}
+
+export function getHistoryTrade(tokenId) {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.NFT.HISTORY_TRADE(tokenId), data: {} }).then(
+      ({ data }) => {
+        if (data) {
+          dispatch({ type: SET_REDUX, payload: { histories: data } });
+        }
       }
     );
   };

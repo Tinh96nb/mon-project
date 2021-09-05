@@ -149,13 +149,18 @@ const addProperty = async (listNft = []) => {
   const result = await Promise.all(
     listNft.map(async (nft) => {
       const category = await knex('categories').where('id', nft.category_id).first();
-      const author = await knex('users').where('address', nft.author).first();
-      const owner = await knex('users').where('address', nft.owner).first();
+      const author = await userModel.getInfo({ address: nft.author });
+      const owner = await userModel.getInfo({ address: nft.owner });
+      const numHis = await knex('nft_histories').count('id as num').where('token_id', nft.token_id).first();
+      const totalVol = await knex('nft_histories').sum('price as sum').where('token_id', nft.token_id).first();
+
       return {
         ...nft,
         author,
         owner,
         category_name: category ? category.name : '',
+        total_vol: totalVol.sum,
+        amount_trade: numHis.num
       };
     })
   );

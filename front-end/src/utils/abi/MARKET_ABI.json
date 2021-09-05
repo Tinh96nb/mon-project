@@ -63,19 +63,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "oldOwner",
+        "name": "previousOwner",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
       }
     ],
-    "name": "OwnerChanged",
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
@@ -116,13 +116,6 @@
     "stateMutability": "view",
     "type": "function",
     "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "approveToBeOwner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "inputs": [],
@@ -167,20 +160,6 @@
     "constant": true
   },
   {
-    "inputs": [],
-    "name": "getOwner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -216,14 +195,22 @@
     "constant": true
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
       {
         "internalType": "address",
-        "name": "newOwner",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "requestChangeOwner",
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -263,6 +250,19 @@
       }
     ],
     "name": "setTokenNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
