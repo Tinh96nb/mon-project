@@ -1,21 +1,19 @@
-import { useEffect } from 'react'
-import {Container, Row, Col} from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import { getCategories, setCateFilter } from 'redux/nftReducer'
+import { useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategories, setCateFilter } from "redux/nftReducer";
 
 const Categories = () => {
   const dispatch = useDispatch();
 
-  const {categories, selectCate} = useSelector((state) => state.nft)
+  const { categories, selectCate } = useSelector((state) => state.nft);
 
   useEffect(() => {
     dispatch(getCategories());
-  }, [])
+  }, []);
 
-  console.log(selectCate);
   return (
-    <>
-      <div className="categories-area">
+    <div className="categories-area">
       <Container>
         <Row>
           <Col>
@@ -23,7 +21,7 @@ const Categories = () => {
               <ul>
                 <li>
                   <button
-                    className={!selectCate ? 'active' : ''}
+                    className={!selectCate ? "active" : ""}
                     type="button"
                     onClick={() => dispatch(setCateFilter(null))}
                   >
@@ -31,24 +29,25 @@ const Categories = () => {
                   </button>
                 </li>
                 {categories.map((cate, i) => {
-                  return <li key={i}>
-                    <button
-                      className={cate.id === selectCate ? 'active' : ''}
-                      type="button"
-                      onClick={() => dispatch(setCateFilter(cate.id))}
-                    >
+                  return (
+                    <li key={i}>
+                      <button
+                        className={cate.id === selectCate ? "active" : ""}
+                        type="button"
+                        onClick={() => dispatch(setCateFilter(cate.id))}
+                      >
                         {cate.name}
-                    </button>
-                  </li>
+                      </button>
+                    </li>
+                  );
                 })}
               </ul>
             </div>
           </Col>
         </Row>
       </Container>
-      </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default Categories
+export default Categories;
