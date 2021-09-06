@@ -29,7 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "serve": "serve -s build",
+    "serve": "pm2 --name=app serve build 3000 --spa",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
