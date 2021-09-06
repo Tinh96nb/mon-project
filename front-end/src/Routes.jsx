@@ -9,8 +9,15 @@ const EditProfile = lazy(() => import("Pages/EditProfile"));
 const Marketplace = lazy(() => import("Pages/Marketplace"));
 
 const routers = () => {
+
+  const loader = () => {
+    return <div className="overlay">
+      <div className="loader-5 center"><span></span></div>
+      </div>
+  }
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={loader()}>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/mint" component={MintNFT} />
