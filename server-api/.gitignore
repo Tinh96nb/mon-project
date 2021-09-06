@@ -5,7 +5,7 @@ yarn.lock
 data.txt
 public/upload/user/*
 public/upload/kyc/*
-public/upload/nft/*
+# public/upload/nft/*
 public/upload/collection/*
 .gitlab-ci.yml
 !public/upload/collection/.gitkeep
