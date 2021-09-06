@@ -45,6 +45,7 @@ const Header = () => {
   const [headerNav, setHeader] = useState(false);
   const [mobileNav, mobileNavSet] = useState(false);
   const [search, searchSet] = useState(false);
+  const [web3Modal, setWeb3Modal] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -61,18 +62,19 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("load", async () => {
       // if not logined
-      const webModal = new Web3Modal({
+      const web3Modal = new Web3Modal({
         network: REACT_APP_NETWORK_NAME,
         cacheProvider: true,
         providerOptions,
       });
-      if (!webModal.cachedProvider) {
+      setWeb3Modal(web3Modal);
+      if (!web3Modal.cachedProvider) {
         const provider = new Web3.providers.HttpProvider(REACT_APP_RPC);
         const web3 = new Web3(provider);
         setRedux(web3);
         return;
       }
-      await setConnect(webModal);
+      await setConnect(web3Modal);
     });
   }, []);
 
@@ -154,7 +156,6 @@ const Header = () => {
                     <Form>
                       <Form.Group controlId="searchMobile">
                         <Form.Control type="Search" placeholder="Search" />
-                        
                       </Form.Group>
                     </Form>
                   </div>
@@ -169,7 +170,7 @@ const Header = () => {
                 <Col lg="4" md="6" className="text-right align-self-center d-none d-md-block">
                   <div className="menu-area">
                     <div className="main-menu">
-                      <MainMenu setConnect={() => setConnect()}/>
+                      <MainMenu setConnect={() => setConnect(web3Modal)}/>
                     </div>
                   </div>
                 </Col>
