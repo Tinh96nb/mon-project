@@ -8,13 +8,13 @@
     position: absolute;
     left: 0;
     top: 50%;
-    height: 120px;
-    width: 120px;
-    object-fit: cover;
     margin-top: -60px;
 }
 
 .user_img img {
+    height: 120px;
+    width: 120px;
+    object-fit: cover;
     border-radius: 50%;
 }
 

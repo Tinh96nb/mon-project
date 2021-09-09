@@ -155,7 +155,7 @@ const Header = () => {
                   <div className="search-bar">
                     <Form>
                       <Form.Group controlId="searchMobile">
-                        <Form.Control type="Search" placeholder="Search" />
+                        <Form.Control type="text" placeholder="Search" />
                       </Form.Group>
                     </Form>
                   </div>
@@ -202,7 +202,7 @@ const Header = () => {
           <Form>
               <Form.Group controlId="search">
                 
-                <Form.Control type="Search" placeholder="Search" />
+                <Form.Control type="text" placeholder="Search" />
                 
               </Form.Group>
             </Form>

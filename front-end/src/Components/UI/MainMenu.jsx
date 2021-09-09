@@ -35,6 +35,12 @@ const MainMenu = (props) => {
       </div>
       <div className="avt">
           <img src={avt} />
+          <div className="dropdown-content">
+            <ul className="dropdown-list" >
+              <li><Link to="/profile">Profile</Link></li>
+              <li><Link to="/mint">Logout</Link></li>
+            </ul>
+          </div>
       </div>
     </div>
   }
@@ -45,7 +51,7 @@ const MainMenu = (props) => {
       <li>
         {userAddress
         ? renderUser()
-        : <a style={{cursor: "pointer"}} onClick={() => props.setConnect()}>
+        : <a className="connect" style={{cursor: "pointer"}} onClick={() => props.setConnect()}>
             Connect
           </a>
         }

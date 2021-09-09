@@ -7,7 +7,7 @@ import { getAllowance, getBalance, setMAxAllowance } from "redux/userReducer";
 import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
 import toast from "./Toast";
 
-const DetailsHero = ({ detail }) => {
+const DetailNFT = ({ detail }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -143,4 +143,4 @@ const DetailsHero = ({ detail }) => {
   );
 };
 
-export default DetailsHero;
+export default DetailNFT;

@@ -1,12 +1,12 @@
 import UserDetails from '../Components/UserDetails'
-import DetailsHero from '../Components/DetailsHero'
+import DetailNFT from '../Components/DetailNFT'
 import HistoryTable from '../Components/historyTable'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDetail, getHistoryTrade } from 'redux/nftReducer';
 
-export default function DetailNFT() {
+export default function detailNFT() {
   const dispatch = useDispatch();
 
   const { tokenId } = useParams();
@@ -22,7 +22,7 @@ export default function DetailNFT() {
   return (
     <>
     <UserDetails owner={detail?.owner}/>
-    <DetailsHero detail={detail} />
+    <DetailNFT detail={detail} />
     <HistoryTable histories={histories} />
     </>
   )

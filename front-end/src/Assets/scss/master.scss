@@ -131,9 +131,7 @@ button {
     color: $orangeColor;
 }
 
-.main-menu ul li:last-child {
-    color: $blackColor;
-}
+
 .main-menu .user-pro {
   color: #fff;
   .info-tab {
@@ -142,11 +140,57 @@ button {
   .avt {
     float: right;
     margin-left: 5px;
+    position: relative;
     img {
       height: 40px;
       width: 40px;
       border-radius: 50%;
       border: 1px solid #ccc;
+      object-fit: cover;
+    }
+    &:hover {
+      .dropdown-content {
+        transform: scale(1);
+      }
+    }
+  }
+  .dropdown-content {
+    position: absolute;
+    top: 111%;
+    left: -70%;
+    padding-top: 2px;
+    transform: scale(0);
+    transform-origin: top center;
+    transition: all 0.3s;
+    &:after {
+      content: "";
+      display: block;
+      border-bottom: 5px solid #ccc;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    ul {
+      background: #000;
+      box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+      border-top: 2px solid #ccc;
+      padding-bottom: 7px;
+      padding-top: 3px;
+      li {
+        font-size: 13px;
+        margin-left: 0;
+        cursor: pointer;
+        text-align: center;
+        padding: 5px;
+        width: 100px;
+        a {
+          padding: 0;
+        }
+      }
     }
   }
 }
@@ -154,7 +198,7 @@ button {
   display: inline-block;
   &:last-child{
     margin-left:8px;
-    a{
+    .connect {
       color: $blackColor;
       background: $whiteBg;
       border-radius:30px;

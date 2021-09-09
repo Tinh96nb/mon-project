@@ -7,6 +7,7 @@ const initialState = {
   contractToken: null,
   contractNFT: null,
   contractMarket: null,
+  loading: false,
 }
 
 export function setAddress(address) {
@@ -14,6 +15,15 @@ export function setAddress(address) {
     dispatch({
       type: SET_REDUX,
       payload: { userAddress: address }
+    })
+  }
+}
+
+export function setLoading(type) {
+  return (dispatch) => {
+    dispatch({
+      type: SET_REDUX,
+      payload: { loading: type }
     })
   }
 }

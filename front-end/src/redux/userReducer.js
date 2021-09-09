@@ -1,4 +1,4 @@
-import { request } from "utils/api/axios";
+import { request, requestToken } from "utils/api/axios";
 import API_URL from "utils/api/url";
 import { parseFromBNString } from "utils/hepler";
 
@@ -30,21 +30,21 @@ export function fetchUser(address) {
   }
 }
 
-export function postLogin(address, cb) {
+export function postLogin(cb) {
   return async (dispatch, getStore) => {
     const { web3 } = getStore().home;
     const { me } = getStore().user;
     if (!web3 || !me) return cb(true);
     try {
-      const signature = await web3.eth.personal.sign(String(me.nonce), address, "");
+      const signature = await web3.eth.personal.sign(String(me.nonce), me.address, "");
       request({
         method: "POST",
         url: API_URL.USER.POST_LOGIN,
-        data: { signature, publicAddress: address },
+        data: { signature, publicAddress: me.address },
       }).then((res) => {
         dispatch({type: SET_REDUX, payload: { authChecked: true }})
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("address", address);
+        localStorage.setItem("address", me.address);
         cb(true)
       })
       .catch((e) => {
@@ -53,6 +53,19 @@ export function postLogin(address, cb) {
     } catch (error) {
       cb(false)
     }
+  }
+}
+
+export function updateProfile(dataForm, cb) {
+  return (dispatch) => {
+    requestToken({ method: "PUT", url: API_URL.USER.PUT, data: dataForm})
+    .then(({ data }) => {
+      if (data) {
+        dispatch({type: SET_REDUX, payload: { me: data }});
+        cb(true);
+      }
+    })
+    .catch(() => cb(false))
   }
 }
 

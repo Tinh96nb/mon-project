@@ -10,7 +10,7 @@ const initialState = {
   list: [],
   categories: [],
   histories: [],
-  selectCate: null,
+  textSearch: null,
 };
 
 export function mintNFT(formData, callback = null) {
@@ -92,9 +92,14 @@ export function getHistoryTrade(tokenId) {
   };
 }
 
-export function getListNFT(query) {
+export function getListNFT(params) {
   return (dispatch) => {
-    request({ method: "GET", url: API_URL.NFT.GET, data: {} }).then(
+    request({
+      method: "GET",
+      url: API_URL.NFT.GET,
+      data: {},
+      params
+    }).then(
       ({ data }) => {
         if (data) {
           dispatch({ type: SET_REDUX, payload: { list: data } });

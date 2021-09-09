@@ -76,7 +76,7 @@ async function init() {
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
-  await sleep(2000);
+  await sleep(3000);
   init();
 };
 init();

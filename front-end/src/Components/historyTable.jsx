@@ -37,9 +37,9 @@ const historyTable = ({ histories }) => {
                                 {history?.to?.username || displayAddress(history?.to?.address)}
                               </td>
                               <td>{history.price || 0} MON</td>
-                              <td>{history.type === 0 ? "Minted" : "Transfer"}</td>
+                              <td>{history.type === 1 ? "Minted" : "Transfer"}</td>
                               <td>
-                                {UTCTimeToTime(history.created_at)}
+                                {UTCTimeToTime(history?.created_at)}
                               </td>
                               <td>
                                 <a href={`${process.env.REACT_APP_URL_SCAN}/tx/${history.txid}`} target="_blank">View</a>

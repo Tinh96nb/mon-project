@@ -33,6 +33,11 @@ const CreatorForm = () => {
 
   const setImage = (event) => {
     if (event.target.files && event.target.files[0]) {
+      const [type] = event.target.files[0].type.split("/")
+      if (type !== "image" && type !== "video") {
+        toast.error({message: "Only support file type image or video!"})
+        return;
+      }
       if (event.target.files[0].size >=(1024 * 1024 * 30)) {
         toast.error({message: "File NFT too big!"})
         return;
