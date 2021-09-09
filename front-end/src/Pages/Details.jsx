@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDetail, getHistoryTrade } from 'redux/nftReducer';
 
-export default function detailNFT() {
+export default function Detail() {
   const dispatch = useDispatch();
 
   const { tokenId } = useParams();
