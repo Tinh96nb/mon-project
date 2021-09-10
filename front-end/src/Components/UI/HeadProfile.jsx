@@ -43,17 +43,20 @@ const CollectionHero = ({user}) => {
             </div>
             </Col>
           </Row>
+          <Row>
+            <Col>
+            <p className="text-bio">{user?.bio}</p>
+            </Col>
+          </Row>
         </Container>
       </div>
       <div className="collection_hero">
         <Container>
           <Row>
             <Col>
-              <div className="collectionInner">
-                {/* <p>{CollectionData.pera}</p>
-
-                <img src={process.env.PUBLIC_URL + `/assets/img/${CollectionData.collectionImg}`} alt="" /> */}
-              </div>
+              <form>
+                <input type="text" />
+              </form>
             </Col>
           </Row>
         </Container>

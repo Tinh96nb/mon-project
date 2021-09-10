@@ -12,8 +12,9 @@ import {Container, Col, Row, Form} from 'react-bootstrap'
 import { FaTimes, FaSearch } from "react-icons/fa";
 import Logo from './UI/Logo';
 import MainMenu from './UI/MainMenu';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAddress, setEnvContract } from 'redux/homeReducer';
+import { fetchUser, getBalance } from 'redux/userReducer';
 
 const {
   REACT_APP_CONTRACT_TOKEN,
@@ -41,13 +42,15 @@ const providerOptions = {
 };
 
 const Header = () => {
+  const dispatch = useDispatch();
 
   const [headerNav, setHeader] = useState(false);
   const [mobileNav, mobileNavSet] = useState(false);
   const [search, searchSet] = useState(false);
   const [web3Modal, setWeb3Modal] = useState(null);
 
-  const dispatch = useDispatch();
+  const { userAddress, contractToken } = useSelector((store) => store.home)
+  const { balance, me } = useSelector((store) => store.user)
 
   const changeMenuStyle =() => {
     if(window.scrollY >= 80){
@@ -122,7 +125,6 @@ const Header = () => {
     }
   };
 
-
   const switchNetWork = async () => {
     await window.ethereum.request({
       method: "wallet_addEthereumChain",
@@ -141,6 +143,18 @@ const Header = () => {
       ],
     });
   };
+
+  useEffect(() => {
+    if (userAddress) {
+      dispatch(fetchUser(userAddress));
+    }
+  }, [userAddress])
+
+  useEffect(() => {
+    if (userAddress && contractToken) {
+      dispatch(getBalance())
+    }
+  }, [userAddress, contractToken])
 
   return (
     <>
@@ -170,7 +184,11 @@ const Header = () => {
                 <Col lg="4" md="6" className="text-right align-self-center d-none d-md-block">
                   <div className="menu-area">
                     <div className="main-menu">
-                      <MainMenu setConnect={() => setConnect(web3Modal)}/>
+                      <MainMenu
+                        me={me}
+                        balance={balance}
+                        setConnect={() => setConnect(web3Modal)}
+                      />
                     </div>
                   </div>
                 </Col>
@@ -192,7 +210,11 @@ const Header = () => {
           <div className="close-btn" onClick={()=> mobileNavSet(false)}>
             <FaTimes />
           </div>
-            <MainMenu setConnect={() => setConnect()}/>
+            <MainMenu
+              me={me}
+              balance={balance}
+              setConnect={() => setConnect()}
+            />
         </div>
 
         <div className={search ? 'mobile-search active d-md-none' : 'mobile-search d-md-none' }>

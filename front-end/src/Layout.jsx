@@ -6,7 +6,8 @@ import Loading from "Components/Loading";
 
 export default function Layout({ children }) {
 
-  const {loading} = useSelector((state) => state.home)
+  // const {loading} = useSelector((state) => state.home)
+
   return (
     <Fragment>
       <Header />

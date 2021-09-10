@@ -11,7 +11,8 @@ const { contract, web3 } = require("../helper/web3");
 const EVENT = {
   minNFT: "MIN_NFT",
   buy: "BUY",
-  createSell: "CREATE_SELL"
+  createSell: "CREATE_SELL",
+  cancelOrder: "CANCEL_SELL",
 }
 
 const fileName = path.resolve(__dirname, 'data.txt');
@@ -24,6 +25,7 @@ async function init() {
     [EVENT.minNFT]: blockMint,
     [EVENT.buy]: blockBuy,
     [EVENT.createSell]: blockSell,
+    [EVENT.cancelOrder]: blockCancel,
   } = objBlock
 
   // event trasfer
@@ -76,6 +78,24 @@ async function init() {
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
+
+    // event cancel sell
+    if (+blockCancel === 0) {
+      objBlock[EVENT.cancelOrder] = latest;
+      await fs.writeFile(fileName, JSON.stringify(objBlock));
+    } else if (+blockCancel !== +latest) {
+      contract().market 
+        .getPastEvents("CancelOrder", {
+          fromBlock: +blockCancel+1,
+          toBlock: 'latest'
+        })
+        .then(async (events) => {
+          if (events.length) event.emit(EVENT.cancelOrder, events)
+          objBlock[EVENT.cancelOrder] = latest;
+          await fs.writeFile(fileName, JSON.stringify(objBlock));
+        })
+    }
+  
   await sleep(3000);
   init();
 };
@@ -106,6 +126,15 @@ event.on(EVENT.createSell, async (events) => {
     const { returnValues } = events[index];
     const { tokenId, seller, price } = returnValues;
     const res = await nftModel.confirmPriceSell(tokenId, seller, price)
+    console.log(res);
+  }
+});
+
+event.on(EVENT.cancelOrder, async (events) => {
+  for (let index = 0; index < events.length; index++) {
+    const { returnValues } = events[index];
+    const { tokenId } = returnValues;
+    const res = await nftModel.cancelOrder(tokenId)
     console.log(res);
   }
 });

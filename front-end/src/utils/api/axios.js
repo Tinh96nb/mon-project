@@ -1,7 +1,7 @@
 import axios from "axios";
-import { setLoading } from "redux/homeReducer";
 import store from "redux/store";
 import { postLogin } from "redux/userReducer";
+import { setLoading } from "redux/homeReducer";
 
 const instanceAxios = {
   baseURL: process.env.REACT_APP_SERVER_API,

@@ -11,7 +11,7 @@ const Marketplace = lazy(() => import("Pages/Marketplace"));
 
 const routers = () => {
   return (
-    <Suspense fallback={Loading}>
+    <Suspense fallback={() => <Loading />}>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/mint" component={MintNFT} />

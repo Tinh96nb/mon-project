@@ -2,9 +2,19 @@ import {Container, Row, Col} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import Socials from './UI/Socials'
 import { displayAddress, getFile } from 'utils/hepler'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleFollow } from 'redux/userReducer'
+import { getDetail } from 'redux/nftReducer'
 
-const UserDetails = ({owner}) => {
+const UserDetails = ({tokenId, owner}) => {
+
+  const dispatch = useDispatch();
+  const { userAddress } = useSelector((state) => state.home)
   const avt = owner && owner.avatar ? getFile(owner.avatar) : '/assets/img/user/avatar.jpg';
+
+  const isFollowed = owner?.followers.length && 
+    owner?.followers.indexOf(userAddress) !== -1
+
   return (
     <>
       <div className="userdetails_area">
@@ -19,14 +29,24 @@ const UserDetails = ({owner}) => {
                 </div>
                 <h2>{owner?.username || displayAddress(owner?.address)}</h2>
                 <ul>
-                  <li>{owner?.amountNFT} NFTs</li>
-                  <li>{owner?.followers} Followers</li>
-                  <li>{owner?.followings} Following</li>
+                  <li>{owner?.amountNFT || 0} NFTs</li>
+                  <li>{owner?.followers.length || 0} Followers</li>
+                  <li>{owner?.followings.length || 0} Following</li>
                 </ul>
 
                 <div className="follow-btn-wrap">
                   <div>
-                    <button className="follow_btn">Follow</button>
+                    <button
+                      className={`follow_btn ${isFollowed ? 'active': ''}`}
+                      disabled={userAddress === owner?.address}
+                      onClick={() => {
+                        dispatch(toggleFollow(owner.address, (res) => {
+                          if (res) dispatch(getDetail(tokenId));
+                        }))
+                      }}
+                    >
+                        {isFollowed ? 'Unfollow' : 'Follow'}
+                    </button>
                   </div>
                   <div>
                     <Socials user={owner} />
@@ -34,9 +54,8 @@ const UserDetails = ({owner}) => {
                 </div>
               </div>
             </Col>
-            {/* <Col lg="6" className="text-md-right align-self-center">
-              <UserNave />
-            </Col> */}
+            <Col lg="6" className="text-md-right align-self-center">
+            </Col>
           </Row>
         </Container>
       </div>

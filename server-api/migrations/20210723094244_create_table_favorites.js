@@ -3,7 +3,7 @@ exports.up = async function (knex) {
   await knex.schema.createTable("favorites", function (table) {
     table.increments("id");
     table.string("user").notNullable();
-    table.integer("to").notNullable();
+    table.string("to").notNullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.unique(['user', 'to']);
   });

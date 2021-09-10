@@ -3,6 +3,7 @@ const API_URL = {
     GET: (address) => `/users/${address}`,
     POST_LOGIN: "/login",
     PUT: "/users",
+    FOLLOW: "/users/toggle-favorite"
   },
   CATEGORY: {
     GET_ALL: "/categories"

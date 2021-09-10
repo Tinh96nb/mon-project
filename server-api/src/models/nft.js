@@ -117,7 +117,32 @@ const confirmPriceSell = async (tokenId, seller, price) => {
   } catch (error) {
     return {
       success: false,
-      message: 'Error transfer nft!',
+      message: 'Error confirm price!',
+      data: error.message,
+    };
+  }
+}
+
+const cancelOrder = async (tokenId) => {
+  try {
+    const nft = await knex('nfts').where({ token_id: tokenId, status: statusNft.selling }).first();
+    if (!nft) {
+      return {
+        success: false,
+        message: 'Not found NFT or not selling!',
+        data: {tokenId},
+      };
+    }
+    await knex('nfts').where({ token_id: tokenId }).update({ status: statusNft.verified })
+    return {
+      success: true,
+      message: 'Cancel order successfully!',
+      data: tokenId,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Error cancel order nft!',
       data: error.message,
     };
   }
@@ -241,5 +266,6 @@ module.exports = {
   verifyNft,
   getList,
   transferNFT,
-  confirmPriceSell
+  confirmPriceSell,
+  cancelOrder
 };

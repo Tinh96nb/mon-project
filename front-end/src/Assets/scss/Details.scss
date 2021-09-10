@@ -20,6 +20,10 @@
 
 .userdetails_area {
     padding: 40px 0;
+    .text-bio {
+        margin-top: 20px;
+        font-size: 14px;
+    }
 }
 
 .userDetails ul li {
@@ -57,7 +61,11 @@ button.follow_btn {
     color: #ff8f59;
     transition: all .3s;
 }
-
+.follow_btn.active {
+    background: #ffc5a8;
+    color: #000;
+    transition: all .3s;
+}
 button.follow_btn:hover {
     background: #ffc5a8;
     color: #000;

@@ -63,14 +63,19 @@ const getUser = async (ctx) => {
 }
 
 const favorite = async (ctx) => {
-  const { to } = ctx.body;
+  const { to } = ctx.request.body;
   if (!to) {
     ctx.body = { message: "Param To must be required!"};
     ctx.status = 400;
     return;
   }
   const { address } = ctx.state.user;
-  const res = await usersModel.toggleFavorite(address);
+  if (address === to) {
+    ctx.body = { message: "Error!"};
+    ctx.status = 400;
+    return;
+  }
+  const res = await usersModel.toggleFavorite(address, to);
   ctx.body = res
 }
 

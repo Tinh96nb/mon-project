@@ -23,6 +23,21 @@ const DetailNFT = ({ detail }) => {
     }
   }, [userAddress, contractToken]);
 
+  const cancelSell = () => {
+    contractMarket.methods
+      .cancelSellOrder(detail.token_id)
+      .send({from: userAddress})
+      .then(() => {
+        setLoading(false);
+        toast.success("Cancel NFT successfully!");
+        history.push("/profile");
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.error({ message: "Cancel NFT error!" });
+      })
+  }
+
   const setBuy = () => {
     contractMarket.methods
       .purchase(detail.token_id)
@@ -78,13 +93,17 @@ const DetailNFT = ({ detail }) => {
                           message: "You must be approve to buy NFT!",
                         });
                     };
+                    if (userAddress === detail?.owner.address) {
+                      return cancelSell();
+                    }
                     if (+allowance <= +detail.price)
                       return dispatch(setMAxAllowance(cb));
                     return setBuy();
                   }}
                 >
                   {loading && <div className="loader"></div>}
-                  {+allowance <= +detail.price ? "Approve to buy" : "buy now"}
+                  {userAddress === detail?.owner.address ? "Cancel Sell"
+                    : +allowance <= +detail.price ? "Approve to buy" : "buy now"}
                   {loading && "..."}
                 </button>
                 <div className="creators_details">

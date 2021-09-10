@@ -24,6 +24,9 @@ export function fetchUser(address) {
           dispatch({type: SET_REDUX, payload: { authChecked: true }})
         } else {
           dispatch({type: SET_REDUX, payload: { authChecked: false }})
+          token && localStorage.removeItem("token");
+          userAddress && localStorage.removeItem("address");
+          dispatch(postLogin(() => true));
         }
       }
     })
@@ -64,6 +67,21 @@ export function updateProfile(dataForm, cb) {
         dispatch({type: SET_REDUX, payload: { me: data }});
         cb(true);
       }
+    })
+    .catch(() => cb(false))
+  }
+}
+
+export function toggleFollow(address, cb) {
+  return (dispatch) => {
+    requestToken({
+      method: "POST",
+      url: API_URL.USER.FOLLOW,
+      data: {to: address}
+    })
+    .then(({ data }) => {
+      if (data) return cb(true);
+      return cb(false)
     })
     .catch(() => cb(false))
   }
