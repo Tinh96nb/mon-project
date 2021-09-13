@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategories, mintNFT } from "redux/nftReducer";
 import toast from 'Components/Toast';
 import { useHistory } from "react-router-dom";
+import { NFTStorage, File } from 'nft.storage';
 
 const CreatorForm = () => {
   const dispatch = useDispatch();
@@ -113,6 +114,16 @@ const CreatorForm = () => {
     formData.append("category_id", category);
     formData.append("owner", userAddress);
     formData.append("media", file);
+    // push ipfs
+    const client = new NFTStorage({ token: process.env.REACT_APP_IPFS })
+    console.log('run');
+    const metadata = await client.store({
+      name: name,
+      description: des,
+      image: new File([file], file.name, { type: file.type }),
+    })
+    formData.append("metadata", metadata?.url || "");
+
     const cb = (tokenId) => {
       if (tokenId) {
         setTextStep('Selling...')
@@ -125,7 +136,7 @@ const CreatorForm = () => {
     dispatch(mintNFT(formData, cb));
   }
 
-  const userReceived = +parseFloat(+price-(+price/100*fee)).toFixed(2);
+  const userReceived = +parseFloat((+price-(+price/100*fee)).toString()).toFixed(2);
   return (
     <>
       <div className="creator-form-area">
@@ -220,7 +231,7 @@ const CreatorForm = () => {
                         <li>
                           You will receive:
                           <span>
-                            {userReceived} MON - ${+parseFloat(+userReceived*+priceToken).toFixed(2)}
+                            {userReceived} MON - ${+parseFloat((+userReceived*+priceToken).toString()).toFixed(2)}
                           </span>
                         </li>
                       </ul>

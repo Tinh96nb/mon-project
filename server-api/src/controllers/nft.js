@@ -1,5 +1,3 @@
-const fs = require("fs");
-const { NFTStorage, File } = require('nft.storage');
 const nftModel = require("../models/nft");
 const historyModel = require("../models/nft_history");
 
@@ -11,6 +9,7 @@ const mint = async (ctx, next) => {
     token_id: { notEmpty: true, errorMessage: 'This field is required!'},
     name: { notEmpty: true, errorMessage: 'This field is required!'},
     description: { notEmpty: true, errorMessage: 'This field is required!'},
+    metadata: { notEmpty: true, errorMessage: 'This field is required!'},
     category_id: {}
   };
 
@@ -33,18 +32,6 @@ const mint = async (ctx, next) => {
     ctx.status = 400;
     return;
   }
-  const buffer = fs.readFileSync(file.path);
-  const client = new NFTStorage({ token: process.env.TOKEN_URI })
-  const metadata = await client.store({
-    name: data.name,
-    description: data.description,
-    image: new File(
-      [buffer],
-      file.filename,
-      { type: file.mimetype }
-    ),
-  })
-  data.metadata = metadata ? metadata.url: ''
   const { address } = ctx.state.user;
   data.owner = address;
   const res = await nftModel.mintNft(data);
