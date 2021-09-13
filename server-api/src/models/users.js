@@ -64,7 +64,7 @@ const getInfo = async (condition) => {
   }
 };
 
-const listUser = async () => {
+const listUser = async (limit = 7) => {
   const [users] = await knex.raw(`
     SELECT users.*, c2.numfa as favorite
     FROM users
@@ -73,7 +73,8 @@ const listUser = async () => {
         FROM favorites
         GROUP BY favorites.to
       ) c2 ON ( c2.to = users.address )
-    ORDER BY c2.numfa DESC;
+    ORDER BY c2.numfa DESC
+    LIMIT ${limit};
   `)
   return users;
 }
