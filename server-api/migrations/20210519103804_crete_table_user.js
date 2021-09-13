@@ -8,7 +8,7 @@ exports.up = async function (knex) {
       table.integer('nonce')
       table.string('avatar')
       table.string('cover')
-      table.string('bio')
+      table.text('bio')
       table.string('facebook')
       table.string('twitter')
       table.string('instagram')

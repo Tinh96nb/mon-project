@@ -7,7 +7,7 @@ exports.up = async function (knex) {
       table.string('author')
       table.integer('status').comment("0.creator, 1.verify, 2.selling, 3.report")
       table.string('name').notNullable()
-      table.string('description')
+      table.text('description')
       table.string('media').notNullable()
       table.string('mine_type').notNullable()
       table.string('metadata')
