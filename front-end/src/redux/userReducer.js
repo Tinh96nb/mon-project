@@ -1,12 +1,15 @@
 import { request, requestToken } from "utils/api/axios";
 import API_URL from "utils/api/url";
 import { parseFromBNString } from "utils/hepler";
+import { resetStore } from "./homeReducer";
 
 const SET_REDUX = 'user/SET_REDUX'
 
 const initialState = {
   authChecked: false,
   me: null,
+  list: [],
+  user: null,
   balance: 0,
   allowance: 0,
   isApprove: false,
@@ -28,6 +31,28 @@ export function fetchUser(address) {
           userAddress && localStorage.removeItem("address");
           dispatch(postLogin(() => true));
         }
+      }
+    })
+  }
+}
+
+export function detailUser(address) {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.USER.GET(address), data: {}})
+    .then(({ data }) => {
+      if (data) {
+        dispatch({type: SET_REDUX, payload: { user: data }})
+      }
+    })
+  }
+}
+
+export function fetchListUser() {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.USER.LIST, data: {}})
+    .then(({ data }) => {
+      if (data) {
+        dispatch({type: SET_REDUX, payload: { list: data }})
       }
     })
   }
@@ -134,6 +159,25 @@ export const setMAxAllowance = (cb) => {
         .catch(() => cb(false));
   };
 };
+
+export const logOut = () => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_REDUX,
+      payload: {
+        authChecked: false,
+        me: null,
+        balance: 0,
+        allowance: 0,
+        isApprove: false,
+      }
+    });
+    dispatch(resetStore())
+    localStorage.removeItem("token");
+    localStorage.removeItem("address");
+    localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER");
+  }
+}
 
 export const userReducer = (state = initialState, action) => {
   const { type, payload = {} } = action

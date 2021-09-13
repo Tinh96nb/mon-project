@@ -1,4 +1,4 @@
-const SET_REDUX = 'user/SET_REDUX'
+const SET_REDUX = 'home/SET_REDUX'
 
 const initialState = {
   userAddress: null,
@@ -33,6 +33,15 @@ export function setEnvContract(obj) {
     dispatch({
       type: SET_REDUX,
       payload: obj
+    })
+  }
+}
+
+export function resetStore() {
+  return (dispatch) => {
+    dispatch({
+      type: SET_REDUX,
+      payload: { userAddress: null }
     })
   }
 }

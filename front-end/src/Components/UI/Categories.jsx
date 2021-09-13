@@ -23,7 +23,7 @@ const Categories = () => {
                   <button
                     className={!selectCate ? "active" : ""}
                     type="button"
-                    onClick={() => dispatch(setCateFilter(null))}
+                    onClick={() => dispatch(setCateFilter("all"))}
                   >
                     All
                   </button>

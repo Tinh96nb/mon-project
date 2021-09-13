@@ -64,6 +64,20 @@ const getInfo = async (condition) => {
   }
 };
 
+const listUser = async () => {
+  const [users] = await knex.raw(`
+    SELECT users.*, c2.numfa as favorite
+    FROM users
+    LEFT JOIN
+      ( SELECT favorites.to, COUNT(*) AS numfa
+        FROM favorites
+        GROUP BY favorites.to
+      ) c2 ON ( c2.to = users.address )
+    ORDER BY c2.numfa DESC;
+  `)
+  return users;
+}
+
 const toggleFavorite = async (from, to) => {
   try {
     const res = await knex('favorites').where({user: from, to}).first();
@@ -94,5 +108,6 @@ module.exports = {
   createUser,
   updateByAddress,
   getInfo,
-  toggleFavorite
+  toggleFavorite,
+  listUser
 };

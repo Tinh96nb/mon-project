@@ -207,7 +207,9 @@ span.menuLine:nth-child(2) {
   }
 
   .mobile-menu-assets ul {
-      margin-top: 50px;
+    margin-top: 45px;
+    display: inline-block;
+    width: 100%;
   }
 
   .mobile-menu-assets li {
@@ -220,6 +222,18 @@ span.menuLine:nth-child(2) {
 
   .userDetails{
     padding-left: 0;
+    text-align: center;
+    .user_img {
+      margin: 0 auto;
+    }
+    .follow-btn-wrap {
+      justify-content: center;
+    }
+  }
+  .portfolio-area {
+    select {
+      margin-bottom: 20px;
+    }
   }
 
   .user_img {
@@ -245,6 +259,21 @@ span.menuLine:nth-child(2) {
   }
   .usernave{
     margin-top: 30px;
+    text-align: center;
+  }
+  .user-pro {
+    margin-top: 10px;
+    .info-tab {
+      float: right;
+    }
+    img {
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+    }
+    .dropdown-list {
+      margin-top: 7px;
+    }
   }
 
 }

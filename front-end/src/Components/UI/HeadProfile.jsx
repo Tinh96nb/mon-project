@@ -20,13 +20,13 @@ const CollectionHero = ({user}) => {
                 <h2>{user?.username}</h2>
                 <ul>
                   <li>{user?.amountNFT} NFTs</li>
-                  <li>{user?.followers} Followers</li>
-                  <li>{user?.followings} Following</li>
+                  <li>{user?.followers.length} Followers</li>
+                  <li>{user?.followings.length} Following</li>
                 </ul>
 
                 <div className="follow-btn-wrap">
                   <div>
-                    <button className="follow_btn">Follow</button>
+                    <button disabled={true} className="follow_btn">Follow</button>
                   </div>
                   <div>
                     <Socials user={user}/>
@@ -46,17 +46,6 @@ const CollectionHero = ({user}) => {
           <Row>
             <Col>
             <p className="text-bio">{user?.bio}</p>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-      <div className="collection_hero">
-        <Container>
-          <Row>
-            <Col>
-              <form>
-                <input type="text" />
-              </form>
             </Col>
           </Row>
         </Container>

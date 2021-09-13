@@ -1,36 +1,49 @@
-import Creators from "../Components/Creators";
 import { Container, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getListNFT, getNFTTop } from "redux/nftReducer";
+import { getListNFT } from "redux/nftReducer";
 import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
-import { Link } from "react-router-dom";
+import { Link , useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-import HomeWelcome from "Components/HomeWelcome";
+import { detailUser, toggleFollow } from "redux/userReducer";
+import Socials from "Components/UI/Socials";
 
-export default function Marketplace() {
+export default function Creator() {
+
   const dispatch = useDispatch();
+  const {address} = useParams();
 
-  const { list, pagination, top } = useSelector((state) => state.nft);
-  const { priceToken } = useSelector((state) => state.home);
+  const { list, pagination } = useSelector((state) => state.nft);
+  const { userAddress, priceToken } = useSelector((state) => state.home);
+  const { user } = useSelector((state) => state.user);
+
   const [sort, setSort] = useState(null);
 
   useEffect(() => {
-    const query = { status: 2 };
-    if (sort && sort !== "0") {
+    if (sort) {
+      const query = { owner: user?.address, status: 2};
+      if (sort === "0") return dispatch(getListNFT(query));
       const [sort_by, order_by ] = sort.split("/")
       query.sort_by = sort_by;
       query.order_by = order_by;
+      dispatch(getListNFT(query));
     }
-    dispatch(getListNFT(query));
   }, [sort]);
 
   useEffect(() => {
-    dispatch(getNFTTop());
-  }, [])
+    if (address)
+    dispatch(detailUser(address))
+  }, [address])
+
+  useEffect(() => {
+    if (user) {
+      const query = { owner: user.address, status: 2};
+      dispatch(getListNFT(query));
+    }
+  }, [user])
 
   const loadMore = () => {
-    const query = { status: 2 };
+    const query = { owner: user?.address, status: 2};
     if (sort) {
       const [sort_by, order_by ] = sort.split("/")
       query.sort_by = sort_by;
@@ -90,16 +103,61 @@ export default function Marketplace() {
     );
   };
 
+  const avt = user?.avatar ? getFile(user.avatar) : "/assets/img/user/avatar.jpg";
+  const isFollowed = user?.followers.length && 
+    user?.followers.indexOf(userAddress) !== -1
   return (
     <>
-      <HomeWelcome nft={top} priceToken={priceToken}/>
-      <Creators />
+      <div className="userdetails_area pb-0">
+        <Container>
+          <Row>
+            <Col lg="6" className="align-self-center">
+              <div className="userDetails">
+                <div className="user_img">
+                  <img src={avt} alt="avatar user" />
+                </div>
+                <h2>{user?.username || displayAddress(user?.address)}</h2>
+                <ul>
+                  <li>{pagination?.total} NFTs</li>
+                  <li>{user?.followers?.length} Followers</li>
+                  <li>{user?.followings?.length} Following</li>
+                </ul>
+
+                <div className="follow-btn-wrap">
+                  <div>
+                  <button
+                      className={`follow_btn ${isFollowed ? 'active': ''}`}
+                      disabled={userAddress === user?.address}
+                      onClick={() => {
+                        dispatch(toggleFollow(user.address, (res) => {
+                          if (res) dispatch(detailUser(user.address));
+                        }))
+                      }}
+                    >
+                        {isFollowed ? 'Unfollow' : 'Follow'}
+                    </button>
+                  </div>
+                  <div>
+                    <Socials user={user}/>
+                  </div>
+                </div>
+
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <p className="text-bio">{user?.bio}</p>
+            </Col>
+          </Row>
+        </Container>
+      </div>
       <div className="portfolio-area">
         <Container>
           <Row>
             <Col>
               <div className="title">
-                <h1>Featured artworks</h1>
+                <h1 style={{fontWeight: 'bold'}}>NFT Created ({pagination?.total || 0})</h1>
               </div>
             </Col>
             <Col md={2}>
@@ -117,7 +175,7 @@ export default function Marketplace() {
           <InfiniteScroll
             dataLength={list.length}
             next={loadMore}
-            hasMore={pagination?.current_page !== pagination?.last_page}
+            hasMore={list.length && pagination?.current_page !== pagination?.last_page ? true : false}
             loader={<h4>Loading...</h4>}
           >
             <Row className={list.length ? "" : "justify-content-md-center"}>

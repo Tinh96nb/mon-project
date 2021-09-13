@@ -55,6 +55,11 @@ const DetailNFT = ({ detail }) => {
   };
 
   if (!detail) return null;
+  const media = detail?.media
+    ? getFile(detail.media)
+    : "/assets/img/portfolio/avatar.jpg";
+  const typeMedia = detail?.mine_type?.split("/")[0];
+
   return (
     <>
       <div className="detailsHeroArea">
@@ -62,7 +67,16 @@ const DetailNFT = ({ detail }) => {
           <Row>
             <Col xs="12" lg="6" className="align-self-center">
               <div className="detailsHeroImg">
-                <img src={getFile(detail?.media)} alt={detail?.name} />
+              {typeMedia === "image" ? (
+                <img src={media} alt={detail?.name} />
+              ) : (
+                <video
+                  autoPlay={true}
+                  loop={true}
+                  playsInline={true}
+                  src={media}
+                />
+              )}
               </div>
             </Col>
             <Col xs="12" lg="6" className="align-self-center">
@@ -76,7 +90,7 @@ const DetailNFT = ({ detail }) => {
                   {toDisplayNumber(detail?.price || 0)}
                 </h2>
                 <h5>
-                  ${toDisplayNumber(detail ? +detail?.price * priceToken : 0)}
+                  ${toDisplayNumber(detail ? +parseFloat((+detail?.price * priceToken).toString()).toFixed(2) : 0)}
                 </h5>
 
                 <button

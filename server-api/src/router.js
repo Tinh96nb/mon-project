@@ -18,12 +18,14 @@ module.exports = function () {
   router.post('/login', loginController.login);
   // for user
   router.put('/users', isAuth, userUploader.fields(userUpload), userController.updateUser);
+  router.get('/users', userController.getList);
   router.get('/users/:address', userController.getUser);
   router.post('/users/toggle-favorite', isAuth, userController.favorite);
 
   // for nft
   router.get('/nfts', nftController.listNft);
   router.post('/nfts/mint', isAuth, nftUploader.single('media'), nftController.mint);
+  router.get('/nfts/top', nftController.getNFTTop);
   router.get('/nfts/:tokenId', nftController.detailNft);
   router.get('/nfts/history/:tokenId', nftController.nftHistory);
 

@@ -14,7 +14,8 @@ import Logo from './UI/Logo';
 import MainMenu from './UI/MainMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAddress, setEnvContract } from 'redux/homeReducer';
-import { fetchUser, getBalance } from 'redux/userReducer';
+import { fetchUser, getBalance, logOut } from 'redux/userReducer';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const {
   REACT_APP_CONTRACT_TOKEN,
@@ -43,10 +44,14 @@ const providerOptions = {
 
 const Header = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
 
   const [headerNav, setHeader] = useState(false);
   const [mobileNav, mobileNavSet] = useState(false);
   const [search, searchSet] = useState(false);
+  const [textSearch, setTextSearch] = useState('');
+
   const [web3Modal, setWeb3Modal] = useState(null);
 
   const { userAddress, contractToken } = useSelector((store) => store.home)
@@ -156,6 +161,21 @@ const Header = () => {
     }
   }, [userAddress, contractToken])
 
+  useEffect(() => {
+    if (location.pathname !== "/marketplace") {
+      setTextSearch('')
+    }
+    if (location.pathname === "/marketplace" && !location.search) {
+      setTextSearch('')
+    }
+    if (location.search) {
+      setTextSearch((new URLSearchParams(location.search)).get("search"))
+    }
+  }, [location])
+
+  const logout = () => {
+    dispatch(logOut())
+  }
   return (
     <>
       <div className={headerNav ? 'header black-bg header_sticky' : 'header black-bg'}>
@@ -167,11 +187,27 @@ const Header = () => {
                 </Col>
                 <Col lg="5" md="3" className="align-items-center d-none d-md-block">
                   <div className="search-bar">
-                    <Form>
-                      <Form.Group controlId="searchMobile">
-                        <Form.Control type="text" placeholder="Search" />
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        history.push(`/marketplace${textSearch ? `?search=${textSearch}` : ''}`)
+                      }}
+                    >
+                      <Form.Group className="search">
+                      <Form.Control
+                        onChange={(e) => setTextSearch(e.target.value)}
+                        type="text"
+                        value={textSearch}
+                        placeholder="Search NFT"
+                      />
+                        <FaSearch
+                          className="icon-search"
+                          onClick={(e) => {
+                            history.push(`/marketplace${textSearch ? `?search=${textSearch}` : ''}`)
+                          }}
+                        />
                       </Form.Group>
-                    </Form>
+                    </form>
                   </div>
                 </Col>
 
@@ -188,6 +224,7 @@ const Header = () => {
                         me={me}
                         balance={balance}
                         setConnect={() => setConnect(web3Modal)}
+                        logout={() => logout()}
                       />
                     </div>
                   </div>
@@ -214,6 +251,7 @@ const Header = () => {
               me={me}
               balance={balance}
               setConnect={() => setConnect()}
+              logout={() => logout()}
             />
         </div>
 
@@ -221,13 +259,27 @@ const Header = () => {
           <div className="search-close" onClick={()=> searchSet(false)}>
             <FaTimes />
           </div>
-          <Form>
-              <Form.Group controlId="search">
-                
-                <Form.Control type="text" placeholder="Search" />
-                
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              history.push(`/marketplace${textSearch ? `?search=${textSearch}` : ''}`)
+            }}
+          >
+              <Form.Group className="search">
+                <Form.Control
+                  onChange={(e) => setTextSearch(e.target.value)}
+                  type="text"
+                  placeholder="Search NFT"
+                  value={textSearch}
+                />
+                <FaSearch
+                  className="icon-search"
+                  onClick={(e) => {
+                    history.push(`/marketplace${textSearch ? `?search=${textSearch}` : ''}`)
+                  }}
+                />
               </Form.Group>
-            </Form>
+            </form>
           </div>
     </>
   )

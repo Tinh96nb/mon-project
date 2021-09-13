@@ -10,7 +10,8 @@ const mint = async (ctx, next) => {
   const schema = {
     token_id: { notEmpty: true, errorMessage: 'This field is required!'},
     name: { notEmpty: true, errorMessage: 'This field is required!'},
-    description: { notEmpty: true, errorMessage: 'This field is required!'}
+    description: { notEmpty: true, errorMessage: 'This field is required!'},
+    category_id: {}
   };
 
   ctx.checkBody(schema);
@@ -91,6 +92,11 @@ const detailNft = async (ctx) => {
   ctx.body = nft;
 };
 
+const getNFTTop = async (ctx) => {
+  const nft = await nftModel.getNFTTop();
+  ctx.body = nft;
+};
+
 const nftHistory = async (ctx, next) => {
   const { tokenId } = ctx.params;
   const res = await historyModel.historyTransfer(tokenId);
@@ -104,8 +110,6 @@ const listNft = async (ctx, next) => {
     name,
     owner,
     status,
-    priceFrom,
-    priceTo,
     page,
     limit,
     sort_by = "id",
@@ -116,8 +120,6 @@ const listNft = async (ctx, next) => {
     ['status', status],
     ['category_id', 'in', category ? category.split(",") : null],
     ['name', 'like', name ? `%${name}%` : null],
-    ['price', '<=', priceTo],
-    ['price', '>=', priceFrom],
   ];
   const orderBy = {
     field: sort_by,
@@ -128,4 +130,4 @@ const listNft = async (ctx, next) => {
   return next();
 };
 
-module.exports = { mint, nftHistory, detailNft, listNft };
+module.exports = { mint, nftHistory, detailNft, listNft, getNFTTop };

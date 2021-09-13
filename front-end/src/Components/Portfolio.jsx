@@ -22,15 +22,12 @@ const Portfolio = () => {
         <Container>
           <Row>
             <Col>
-              <Title
-                title="Featured artworks"
-                // titleSpan={"(View all artworks)"}
-              />
+              <Title title="Featured artworks" />
             </Col>
           </Row>
           <Row>
             {list.map((nft, i) => {
-              const avt = nft.owner.avatar
+              const avt = nft.owner?.avatar
                 ? getFile(nft.owner.avatar)
                 : "/assets/img/user/avatar.jpg";
               const media = nft.media
@@ -58,7 +55,7 @@ const Portfolio = () => {
                         </span>
                       </h1>
                       <div className="author">
-                        <img src={avt} alt={nft.owner.address} />
+                        <img src={avt} alt={nft.owner?.address} />
                         <Link to={`/creator/${nft?.owner?.address}`}>
                           {nft?.owner?.username ||
                             displayAddress(nft?.owner?.address)}

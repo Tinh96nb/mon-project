@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { displayAddress, getFile, toDisplayNumber } from 'utils/hepler'
 
-const MainMenu = ({balance, me, setConnect}) => {
+const MainMenu = ({balance, me, setConnect, logout}) => {
 
   const renderUser = () => {
     const avt = me && me.avatar ? getFile(me.avatar) : '/assets/img/user/avatar.jpg';
@@ -19,7 +19,17 @@ const MainMenu = ({balance, me, setConnect}) => {
           <div className="dropdown-content">
             <ul className="dropdown-list" >
               <li><Link to="/profile">Profile</Link></li>
-              <li><Link to="/mint">Logout</Link></li>
+              <li>
+                <a
+                  href=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    logout()
+                  }}
+                >
+                  Logout
+                  </a>
+              </li>
             </ul>
           </div>
       </div>

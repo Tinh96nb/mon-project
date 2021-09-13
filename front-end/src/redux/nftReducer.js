@@ -3,14 +3,16 @@ import { requestToken, request } from "utils/api/axios";
 import API_URL from "utils/api/url";
 import { postLogin } from "./userReducer";
 
-const SET_REDUX = "user/SET_REDUX";
+const SET_REDUX = "nft/SET_REDUX";
 
 const initialState = {
   detail: null,
   list: [],
+  top: null,
   categories: [],
   histories: [],
-  textSearch: null,
+  selectCate: null,
+  pagination: null
 };
 
 export function mintNFT(formData, callback = null) {
@@ -51,7 +53,7 @@ export function mintNFT(formData, callback = null) {
         if (res) postCreate();
         if (!res) callback(false);
       };
-      dispatch(postLogin(userAddress, cb));
+      dispatch(postLogin(cb));
     } else postCreate();
   };
 }
@@ -80,6 +82,19 @@ export function getDetail(tokenId) {
   };
 }
 
+export function getNFTTop() {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.NFT.TOP, data: {} }).then(
+      ({ data }) => {
+        if (data) {
+          data.price = data.price ? +parseFloat(data.price).toFixed(2) : 0
+          dispatch({ type: SET_REDUX, payload: { top: data } });
+        }
+      }
+    );
+  };
+}
+
 export function getHistoryTrade(tokenId) {
   return (dispatch) => {
     request({ method: "GET", url: API_URL.NFT.HISTORY_TRADE(tokenId), data: {} }).then(
@@ -92,8 +107,8 @@ export function getHistoryTrade(tokenId) {
   };
 }
 
-export function getListNFT(params) {
-  return (dispatch) => {
+export function getListNFT(params, isMore = false) {
+  return (dispatch, getStore) => {
     request({
       method: "GET",
       url: API_URL.NFT.GET,
@@ -101,9 +116,10 @@ export function getListNFT(params) {
       params
     }).then(
       ({ data }) => {
-        if (data) {
-          dispatch({ type: SET_REDUX, payload: { list: data } });
-        }
+        const currentList = getStore().nft.list.length && isMore
+          ? [...getStore().nft.list, ...data.data]
+          : data.data;
+        dispatch({ type: SET_REDUX, payload: { list: currentList, pagination: data.pagination}});
       }
     );
   };

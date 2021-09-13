@@ -108,7 +108,11 @@ const confirmPriceSell = async (tokenId, seller, price) => {
       };
     }
     await knex('nfts').where({ token_id: tokenId })
-      .update({ status: statusNft.selling, price: web3.utils.fromWei(price, "ether") })
+      .update({
+        status: statusNft.selling,
+        price: web3.utils.fromWei(price, "ether"),
+        sell_at: knex.fn.now()
+      })
     return {
       success: true,
       message: 'Confirm price done!',
@@ -149,48 +153,59 @@ const cancelOrder = async (tokenId) => {
 }
 
 const getByTokenId = async (tokenId) => {
-  const nfts = await knex('nfts').select().where('token_id', tokenId);
-  if (!nfts) return null;
+  const nfts = await knex('nfts').where('token_id', tokenId);
+  if (!nfts) return {};
   const result = await addProperty(nfts);
-  return result.length ? result[0]: null;
+  return result.length ? result[0]: {};
 };
+
+const getNFTTop = async () => {
+  const nft = await knex('nft_histories').where('type', eventHistoryNFT.sale)
+    .sum('price as price')
+    .select('token_id')
+    .groupBy('token_id')
+    .orderBy('price', 'desc')
+    .limit(1)
+    .first();
+  if (!nft) return {};
+  return getByTokenId(nft.token_id);
+}
 
 const getList = async (
   conditions = [],
   orderBy = null,
-  limit = null,
-  page = null
+  limit = 12,
+  page = 1
 ) => {
   const query = knex('nfts').select();
   conditions.forEach((condition) => {
     if (condition[condition.length - 1]) {
-      if (condition[condition.length - 1][0] !== 'none') {
-        if (condition.length === 2) query.andWhere(condition[0], condition[1]);
-        if (condition.length === 3) query.andWhere(condition[0], condition[1], condition[2]);
-      } else {
-        query.whereRaw(`${condition[0]} is null`)
-      }
+      if (condition.length === 2) query.andWhere(condition[0], condition[1]);
+      if (condition.length === 3) query.andWhere(condition[0], condition[1], condition[2]);
     }
   });
+  const total = await query.clone().count('id as amount').first();
   if (limit) query.limit(limit);
   if (page) {
     const offset = limit * (page - 1);
     if (offset) query.offset(offset);
   }
   if (orderBy) {
-    query.orderBy(orderBy.field, orderBy.type);
+    query.orderByRaw(`
+      ${orderBy.field === 'price' ? `${orderBy.field}+0`: orderBy.field}
+      ${orderBy.type}`
+    )
   }
   const nfts = await query;
   const result = await addProperty(nfts);
   if (limit && page) {
-    const total = result.length;
     return {
       data: result,
       pagination: {
         current_page: +page,
         per_page: +limit,
-        total: total,
-        last_page: Math.ceil(total / limit),
+        total: total.amount,
+        last_page: Math.ceil(total.amount / limit),
       },
     };
   }
@@ -267,5 +282,6 @@ module.exports = {
   getList,
   transferNFT,
   confirmPriceSell,
-  cancelOrder
+  cancelOrder,
+  getNFTTop
 };
