@@ -1,7 +1,8 @@
 import moment from "moment";
 
-const getFile = (link) => {
+const getFile = (link, isVideo = false) => {
   const staticURL = process.env.REACT_APP_STATIC_FILE_URI;
+  if (isVideo) return `${staticURL}${link}`;
   return `${staticURL}/upload${link}`;
 }
 const toDisplayNumber = (amount) => {

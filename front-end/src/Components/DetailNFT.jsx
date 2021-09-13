@@ -55,10 +55,10 @@ const DetailNFT = ({ detail }) => {
   };
 
   if (!detail) return null;
-  const media = detail?.media
-    ? getFile(detail.media)
-    : "/assets/img/portfolio/avatar.jpg";
   const typeMedia = detail?.mine_type?.split("/")[0];
+  const media = detail?.media
+    ? getFile(detail.media, typeMedia === "video")
+    : "/assets/img/portfolio/default.jpeg";
 
   return (
     <>

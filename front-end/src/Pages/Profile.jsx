@@ -117,10 +117,10 @@ export default function Creator() {
   }
 
   const renderNFT = (nft, i) => {
-    const media = nft.media
-      ? getFile(nft.media)
-      : "/assets/img/portfolio/avatar.jpg";
     const typeMedia = nft?.mine_type?.split("/")[0];
+    const media = nft.media
+      ? getFile(nft.media, typeMedia === "video")
+      : "/assets/img/portfolio/default.jpeg";
     return (
       <Col sm="6" lg="4" key={i}>
         <div className="single_portfolio">

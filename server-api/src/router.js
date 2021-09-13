@@ -1,4 +1,6 @@
 const Router = require('koa-router');
+const path = require("path");
+const koaPart = require('koa-partial-content');
 
 const userController = require('./controllers/user');
 const nftController = require('./controllers/nft');
@@ -7,13 +9,18 @@ const loginController = require('./controllers/login');
 
 const { upload } = require('./middlewares/multer');
 const { isAuth } = require('./middlewares/auth');
+
 const userUploader = upload('upload/user');
 const nftUploader = upload('upload/nft');
 
 const { userUpload } = require('./helper/const');
+const part = new koaPart(path.resolve(__dirname, "../public/upload/"))
 
 module.exports = function () {
   const router = new Router();
+  // chunk video
+  router.get('/nft/:path', part.middleware())
+
   router.get('/ping', (ctx) => (ctx.body = 'bong'));
   router.post('/login', loginController.login);
   // for user

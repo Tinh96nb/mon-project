@@ -9,7 +9,10 @@ const upload = (folder = '') => {
     filename: (req, file, cb) => {
       const filename = file.originalname.split('.');
       const type = filename[filename.length - 1];
-      cb(null, `${filename[0]}-${Date.now().toString(16)}.${type}`);
+      const firstName = file.mimetype.split("/")[0] === "video"
+        ? encodeURIComponent(filename[0])
+        : filename[0];
+      cb(null, `${firstName}-${Date.now().toString(16)}.${type}`);
     },
   });
   const limits = {
