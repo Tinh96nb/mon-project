@@ -160,9 +160,12 @@ const getByTokenId = async (tokenId) => {
 };
 
 const getNFTTop = async () => {
-  const nft = await knex('nft_histories').where('type', eventHistoryNFT.sale)
-    .sum('price as price')
-    .select('token_id')
+  const nft = await knex('nft_histories')
+    .sum('nft_histories.price as price')
+    .select('nft_histories.token_id as token_id')
+    .join('nfts', 'nft_histories.token_id', 'nfts.token_id')
+    .where('nft_histories.type', eventHistoryNFT.sale)
+    .where('nfts.status', statusNft.selling)
     .groupBy('token_id')
     .orderBy('price', 'desc')
     .limit(1)
