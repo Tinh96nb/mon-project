@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getAllowance, getBalance, setMAxAllowance } from "redux/userReducer";
 import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
+import LazyImage from "./LazyImage";
 import toast from "./Toast";
 
 const DetailNFT = ({ detail }) => {
@@ -68,7 +69,7 @@ const DetailNFT = ({ detail }) => {
             <Col xs="12" lg="6" className="align-self-center">
               <div className="detailsHeroImg">
               {typeMedia === "image" ? (
-                <img src={media} alt={detail?.name} />
+                <LazyImage src={media} alt={detail?.name} />
               ) : (
                 <video
                   autoPlay={true}

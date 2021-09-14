@@ -7,23 +7,12 @@ import "./interface/IMonMarketPlace.sol";
 import "./MonBase.sol";
 
 contract MonMarketPlace is MonBase, IMonMarketPlace{
-    struct MarketHistory{
-        address buyer;
-        address seller;
-        uint256 price;
-        uint256 time;
-    }
-    
-    uint256[] internal _tokens;
     
     //Mapping tokenId to token price
     mapping(uint256 => uint256) internal _tokenPrices;
     
     //Mapping tokenId to owner of tokenId
     mapping(uint256 => address) internal _tokenOwners;
-    
-    //Mapping tokenId to market
-    mapping(uint256 => MarketHistory[]) internal _marketHistories;
     
     constructor(address monTokenAddress, address monNFTAddress) 
         MonBase(monTokenAddress, monNFTAddress){}
@@ -44,7 +33,6 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         
         _tokenOwners[tokenId] = tokenOwner;
         _tokenPrices[tokenId] = price;
-        _tokens.push(tokenId);
         
         emit NewSellOrderCreated(_msgSender(), block.timestamp, tokenId, price);
         
@@ -63,7 +51,6 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         
         _tokenOwners[tokenId] = address(0);
         _tokenPrices[tokenId] = 0;
-        _tokens = _removeFromTokens(tokenId);
         
         emit CancelOrder(tokenId);
 
@@ -71,22 +58,10 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
     }
     
     /**
-     * @dev Get all active tokens that can be purchased 
-     */ 
-    function getTokens() external view returns(uint256[] memory){
-        return _tokens;
-    }
-    
-    /**
      * @dev Get token info about price and owner
      */ 
     function getTokenInfo(uint tokenId) external view returns(address, uint){
         return (_tokenOwners[tokenId], _tokenPrices[tokenId]);
-    }
-    
-    
-    function getMarketHistories(uint256 tokenId) external view returns(MarketHistory[] memory){
-        return _marketHistories[tokenId];
     }
     
     /**
@@ -138,38 +113,12 @@ contract MonMarketPlace is MonBase, IMonMarketPlace{
         //Transfer monNFT from contract to sender
         getMonNFT().transferFrom(address(this), _msgSender(), tokenId);
         
-        _marketHistories[tokenId].push(MarketHistory({
-            buyer: _msgSender(),
-            seller: _tokenOwners[tokenId],
-            price: tokenPrice,
-            time: block.timestamp
-        }));
-        
         _tokenOwners[tokenId] = address(0);
         _tokenPrices[tokenId] = 0;
-        _tokens = _removeFromTokens(tokenId);
         
         emit Purchased(_msgSender(), tokenId, tokenPrice);
         
         return tokenPrice;
-    }
-    
-    /**
-     * @dev Remove token item by value from _tokens and returns new list _tokens
-    */ 
-    function _removeFromTokens(uint tokenId) internal view returns(uint256[] memory){
-        uint256 tokenCount = _tokens.length;
-        uint256[] memory result = new uint256[](tokenCount-1);
-        uint256 resultIndex = 0;
-        for(uint tokenIndex = 0; tokenIndex < tokenCount; tokenIndex++){
-            uint tokenItemId = _tokens[tokenIndex];
-            if(tokenItemId != tokenId){
-                result[resultIndex] = tokenItemId;
-                resultIndex++;
-            }
-        }
-        
-        return result;
     }
     
     event CancelOrder(uint256 indexed tokenId);

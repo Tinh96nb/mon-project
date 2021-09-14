@@ -1,6 +1,7 @@
 import {Container, Row, Col} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import { displayAddress, getFile, toDisplayNumber } from 'utils/hepler';
+import LazyImage from './LazyImage';
 
 const HomeWelcome = ({nft, priceToken}) => {
   const media = nft?.media
@@ -17,7 +18,7 @@ const HomeWelcome = ({nft, priceToken}) => {
           <Col lg="6 align-self-center">
             <div className="welcome-img">
               {typeMedia === "image" ? (
-                  <img src={media} alt={nft?.name} />
+                  <LazyImage src={media} alt={nft?.name} />
                 ) : (
                   <video
                     autoPlay={true}

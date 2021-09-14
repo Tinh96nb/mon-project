@@ -8,6 +8,7 @@ import { Link  } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HeadProfile from "Components/UI/HeadProfile";
 import toast from "Components/Toast";
+import LazyImage from "Components/LazyImage";
 
 const statusNFt = {
   0 : {color: "text-pendding", text: "Unconfirm"},
@@ -127,7 +128,7 @@ export default function Creator() {
           <Link to={`/detail/${nft.token_id}`}>
             <div className="portfolio_img">
               {typeMedia === "image" ? (
-                <img src={media} alt={nft.name} />
+                <LazyImage src={media} alt={nft.name} />
               ) : (
                 <video
                   autoPlay={true}

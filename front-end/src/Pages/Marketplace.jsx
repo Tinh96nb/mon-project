@@ -7,6 +7,7 @@ import { getListNFT, setCateFilter } from "redux/nftReducer";
 import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
 import { Link, useLocation } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
+import LazyImage from "Components/LazyImage";
 
 export default function Marketplace() {
   const dispatch = useDispatch();
@@ -68,7 +69,7 @@ export default function Marketplace() {
           <Link to={`/detail/${nft.token_id}`}>
             <div className="portfolio_img">
               {typeMedia === "image" ? (
-                <img src={media} alt={nft.name} />
+                <LazyImage src={media} alt={nft.name} />
               ) : (
                 <video
                   autoPlay={true}
@@ -93,7 +94,7 @@ export default function Marketplace() {
               </span>
             </h1>
             <div className="author">
-              <img src={avt} alt={nft.owner?.address} />
+              <LazyImage src={avt} alt={nft.owner?.address} />
               <Link to={`/creator/${nft?.owner?.address}`}>
                 {nft?.owner?.username || displayAddress(nft?.owner?.address)}
               </Link>

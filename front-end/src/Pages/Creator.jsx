@@ -7,6 +7,7 @@ import { Link , useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { detailUser, toggleFollow } from "redux/userReducer";
 import Socials from "Components/UI/Socials";
+import LazyImage from "Components/LazyImage";
 
 export default function Creator() {
 
@@ -67,7 +68,7 @@ export default function Creator() {
           <Link to={`/detail/${nft.token_id}`}>
             <div className="portfolio_img">
               {typeMedia === "image" ? (
-                <img src={media} alt={nft.name} />
+                <LazyImage src={media} alt={nft.name} />
               ) : (
                 <video
                   autoPlay={true}
