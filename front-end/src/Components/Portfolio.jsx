@@ -32,7 +32,7 @@ const Portfolio = () => {
                 : "/assets/img/user/avatar.jpg";
               const media = nft.media
                 ? getFile(nft.media)
-                : "/assets/img/portfolio/avatar.jpg";
+                : "/assets/img/portfolio/default.jpeg";
               return (
                 <Col sm="6" lg="4" key={i}>
                   <div className="single_portfolio">

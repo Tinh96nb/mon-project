@@ -6,7 +6,7 @@ import LazyImage from './LazyImage';
 const HomeWelcome = ({nft, priceToken}) => {
   const media = nft?.media
     ? getFile(nft.media)
-    : "/assets/img/portfolio/avatar.jpg";
+    : "/assets/img/portfolio/default.jpeg";
   const typeMedia = nft?.mine_type?.split("/")[0];
   const avt = nft?.owner && nft?.owner?.avatar ? getFile(nft?.owner?.avatar) : '/assets/img/user/avatar.jpg';
 
