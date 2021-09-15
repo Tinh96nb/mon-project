@@ -1,5 +1,5 @@
-import { lazy, Suspense } from "react";
-import { Switch, Route } from "react-router-dom";
+import { lazy, Suspense, useLayoutEffect } from "react";
+import { Switch, Route, useLocation } from "react-router-dom";
 
 import Loading from "Components/Loading";
 const Home = lazy(() => import("Pages/Home"));
@@ -10,7 +10,13 @@ const Details = lazy(() => import("Pages/Details"));
 const EditProfile = lazy(() => import("Pages/EditProfile"));
 const Marketplace = lazy(() => import("Pages/Marketplace"));
 
-const routers = () => {
+export default function Router() {
+
+  const location = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <Suspense fallback={Loading()}>
       <Switch>
@@ -25,5 +31,3 @@ const routers = () => {
     </Suspense>
   );
 };
-
-export default routers;
