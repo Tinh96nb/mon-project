@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAddress, setEnvContract } from 'redux/homeReducer';
 import { fetchUser, getBalance, logOut } from 'redux/userReducer';
 import { useHistory, useLocation } from 'react-router-dom';
+import toast from './Toast';
 
 const {
   REACT_APP_CONTRACT_TOKEN,
@@ -126,7 +127,10 @@ const Header = () => {
     }
     if (web3.eth && window.ethereum) {
       const netId = await web3.eth.net.getId();
-      if (netId.toString() !== REACT_APP_PORT_RPC) switchNetWork();
+      if (netId.toString() !== REACT_APP_PORT_RPC) {
+        toast.warning("Please switch network Binance Smart Chain!")
+        switchNetWork();
+      }
     }
   };
 

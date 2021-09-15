@@ -52,13 +52,13 @@ const CreatorForm = () => {
   }, [])
 
   useEffect(() => {
-    if (contractNFT) {
+    if (contractNFT && userAddress) {
       contractNFT.methods
       .isApprovedForAll(userAddress, process.env.REACT_APP_CONTRACT_MARKET)
       .call()
       .then((res) => setApprove(res))
     }
-  }, [contractNFT])
+  }, [contractNFT,  userAddress])
 
   useEffect(() => {
     if (contractMarket) {
@@ -103,6 +103,7 @@ const CreatorForm = () => {
   }
 
   const submit = async () => {
+    if (!userAddress) return toast.error({message: "Please connect wallet to create NFT!"})
     if (!file) return toast.error({message: "File NFT is missing!"})
     setLoading(true);
     setTextStep('Creating...')

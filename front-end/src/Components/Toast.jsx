@@ -13,6 +13,7 @@ const Toast = Swal.mixin({
 });
 
 const ToastSuccess = (message) => Toast.fire({ icon: 'success', title: message });
+const ToastWarning = (message) => Toast.fire({ icon: 'warning', title: message });
 
 const ToastError = (err) => {
   Toast.fire({
@@ -21,6 +22,6 @@ const ToastError = (err) => {
   });
 };
 
-const toast = { show: Toast, success: ToastSuccess, error: ToastError };
+const toast = { show: Toast, success: ToastSuccess, error: ToastError, warning: ToastWarning };
 
 export default toast;
