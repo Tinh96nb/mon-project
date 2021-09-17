@@ -86,7 +86,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "node scripts/start.js",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false node scripts/build.js",
     "serve": "pm2 --name=app serve build 3000 --spa",
     "test": "node scripts/test.js"
   },
