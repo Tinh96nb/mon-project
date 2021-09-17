@@ -20,14 +20,16 @@
     "react-scripts": "^4.0.3",
     "redux": "4.1.1",
     "redux-thunk": "2.3.0",
+    "source-map-explorer": "^2.5.2",
     "sweetalert2": "11.1.4",
     "web-vitals": "^1.0.1",
     "web3": "1.5.2",
     "web3modal": "1.9.4"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
     "serve": "pm2 --name=app serve build 3000 --spa",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

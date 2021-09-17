@@ -336,7 +336,7 @@ export default function Creator() {
                 }}
               >
                 {loadingRoy && <div className="loader"></div>}
-                Sell Royalty
+                Set Royalty
             </button>
             </Col>
             </Row>
