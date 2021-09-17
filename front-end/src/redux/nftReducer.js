@@ -2,6 +2,7 @@ import toast from "Components/Toast";
 import { requestToken, request } from "utils/api/axios";
 import API_URL from "utils/api/url";
 import { postLogin } from "./userReducer";
+import { setLoading } from "./homeReducer";
 
 const SET_REDUX = "nft/SET_REDUX";
 
@@ -20,10 +21,15 @@ export function mintNFT(formData, callback = null) {
     const { authChecked } = getStore().user;
     const { userAddress, contractNFT } = getStore().home;
     const postCreate = () => {
+      dispatch(setLoading(10));
       requestToken({
         method: "POST",
         url: API_URL.NFT.CREATE(),
         data: formData,
+        onDownloadProgress: function (data) {
+          const percent = (Math.round((100 * data.loaded) / data.total))
+          dispatch(setLoading(percent));
+        },
       })
         .then(({ data }) => {
           data &&
@@ -71,7 +77,16 @@ export function getCategories() {
 
 export function getDetail(tokenId) {
   return (dispatch) => {
-    request({ method: "GET", url: API_URL.NFT.DETAIL(tokenId), data: {} }).then(
+    dispatch(setLoading(10));
+    request({
+      method: "GET",
+      url: API_URL.NFT.DETAIL(tokenId),
+      data: {},
+      onDownloadProgress: function (data) {
+        const percent = (Math.round((100 * data.loaded) / data.total))
+        dispatch(setLoading(percent));
+      },
+    }).then(
       ({ data }) => {
         if (data) {
           data.price = data.price ? +parseFloat(data.price).toFixed(2) : 0
@@ -109,10 +124,15 @@ export function getHistoryTrade(tokenId) {
 
 export function getListNFT(params, isMore = false) {
   return (dispatch, getStore) => {
+    dispatch(setLoading(10));
     request({
       method: "GET",
       url: API_URL.NFT.GET,
       data: {},
+      onDownloadProgress: function (data) {
+        const percent = (Math.round((100 * data.loaded) / data.total))
+        dispatch(setLoading(percent));
+      },
       params
     }).then(
       ({ data }) => {

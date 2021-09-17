@@ -15,7 +15,7 @@ const MainMenu = ({balance, me, setConnect, logout}) => {
         </div>
       </div>
       <div className="avt">
-          <img src={avt} />
+          <Link className="clear-css" to="/profile"><img src={avt} /></Link>
           <div className="dropdown-content">
             <ul className="dropdown-list" >
               <li><Link to="/profile">Profile</Link></li>

@@ -277,6 +277,33 @@ const updateNft = async (tokenId, data) => {
   }
 };
 
+const setFeeCopyright = async (tokenId, fee) => {
+  try {
+    const nft = await knex('nfts').where({ token_id: tokenId }).first();
+    if (!nft) {
+      return {
+        success: false,
+        message: 'Not found NFT!',
+        data: {tokenId},
+      };
+    }
+    const realFee = +parseFloat((fee/1000).toString()).toFixed(2);
+    await knex('nfts').where({ token_id: tokenId })
+      .update({ feeCopyright: realFee })
+    return {
+      success: true,
+      message: 'Set copyright success!',
+      data: {tokenId, realFee},
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Error set copyright!',
+      data: error.message,
+    };
+  }
+}
+
 module.exports = {
   mintNft,
   getByTokenId,
@@ -286,5 +313,6 @@ module.exports = {
   transferNFT,
   confirmPriceSell,
   cancelOrder,
-  getNFTTop
+  getNFTTop,
+  setFeeCopyright
 };

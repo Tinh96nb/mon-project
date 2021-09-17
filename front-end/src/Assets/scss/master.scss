@@ -4,8 +4,19 @@
 
 .black-bg{
   background: $blackBg;
+  .progress-bar {
+    background-color: #ccc;
+    height: 2px;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+  }
 }
-
+.roy {
+  font-size: 14px;
+  margin-top: -7px;
+}
 .section-padding2{
   padding: 80px 0;
   .welcome-img {
@@ -149,6 +160,9 @@ button {
     float: right;
     margin-left: 5px;
     position: relative;
+    a {
+      padding: 0;
+    }
     img {
       height: 40px;
       width: 40px;

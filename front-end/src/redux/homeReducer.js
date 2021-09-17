@@ -7,7 +7,7 @@ const initialState = {
   contractToken: null,
   contractNFT: null,
   contractMarket: null,
-  loading: false,
+  loading: 0,
 }
 
 export function setAddress(address) {
@@ -19,11 +19,11 @@ export function setAddress(address) {
   }
 }
 
-export function setLoading(type) {
+export function setLoading(per) {
   return (dispatch) => {
     dispatch({
       type: SET_REDUX,
-      payload: { loading: type }
+      payload: { loading: per }
     })
   }
 }

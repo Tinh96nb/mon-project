@@ -13,6 +13,7 @@ const EVENT = {
   buy: "BUY",
   createSell: "CREATE_SELL",
   cancelOrder: "CANCEL_SELL",
+  setRoy: "SET_ROY",
 }
 
 const fileName = path.resolve(__dirname, 'data.txt');
@@ -26,6 +27,7 @@ async function init() {
     [EVENT.buy]: blockBuy,
     [EVENT.createSell]: blockSell,
     [EVENT.cancelOrder]: blockCancel,
+    [EVENT.setRoy]: blockRoy,
   } = objBlock
 
   // event trasfer
@@ -79,22 +81,39 @@ async function init() {
       })
   }
 
-    // event cancel sell
-    if (+blockCancel === 0) {
-      objBlock[EVENT.cancelOrder] = latest;
-      await fs.writeFile(fileName, JSON.stringify(objBlock));
-    } else if (+blockCancel !== +latest) {
-      contract().market 
-        .getPastEvents("CancelOrder", {
-          fromBlock: +blockCancel+1,
-          toBlock: 'latest'
-        })
-        .then(async (events) => {
-          if (events.length) event.emit(EVENT.cancelOrder, events)
-          objBlock[EVENT.cancelOrder] = latest;
-          await fs.writeFile(fileName, JSON.stringify(objBlock));
-        })
-    }
+  // event cancel sell
+  if (+blockCancel === 0) {
+    objBlock[EVENT.cancelOrder] = latest;
+    await fs.writeFile(fileName, JSON.stringify(objBlock));
+  } else if (+blockCancel !== +latest) {
+    contract().market 
+      .getPastEvents("CancelOrder", {
+        fromBlock: +blockCancel+1,
+        toBlock: 'latest'
+      })
+      .then(async (events) => {
+        if (events.length) event.emit(EVENT.cancelOrder, events)
+        objBlock[EVENT.cancelOrder] = latest;
+        await fs.writeFile(fileName, JSON.stringify(objBlock));
+      })
+  }
+
+  // event cancel sell
+  if (+blockRoy === 0) {
+    objBlock[EVENT.setRoy] = latest;
+    await fs.writeFile(fileName, JSON.stringify(objBlock));
+  } else if (+blockRoy !== +latest) {
+    contract().nft 
+      .getPastEvents("SetFeeCoppyRight", {
+        fromBlock: +blockRoy+1,
+        toBlock: 'latest'
+      })
+      .then(async (events) => {
+        if (events.length) event.emit(EVENT.setRoy, events)
+        objBlock[EVENT.setRoy] = latest;
+        await fs.writeFile(fileName, JSON.stringify(objBlock));
+      })
+  }
   
   await sleep(3000);
   init();
@@ -138,6 +157,25 @@ event.on(EVENT.cancelOrder, async (events) => {
     console.log(res);
   }
 });
+
+event.on(EVENT.cancelOrder, async (events) => {
+  for (let index = 0; index < events.length; index++) {
+    const { returnValues } = events[index];
+    const { tokenId } = returnValues;
+    const res = await nftModel.cancelOrder(tokenId)
+    console.log(res);
+  }
+});
+
+event.on(EVENT.setRoy, async (events) => {
+  for (let index = 0; index < events.length; index++) {
+    const { returnValues } = events[index];
+    const { tokenId, feePercent } = returnValues;
+    const res = await nftModel.setFeeCopyright(tokenId, feePercent)
+    console.log(res);
+  }
+});
+
 
 function sleep(ms) {
   return new Promise((resolve) => {

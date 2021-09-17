@@ -55,7 +55,7 @@ const Header = () => {
 
   const [web3Modal, setWeb3Modal] = useState(null);
 
-  const { userAddress, contractToken } = useSelector((store) => store.home)
+  const { userAddress, contractToken, loading } = useSelector((store) => store.home)
   const { balance, me } = useSelector((store) => store.user)
 
   const changeMenuStyle =() => {
@@ -180,9 +180,14 @@ const Header = () => {
   const logout = () => {
     dispatch(logOut())
   }
+
   return (
     <>
       <div className={headerNav ? 'header black-bg header_sticky' : 'header black-bg'}>
+          {loading !== false && <div
+            className="progress-bar progress-bar-striped"
+            style={{width: `${loading}%`}}
+          />}
           <Container>
             <Row className="header-content">
             

@@ -21,7 +21,7 @@ export default function Creator() {
   const dispatch = useDispatch();
 
   const { list, pagination } = useSelector((state) => state.nft);
-  const { priceToken, contractMarket, web3 } = useSelector((state) => state.home);
+  const { priceToken, contractMarket, web3, contractNFT } = useSelector((state) => state.home);
   const { me } = useSelector((state) => state.user);
   const [fee, setFee] = useState(0);
 
@@ -30,8 +30,11 @@ export default function Creator() {
 
   const [sell, setSell] = useState(null);
   const [priceSell, setPriceSell] = useState(0);
-  const [royalId, setRoyalId] = useState(0);
   const [loadingSell, setLoadingSell] = useState(false);
+  const [maxRoy, setMaxRoy] = useState(0);
+  const [royalId, setRoyalId] = useState(0);
+  const [perRoy, setPerRoy] = useState(0);
+  const [loadingRoy, setLoadingRoy] = useState(false);
 
   useEffect(() => {
     if (sort || filstatus) {
@@ -63,6 +66,15 @@ export default function Creator() {
       .then((res) => setFee((+res/1000)))
     }
   }, [contractMarket])
+
+  useEffect(() => {
+    if (contractNFT) contractNFT.methods
+    .getMaxFreeCopyright()
+    .call()
+    .then((res) => {
+      if (res) setMaxRoy(res/1000)
+    })
+  }, [contractNFT])
 
   const loadMore = () => {
     const query = { owner: me?.address };
@@ -117,6 +129,28 @@ export default function Creator() {
     })
   }
 
+  const setRoy = (tokenId) => {
+    const realfee = +parseFloat((+perRoy*1000).toString()).toFixed(2);
+    contractNFT.methods
+      .setFeeCopyright(tokenId, realfee)
+      .send({from: me.address})
+      .then(() => {
+        toast.success("Set Royalty successfully!")
+        setPerRoy(0)
+        setRoyalId(0)
+        setLoadingRoy(false)
+        setTimeout(() => {
+          dispatch(getListNFT({owner: me.address}));
+        }, 500)
+      })
+      .catch(() => {
+        setPerRoy(0)
+        setRoyalId(0)
+        setLoadingRoy(false)
+        toast.error({message: "You not confirm transaction!"})
+      })
+  }
+
   const renderNFT = (nft, i) => {
     const typeMedia = nft?.mine_type?.split("/")[0];
     const media = nft.media
@@ -157,7 +191,18 @@ export default function Creator() {
             </h1>
             <div className="row">
               <div className="col">
-                {/* <button className="btn btn-option"><BsLightningFill /> Royalty</button> */}
+                <span className="float-right roy">Royalty fee: {nft?.feeCopyright || 0}%</span>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <button
+                  disabled={me?.address !== nft?.author?.address}
+                  onClick={() => setRoyalId(nft.token_id)}
+                  className="btn btn-option"
+                >
+                  <BsLightningFill /> Royalty
+                </button>
               </div>
               <div className="col">
                 {(nft.status === 2) && 
@@ -251,13 +296,51 @@ export default function Creator() {
       </div>
       <Modal show={!!royalId} onHide={() => setRoyalId(0)}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>Set Royalty</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Modal body text goes here.</p>
+          <label className="mb-2">Precentage fee author (Max: {maxRoy}%)</label>
+          <FormControl
+            type="number"
+            required={true}
+            placeholder="Precentage"
+            onChange={(e) => setPerRoy(+e.target.value)}
+          />
+          <Row className="mt-3">
+            <Col>
+            <button
+              className="btn btn-cancel"
+              disabled={loadingRoy}
+              onClick={() => {
+                setPerRoy(0)
+                setRoyalId(0)
+                setLoadingRoy(false)
+              }}
+            >
+              {loadingRoy && <div className="loader"></div>}
+              Cancel
+            </button>
+            </Col>
+            <Col>
+              <button
+                className="btn btn-option"
+                type="submit"
+                disabled={loadingRoy}
+                onClick={() => {
+                  if (+perRoy > +maxRoy) {
+                    toast.error({message: "Invalid percentage fee!"})
+                    return;
+                  }
+                  setLoadingRoy(true)
+                  setRoy(royalId)
+                }}
+              >
+                {loadingRoy && <div className="loader"></div>}
+                Sell Royalty
+            </button>
+            </Col>
+            </Row>
         </Modal.Body>
-        <Modal.Footer>
-        </Modal.Footer>
       </Modal>
       <Modal show={sell && sell.status === 1} onHide={() => setSell(null)}>
         <Modal.Header closeButton>

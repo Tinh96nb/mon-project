@@ -12,23 +12,20 @@ const axiosConfig = axios.create(instanceAxios);
 // Add a request interceptor
 axiosConfig.interceptors.request.use(
   async function (config) {
-    // Do something before request is sent
-    store.dispatch(setLoading(true));
     // delay time
     await new Promise((resolve) => setTimeout(resolve, 300));
-
     return config;
   },
   function (error) {
     // Do something with request error
-    store.dispatch(setLoading(false));
+    store.dispatch(setLoading(0));
     return Promise.reject(error);
   }
 );
 // Add a response interceptor
 axiosConfig.interceptors.response.use(
   function (response) {
-    store.dispatch(setLoading(false));
+    setTimeout(() => store.dispatch(setLoading(false)), 500);
     return response;
   },
   function (error) {
@@ -37,7 +34,7 @@ axiosConfig.interceptors.response.use(
       localStorage.removeItem("address");
       store.dispatch(postLogin(() => true));
     }
-    store.dispatch(setLoading(false));
+    store.dispatch(setLoading(0));
     return Promise.reject(error);
   }
 );
