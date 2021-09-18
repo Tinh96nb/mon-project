@@ -259,7 +259,10 @@ const Header = () => {
             <MainMenu
               me={me}
               balance={balance}
-              setConnect={() => setConnect()}
+              setConnect={() => {
+                setConnect(web3Modal)
+                mobileNavSet(false);
+              }}
               logout={() => logout()}
             />
         </div>
