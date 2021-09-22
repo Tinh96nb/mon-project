@@ -1,3 +1,6 @@
+import { request } from "utils/api/axios"
+import API_URL from "utils/api/url"
+
 const SET_REDUX = 'home/SET_REDUX'
 
 const initialState = {
@@ -8,6 +11,7 @@ const initialState = {
   contractNFT: null,
   contractMarket: null,
   loading: 0,
+  config: null
 }
 
 export function setAddress(address) {
@@ -44,6 +48,17 @@ export function resetStore() {
       payload: { userAddress: null }
     })
   }
+}
+
+export function getConfig() {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.CONFIG, data: {} }).then(
+      ({ data }) => {
+        if (data)
+          dispatch({ type: SET_REDUX, payload: { config: data } });
+      }
+    );
+  };
 }
 
 export const homeReducer = (state = initialState, action) => {

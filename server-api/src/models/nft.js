@@ -160,18 +160,30 @@ const getByTokenId = async (tokenId) => {
 };
 
 const getNFTTop = async () => {
-  const nft = await knex('nft_histories')
-    .sum('nft_histories.price as price')
-    .select('nft_histories.token_id as token_id')
-    .join('nfts', 'nft_histories.token_id', 'nfts.token_id')
-    .where('nft_histories.type', eventHistoryNFT.sale)
-    .where('nfts.status', statusNft.selling)
-    .groupBy('token_id')
-    .orderBy('price', 'desc')
-    .limit(1)
-    .first();
-  if (!nft) return {};
+  let nft = null;
+  const nftConfig = await knex('system_config').where({name: 'nft'}).first();
+  if (nftConfig && nftConfig.value) {
+    const detail = await knex('nfts').where({token_id: nftConfig.value, status: statusNft.selling}).first();
+    if (!detail) {
+      nft = await nftSalest();
+    } else nft = detail;
+  } else {
+    nft = await nftSalest();
+  }
   return getByTokenId(nft.token_id);
+}
+
+const nftSalest = () => {
+  return knex('nft_histories')
+  .sum('nft_histories.price as price')
+  .select('nft_histories.token_id as token_id')
+  .join('nfts', 'nft_histories.token_id', 'nfts.token_id')
+  .where('nft_histories.type', eventHistoryNFT.sale)
+  .where('nfts.status', statusNft.selling)
+  .groupBy('token_id')
+  .orderBy('price', 'desc')
+  .limit(1)
+  .first();
 }
 
 const getList = async (

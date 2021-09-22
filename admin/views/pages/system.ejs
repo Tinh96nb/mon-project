@@ -1,0 +1,169 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<body>
+  <!-- Sidenav -->
+  <% include ../partials/sidebar %>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <% include ../partials/navbar %>
+    <!-- Header -->
+    <% include ../partials/header %>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row justify-content-center">
+        <div class="col-xl-12 order-xl-1">
+          <div class="card bg-secondary shadow">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">System Config</h3>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row justify-content-between">
+              <div class="col-md-6">
+                <form action="/update-config" method="POST">
+                  <h6 class="heading-small text-muted mb-4">System Config</h6>
+                  <div class="pl-lg-4">
+                    <% if (locals.messages && messages.success) { %>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= messages.success %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    <% } %>
+                    <% if (locals.messages && messages.errors) { %>
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%= messages.errors %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    <% } %>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label" for="input-name">NFT Favorite</label>
+                          <select class="nft form-control form-control-alternative" name="nft" value="<%= revert.nft.value %>">
+                            <% init.nfts.forEach(function(nft){ %>
+                                <option value="<%= nft.token_id %>"><%= nft.token_id %></option>
+                            <% }) %>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label" for="input-email">Creator Favorite</label>
+                          <span style="margin-left: 3px; font-size: 13px;">(Recommend 7 users)</span>
+                          <select class="js-example-basic-multiple form-control" name="user" multiple="multiple">
+                            <% init.users.forEach(function(user){ %>
+                              <% if (revert.user.value.split(',').indexOf(user.id.toString()) !== -1) { %>
+                                <option selected="true" value="<%= user.id %>">
+                                  <%= user.address.substring(0, 3)+'...'+user.address.substring(user.address.length - 3, user.address.length) %>
+                                </option>
+                              <% } else { %> 
+                                <option value="<%= user.id %>">
+                                  <%= user.address.substring(0, 3)+'...'+user.address.substring(user.address.length - 3, user.address.length) %>
+                                </option>
+                              <% } %> 
+                              <% }) %>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 text-center">
+                        <button class="btn btn-success mt-4 mb-4">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-5">
+                <form action="/update-footer" method="POST">
+                  <h6 class="heading-small text-muted mb-4">Footer config</h6>
+                  <div class="pl-lg-4">
+                    <% if (messages.successFooter) { %>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= messages.successFooter %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    <% } %>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Facebook</label>
+                          <input value="<%= revert.facebook.value %>" type="text" class="form-control form-control-alternative" name="facebook" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Twitter</label>
+                          <input value="<%= revert.twitter.value %>" type="text" class="form-control form-control-alternative" name="twitter" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Instagram</label>
+                          <input value="<%= revert.instagram.value %>" type="text" class="form-control form-control-alternative" name="instagram" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Telegram</label>
+                          <input value="<%= revert.telegram.value %>" type="text" class="form-control form-control-alternative" name="telegram" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Medium</label>
+                          <input value="<%= revert.medium.value %>" type="text" class="form-control form-control-alternative" name="medium" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">About</label>
+                          <input value="<%= revert.about.value %>" type="text" class="form-control form-control-alternative" name="about" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Help</label>
+                          <input value="<%= revert.help.value %>" type="text" class="form-control form-control-alternative" name="help" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Privacy</label>
+                          <input value="<%= revert.privacy.value %>" type="text" class="form-control form-control-alternative" name="privacy" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-lg-12 text-center">
+                        <button class="btn btn-success mt-4 mb-4">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <% include ../partials/footer %>
+    </div>
+  </div>
+
+  <!-- Include scripts -->
+  <% include ../partials/scripts %>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.nft').val('<%= revert.nft.value %>');
+      $('.js-example-basic-multiple').select2();
+    });
+  </script>
+</body>

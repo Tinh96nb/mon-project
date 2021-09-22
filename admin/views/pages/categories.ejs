@@ -1,0 +1,246 @@
+<body>
+  <!-- Sidenav -->
+  <% include ../partials/sidebar %>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <% include ../partials/navbar %>
+    <!-- Header -->
+    <% include ../partials/header %>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <!-- Table -->
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col-lg-6 col-7"><h3 class="mb-0">Manager Categories</h3></div>
+                <div class="col-lg-6 col-5 text-right">
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    data-toggle="modal"
+                    data-target="#modal-create"
+                  >
+                    Create
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                id="table-categories"
+                class="table table-striped table-bordered"
+                style="width:100%"
+              >
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Amount NFT</th>
+                    <th>Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(let i=0; i<categories.length; i++) {%>
+                    <tr>
+                      <td><%= i+1 %></td>
+                      <td><%= categories[i].name %></td>
+                      <td><%= categories[i].amountNFT %></td>
+                      <td>
+                          <button type="button" class="btn-remove btn btn-warning btn-sm" data-categories="<%=JSON.stringify(categories[i])%>"  data-toggle="modal"
+                            data-target="#modal-remove">
+                            Delete
+                          </button>
+                          <button type="button" class="btn-edit btn btn-info btn-sm" data-categories="<%=JSON.stringify(categories[i])%>" data-toggle="modal"
+                            data-target="#modal-edit">
+                            Edit
+                          </button>
+                      </td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal create -->
+      <div
+        class="modal fade"
+        id="modal-create"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-createLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-createLabel">Create Category</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="form-create">
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Name</label>
+                  <input
+                    required
+                    class="form-control"
+                    type="text"
+                    placeholder="categories"
+                    id="input-name"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button id="create" type="submit" class="btn btn-primary">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal edit -->
+      <div
+        class="modal fade"
+        id="modal-edit"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-editLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-createLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="form-create">
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Name</label>
+                  <input
+                    required
+                    class="form-control"
+                    type="text"
+                    placeholder="categories"
+                    id="input-edit-name"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button id="btn-cf-edit" type="submit" class="btn btn-primary">Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal remove -->
+      <div
+        class="modal fade"
+        id="modal-remove"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-removeLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-createLabel">Remove</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">Remove categories : <strong id="remove-text"></strong></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button id="btn-cf-remove" type="submit" class="btn btn-primary">Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <% include ../partials/footer %>
+    </div>
+  </div>
+  <!-- Include scripts -->
+  <% include ../partials/scripts %>
+  <script>
+    $(document).ready(function() {
+      $('#table-categories').DataTable();
+      // form create
+      $('#create').on('click', e => {
+        var name = $('#input-name').val();
+        console.log('fdf');
+          $.ajax({
+            method: 'POST',
+            url: '/categories',
+            data: {name},
+          })
+            .done(res => {
+              $('#modal-create').modal('hide');
+              toastr.success(res.message);
+              location.reload();
+            })
+            .fail(err => {
+              toastr.error('Fail');
+            });
+        })
+      // edit, remove
+      var categoriesTarget = null;
+      handleBtn();
+      function handleBtn() {
+        $('.btn-remove, .btn-edit').on("click", function(e) {
+        e.preventDefault();
+        let data = $(this).data('categories');
+        categoriesTarget = data;
+
+        $('#remove-text').text(data.name);
+        $('#input-edit-name').val(data.name);
+      });
+      }
+
+      $('#btn-cf-edit').on('click', e => {
+        var name = $('#input-edit-name').val();
+        if (name) {
+          $.ajax({
+            method: 'PUT',
+            url: '/categories',
+            data: {id: categoriesTarget.id, name},
+          })
+            .done(res => {
+              $('#modal-edit').modal('hide');
+              toastr.success(res.message);
+              location.reload();
+            })
+            .fail(err => {
+              toastr.error('Fail');
+            });
+        } else {
+          toastr.error('All field is require.');
+        }
+      });
+
+      $('#btn-cf-remove').on('click', function(e) {
+        $.ajax({ method: 'DELETE', url: '/categories', data: { id: categoriesTarget.id } })
+          .done(res => {
+            $('#modal-remove').modal('hide');
+            toastr.success(res.message);
+            location.reload();
+          })
+          .fail(err => {
+            toastr.error('Fail');
+          });
+      })
+    });
+  </script>
+</body>

@@ -1,0 +1,13 @@
+//
+// Navbar
+//
+
+@import "../core/navbars/navbar";
+@import "../core/navbars/navbar-vertical";
+@import "../core/navbars/navbar-search";
+@import "../core/navbars/navbar-dropdown";
+@import "../core/navbars/navbar-collapse";
+
+.navbar-top.border-bottom.navbar-dark {
+    border-color: rgba(255,255,255,.08)!important;
+}

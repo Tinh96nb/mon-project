@@ -1,0 +1,128 @@
+<body>
+  <!-- Sidenav -->
+  <% include ../partials/sidebar %>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <% include ../partials/navbar %>
+    <!-- Header -->
+    <% include ../partials/header %>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row justify-content-center">
+        <div class="col-xl-12 order-xl-1">
+          <div class="card bg-secondary shadow">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">My account</h3>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row justify-content-between">
+              <div class="col-md-6">
+                <form action="/update-profile-info" method="POST">
+                  <h6 class="heading-small text-muted mb-4">User information</h6>
+                  <div class="pl-lg-4">
+                    <% if (locals.messages && messages.success) { %>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= messages.success %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    <% } %>
+                    <% if (locals.messages && messages.errors && messages.errors.databaseError) { %>
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%= messages.errors %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    <% } %>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label" for="input-name">Name</label>
+                          <input type="text" id="input-name" class="form-control form-control-alternative" name="username" placeholder="Name" value="<%= locals.userInfo && locals.userInfo.username %>">
+                          <% if (locals.messages && messages.errors && messages.errors.username) { %>
+                            <strong class="invalid-feedback" style="display: block"><%= messages.errors.username %></strong>
+                          <% } %>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label" for="input-email">Email address</label>
+                          <input type="email" id="input-email" class="form-control form-control-alternative" name="email" placeholder="jesse@example.com" value="<%= locals.userInfo && locals.userInfo.email %>">
+                          <% if (locals.messages && messages.errors && messages.errors.email) { %>
+                            <strong class="invalid-feedback" style="display: block"><%= messages.errors.email %></strong>
+                          <% } %>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Roles: </label>
+                          <% if (locals.userInfo && locals.userInfo.roles) locals.userInfo.roles.forEach(function(role) { %>
+                            <span class="badge badge-pill badge-default"><%= role %></span>
+                          <% }) %>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 text-center">
+                        <button class="btn btn-success mt-4 mb-4">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-5">
+                <form action="/update-password" method="POST">
+                  <h6 class="heading-small text-muted mb-4">Change Password</h6>
+                  <div class="pl-lg-4">
+                    <% if (messages.successPassword) { %>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= messages.successPassword %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                    <% } %>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Current password</label>
+                          <input type="password" class="form-control form-control-alternative" name="current" placeholder="Enter password">
+                          <% if (locals.messages && messages.errors && messages.errors.current) { %>
+                            <strong class="invalid-feedback" style="display: block"><%= messages.errors.current %></strong>
+                          <% } %>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">New password</label>
+                          <input type="password" class="form-control form-control-alternative" name="newpass" placeholder="New password">
+                          <% if (locals.messages && messages.errors && messages.errors.newpass) { %>
+                            <strong class="invalid-feedback" style="display: block"><%= messages.errors.newpass %></strong>
+                          <% } %>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 text-center">
+                        <button class="btn btn-success mt-4 mb-4">Change</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <% include ../partials/footer %>
+    </div>
+  </div>
+
+  <!-- Include scripts -->
+  <% include ../partials/scripts %>
+</body>

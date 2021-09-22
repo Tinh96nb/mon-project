@@ -1,0 +1,172 @@
+<body>
+  <!-- Sidenav -->
+  <% include ../partials/sidebar %>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <% include ../partials/navbar %>
+    <!-- Header -->
+    <% include ../partials/header %>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <!-- Table -->
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent">
+              <h3 class="mb-0">Manager Roles</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-3">
+                  <div class="input-group">
+                    <input id="role-name" type="text" class="form-control" placeholder="Enter role">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-default" type="button btn-outline-primary" id="create-role">
+                        <i class="fa fa-plus-square"></i>
+                      </button>
+                      <button disabled class="btn btn-outline-default" type="button btn-outline-primary" id="delete-role">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>                  
+                  <select id="roles" class="form-control greate-height" multiple="multiple">
+                    <% roles.forEach(function(role){ %>
+                      <option value="<%- role %>"><%- role %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <select name="from[]" id="multiselect" class="form-control greate-height" multiple="multiple">
+                  </select>
+                </div>
+
+                <div class="col-1 btn-option">
+                  <!-- <button type="button" id="multiselect_rightAll" class="btn btn-sm">
+                    <i class="fa fa-forward" aria-hidden="true"></i>
+                  </button> -->
+                  <button type="button" id="multiselect_rightSelected" class="btn btn-outline-default">
+                    <i class="fa fa-step-forward" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" id="multiselect_leftSelected" class="btn btn-outline-default">
+                    <i class="fa fa-step-backward" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" id="multiselect3_leftSelected" style="display: none;">
+                    <!-- <i class="fa fa-step-backward" aria-hidden="true"></i> -->
+                  </button>
+                  <!-- <button type="button" id="multiselect_leftAll" class="btn btn-sm">
+                    <i class="fa fa-backward" aria-hidden="true"></i>
+                  </button> -->
+                </div>
+
+                <div class="col-4">
+                  <select name="to[]" id="multiselect_to" class="form-control greate-height" multiple="multiple">
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <% include ../partials/footer %>
+    </div>
+  </div>
+  <!-- Include scripts -->
+  <% include ../partials/scripts %>
+  <script src="js/multiselect.js"></script>
+  <script type="text/javascript">
+    jQuery(document).ready(function($) {
+      $('#multiselect').multiselect({
+        search: {
+            left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+            right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+        },
+        afterMoveToRight: function (left, right, option) {
+          var resourceRemove = option.val();
+          var role = $('#roles').val()[0]
+          $.ajax({
+            type: 'POST',
+            url: '/acls/manager-resource',
+            data: { role, resource: resourceRemove, type: 0 },
+          })
+          .done(function(res) {})
+        },
+        afterMoveToLeft: function (left, right, option) {
+          var addResource = option.val();
+          var role = $('#roles').val()[0]
+          $.ajax({
+            type: 'POST',
+            url: '/acls/manager-resource',
+            data: { role, resource: addResource, type: 1 },
+          })
+          .done(function(res) {})
+        },
+      });
+      
+      $('#roles').click(function(e) {
+        //call api;
+        $('#delete-role').removeAttr('disabled')
+        $.ajax({type: 'GET', url: '/acls/api-resource'})
+        .done(function(res) {
+        const listRoles = res.roles
+        const routers = res.routers
+          var roleSelect = $('#roles').val()[0]
+          var roles = listRoles
+            .filter(function(role) {
+              return role[roleSelect];
+            })
+            .map(function(roleNest) {
+              var val = [];
+              Object.keys(roleNest[roleSelect]).forEach(function(role){
+                  var methods = roleNest[roleSelect][role];
+                  methods.forEach(function (method) {
+                    val.push(method.toUpperCase()+' - '+role);
+                  })
+              })
+              return val;
+            })[0]
+          var listLeft = null;
+          roles.forEach(function(role){
+            listLeft+= '<option value="'+role+'">'+role+'</option>'
+          });
+
+          var listRight = null;
+          var allRoute = routers.map(function(router) {
+            return router.method+' - '+router.path;
+          })
+          .filter(function(router){
+            var resIndex = roles.indexOf(router)
+            return resIndex === -1
+          })
+          var listRight = null;
+          allRoute.forEach(function(resource){
+            listRight+= '<option value="'+resource+'">'+resource+'</option>'
+          });
+          $('#multiselect').html(listLeft)
+          $('#multiselect_to').html(listRight)
+        });
+      })
+    
+      $('#create-role').click(function(e){
+        var roleName = $('#role-name').val();
+        if (!roleName) return;
+        $.ajax({type: 'POST', url: '/acls/manager-role', data: { role: roleName, type: 1 }})
+        .done(function(res) {
+          $('#role-name').val('')
+          $('#roles').append('<option value="'+roleName+'">'+roleName+'</option>')
+        })
+      })
+      $('#delete-role').click(function(e){
+        var roleName = $("#roles").val()[0];
+        if (!roleName) return;
+        $.ajax({type: 'POST', url: '/acls/manager-role', data: { role: roleName, type: 0 }})
+        .done(function(res) {
+          $("#roles option[value='"+roleName+"']").remove()
+          $('#multiselect').html('')
+          $('#multiselect_to').html('')
+        })
+      })
+    });
+  </script>
+</body>

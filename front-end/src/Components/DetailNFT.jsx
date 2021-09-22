@@ -47,7 +47,7 @@ const DetailNFT = ({ detail }) => {
         setLoading(false);
         toast.success("Buy NFT successfully!");
         dispatch(getBalance());
-        history.push(`/creator/${userAddress}`);
+        history.push("/profile");
       })
       .catch((e) => {
         setLoading(false);

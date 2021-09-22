@@ -7,6 +7,11 @@ const getCategory = async (condition, limit = 1) => {
   return query;
 };
 
+const getConfig = async () => {
+  return knex('system_config');
+};
+
 module.exports = {
   getCategory,
+  getConfig
 };

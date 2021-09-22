@@ -14,7 +14,7 @@ const statusNFt = {
   0 : {color: "text-pendding", text: "Unconfirm"},
   1 : {color: "text-pendding", text: "Pendding"},
   2 : {color: "text-sell", text: "On Sale"},
-  3 : {color: "text-report", text: "Report"},
+  3 : {color: "text-report", text: "Locked"},
 }
 export default function Creator() {
 
@@ -194,6 +194,7 @@ export default function Creator() {
                 <span className="float-right roy">Royalty fee: {nft?.feeCopyright || 0}%</span>
               </div>
             </div>
+          {me && me.status ?
             <div className="row">
               <div className="col">
                 <button
@@ -237,6 +238,7 @@ export default function Creator() {
                 }
               </div>
             </div>
+            : <div className="mt-3 text-danger">Account has been locked</div>}
           </div>
         </div>
       </Col>

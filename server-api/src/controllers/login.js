@@ -2,6 +2,7 @@ const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
 const jwtHelper = require('../helper/jwt');
 const usersModel = require('../models/users');
+const cateModel = require('../models/category');
 
 const login = async (ctx, next) => {
   const { signature, publicAddress } = ctx.request.body;
@@ -38,4 +39,13 @@ const login = async (ctx, next) => {
   ctx.body = { token };
 };
 
-module.exports = { login };
+const getConfig = async (ctx, next) => {
+  const configs = await cateModel.getConfig();
+  let revert = {};
+  configs.forEach((config) => {
+    revert[config.name] = config
+  })
+  ctx.body = revert;
+}
+
+module.exports = { login, getConfig };

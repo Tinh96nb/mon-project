@@ -23,6 +23,7 @@ module.exports = function () {
 
   router.get('/ping', (ctx) => (ctx.body = 'bong'));
   router.post('/login', loginController.login);
+  router.get('/config', loginController.getConfig);
   // for user
   router.put('/users', isAuth, userUploader.fields(userUpload), userController.updateUser);
   router.get('/users', userController.getList);

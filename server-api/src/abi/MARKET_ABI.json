@@ -311,20 +311,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getTokens",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -343,48 +329,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getMarketHistories",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "buyer",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "seller",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct MonMarketPlace.MarketHistory[]",
-        "name": "",
-        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",

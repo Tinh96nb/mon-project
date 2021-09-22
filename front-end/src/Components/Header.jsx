@@ -13,7 +13,7 @@ import { FaTimes, FaSearch } from "react-icons/fa";
 import Logo from './UI/Logo';
 import MainMenu from './UI/MainMenu';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAddress, setEnvContract } from 'redux/homeReducer';
+import { getConfig, setAddress, setEnvContract } from 'redux/homeReducer';
 import { fetchUser, getBalance, logOut } from 'redux/userReducer';
 import { useHistory, useLocation } from 'react-router-dom';
 import toast from './Toast';
@@ -85,6 +85,8 @@ const Header = () => {
       }
       await setConnect(web3Modal);
     });
+
+    dispatch(getConfig());
   }, []);
 
   const setRedux = async (web3) => {

@@ -65,6 +65,10 @@ const getInfo = async (condition) => {
 };
 
 const listUser = async (limit = 7) => {
+  const nftConfig = await knex('system_config').where({name: 'user'}).first();
+  if (nftConfig && nftConfig.value) {
+    return knex('users').whereIn('id', nftConfig.value.split(','));
+  }
   const [users] = await knex.raw(`
     SELECT users.*, c2.numfa as favorite
     FROM users

@@ -116,7 +116,7 @@ export default function Marketplace() {
             </Col>
           </Row>
           <InfiniteScroll
-            dataLength={list.length}
+            dataLength={list?.length}
             next={loadMore}
             hasMore={pagination?.current_page !== pagination?.last_page}
             loader={<h4>Loading...</h4>}

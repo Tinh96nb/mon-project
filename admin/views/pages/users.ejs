@@ -1,0 +1,172 @@
+<body>
+  <!-- Sidenav -->
+  <% include ../partials/sidebar %>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <% include ../partials/navbar %>
+    <!-- Header -->
+    <% include ../partials/header %>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <!-- Table -->
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent">
+              <h3 class="mb-0">Manager Users</h3>
+            </div>
+            <div class="card-body">
+              <table id="table-user" class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>username</th>
+                    <th>address</th>
+                    <th>NFT</th>
+                    <th>Trade</th>
+                    <th>Volumn</th>
+                    <th>action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">User KYC</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="bind-data">
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Nationaly</label>
+                  <input disabled class="form-control national" type="text" />
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="example-search-input" class="form-control-label">Full name</label>
+                      <input disabled class="form-control fullname" type="text" />
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="example-date-input" class="form-control-label"
+                        >Date of birth</label
+                      >
+                      <input disabled class="form-control birth" type="text" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="example-email-input" class="form-control-label">Address</label>
+                  <input disabled class="form-control address" />
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="example-email-input" class="form-control-label">Front</label>
+                      <img class="front" width="210px" />
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="example-email-input" class="form-control-label">Back</label>
+                      <img class="back" width="210px" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group o-reason">
+                  <label for="example-email-input" class="form-control-label"
+                    >Reason for reject</label
+                  >
+                  <input class="form-control reason" />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-warning" id="confirm-reject">Reject</button>
+              <button type="button" class="btn btn-primary" id="confirm-approve">Approve</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <% include ../partials/footer %>
+    </div>
+  </div>
+  <!-- Include scripts -->
+  <% include ../partials/scripts %>
+  <script>
+      function toogleUser(id) {
+        $.ajax({
+          type: 'POST',
+          url: '/users/toggle-user',
+          data: { id },
+        })
+          .done(function(res) {
+            toastr.success(res.message);
+            datatable.ajax.reload();
+          })
+          .catch(function(error) {
+            datatable.ajax.reload();
+            toastr.error('Error!');
+          });
+      }
+      var datatable = $('#table-user').DataTable({
+        processing: true,
+        pagingType: 'first_last_numbers',
+        ajax: {
+          url: '/api/users',
+          method: 'get',
+        },
+        columns: [
+          { data: 'id' },
+          {
+            data: 'username',
+            render: function(data, type) {
+              if (data === null) return 'Not set';
+              return data;
+            },
+          },
+          {
+            data: 'address',
+            render: function(data, type) {
+              return (
+                data.substring(0, 8) + '...' + data.substring(data.length - 8, data.length)
+              );
+            },
+          },
+          { data: 'amountNFT' },
+          { data: 'numTrade' },
+          { data: 'totalTrade' },
+          {
+            data: 'status',
+            orderable: false,
+            render: function(data, type, row) {
+              if (data)
+                return `<button onclick="toogleUser(${row.id})" class="action-user btn btn-warning btn-sm">Ban User</button>`;
+              return `<button onclick="toogleUser(${row.id})" class="action-user btn btn-success btn-sm">Active</button>`;
+            },
+          },
+        ],
+      });
+  </script>
+</body>

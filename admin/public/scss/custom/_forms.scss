@@ -1,0 +1,49 @@
+//
+// Forms
+//
+
+@import "../core/forms/form";
+@import "../core/forms/form-validation";
+@import "../core/forms/input-group";
+
+.content-wrap {
+  margin-bottom: 8px;
+  .label {
+    font-size: 13px;
+    font-style: italic;
+    display: inline-block;
+    margin: 0;
+    font-weight: 500;
+    width: 17%;
+    text-align: right;
+  }
+  .content {
+    font-size: 13px;
+    margin: 0;
+    margin-left: 8px;
+    display: inline-block;
+  }
+}
+.greate-height {
+  min-height: 500px;
+}
+#roles {
+  option{
+    font-size: 15px;
+    margin-bottom: 3px;
+  }
+}
+.btn-option {
+  display: flex;
+    flex-flow: column;
+    justify-content: center;
+  .btn {
+    margin-bottom: 15px;
+  }
+}
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+  display: unset !important;
+}
+.select2-container {
+  display: unset !important;
+}

@@ -6,6 +6,7 @@ const API_URL = {
     PUT: "/users",
     FOLLOW: "/users/toggle-favorite",
   },
+  CONFIG: "/config",
   CATEGORY: {
     GET_ALL: "/categories"
   },

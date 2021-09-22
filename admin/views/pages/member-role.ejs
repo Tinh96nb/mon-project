@@ -1,0 +1,219 @@
+<body>
+  <!-- Sidenav -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+    rel="stylesheet"
+  />
+  <% include ../partials/sidebar %>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Top navbar -->
+    <% include ../partials/navbar %>
+    <!-- Header -->
+    <% include ../partials/header %>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <!-- Table -->
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent">
+              <h3 class="mb-0">Manager Member Roles</h3>
+            </div>
+            <div class="card-body">
+              <button type="button" data-toggle="modal" data-target="#modal-create" style="margin-bottom: 10px;" class="btn btn-sm btn-outline-default">Create Member</button>
+              <table id="table-nft" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Last Time</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% members.forEach(function(member){ %>
+                  <tr>
+                    <td>
+                      <%- member.id %>
+                      <% if (member.id != locals.userInfo.id) { %>
+                      <div class="action-option">
+                        <button data-status="<%-member.status%>" data-id="<%- member.id %>" class="change-status btn btn-sm <%- member.status == 1 ? 'btn-warning' : 'btn-success' %> " type="button">
+                          <%- member.status == 1 ? '<i class="fa fa-ban" aria-hidden="true"></i>' : '<i class="fa fa-unlock-alt" aria-hidden="true"></i>'%> 
+                        </button>
+                      </div>
+                      <% } %> 
+                    </td>
+                    <td><%- member.username %></td>
+                    <td><%- member.email %></td>
+                    <td><%- (member.last_login_time).toString().substr(0, 25) %></td>
+                    <td>
+                      <select
+                        data-user='<%-JSON.stringify(member)%>'
+                        class="form-control select-role"
+                        multiple="multiple"
+                      >
+                        <% roles.forEach(function(role){ %>
+                          <% if (member.roles.indexOf(role) !== -1) { %>
+                            <option selected="true"><%- role %></option>
+                          <% } else { %> 
+                            <option><%- role %></option>
+                          <% } %> 
+                        <% }) %>
+                      </select>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="modal-create"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-createLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form method="POST" action="/create-member" id="form-create">
+            <div class="modal-header">
+              <h5 style="font-size: 17px;" class="modal-title" id="modal-createLabel">Create admin</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Username <span class="text-warning">*</span></label>
+                  <input
+                    required
+                    class="username form-control"
+                    type="text"
+                    placeholder="Enter text..."
+                    name="username"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="example-search-input" class="form-control-label">Email <span class="text-warning">*</span></label>
+                  <input
+                    required
+                    class="email form-control"
+                    type="email"
+                    placeholder="Enter email..."
+                    name="email"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="example-search-input" class="form-control-label">Password <span class="text-warning">*</span></label>
+                  <input
+                    required
+                    class="password form-control"
+                    type="text"
+                    placeholder="Min 6 character..."
+                    name="password"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="example-search-input" class="form-control-label">Role</label>
+                  <select
+                    class="form-control"
+                    name="role"
+                  >
+                    <option>Select role</option>
+                    <% roles.forEach(function(role){ %>
+                      <option value="<%- role %>"><%- role %></option>
+                    <% }) %>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <% include ../partials/footer %>
+    </div>
+  </div>
+  <!-- Include scripts -->
+  <% include ../partials/scripts %>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      
+      var messages = '<%- JSON.stringify(messages.success) %>';
+      if (messages) toastr.success(messages.replace(/"/gi, ''));
+      messages = '<%- JSON.stringify(messages.errors) %>';
+      if (messages) toastr.warning(messages.replace(/"/gi, ''));
+      
+      $('.change-status').click(function (e) {
+        var btn = $(this)
+        var userId = $(this).data('id');
+        var status = $(this).data('status');
+        $.ajax({
+          type: 'POST',
+          url: '/toggle-status',
+          data: { user_id: userId, type: status ? 0 : 1 },
+        })
+        .then(function (res) {
+          if (status) {
+            btn.addClass('btn-success').removeClass('btn-warning')
+            btn.html('<i class="fa fa-unlock-alt" aria-hidden="true"></i>')
+          } else {
+            btn.removeClass('btn-success').addClass('btn-warning')
+            btn.html('<i class="fa fa-ban" aria-hidden="true"></i>')
+          }
+          btn.data('status', status ? 0 : 1)
+        })
+      })
+
+      var datatable = $('#table-nft').DataTable({pagingType: 'first_last_numbers'});
+      
+      $('.select-role').select2();
+
+      $('#form-create').submit(function (e) {
+        var username = $('#form-create .username').val();
+        var pass = $('#form-create .password').val();
+        if (username.length < 4) {
+          e.preventDefault();
+          toastr.warning('Username must be at least 4 characters!');
+        }
+        if (pass.length < 6) {
+          e.preventDefault();
+          toastr.warning('Password must be at least 6 characters!');
+        }
+      })
+      $('.select-role').on('select2:select', function(e) {
+        var thisBtn = $(this);
+        var user = thisBtn.data('user');
+        var roleAdd = e.params.data.id;
+        $.ajax({
+          type: 'POST',
+          url: '/roles',
+          data: { user_id: user.id, role: roleAdd, type: 1 },
+        })
+      });
+
+      $('.select-role').on('select2:unselect', function(e) {
+        var thisBtn = $(this);
+        var user = thisBtn.data('user');
+        var roleRemove = e.params.data.id;
+        $.ajax({
+          type: 'POST',
+          url: '/roles',
+          data: { user_id: user.id, role: roleRemove, type: 0 },
+        })
+      });
+    });
+  </script>
+</body>
