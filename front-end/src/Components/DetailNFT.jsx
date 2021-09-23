@@ -84,8 +84,8 @@ const DetailNFT = ({ detail }) => {
               <div className="detailsHeroDeta">
                 <h1>{detail?.name}</h1>
                 <p>{detail?.description}.</p>
-
-                <h6 className="current_price">Current Price</h6>
+                {detail?.status === 2 &&
+                  <><h6 className="current_price">Current Price</h6>
                 <h2>
                   <img src="/assets/img/icons/main-icon.png" alt="icon price" />
                   {toDisplayNumber(detail?.price || 0)}
@@ -120,7 +120,7 @@ const DetailNFT = ({ detail }) => {
                   {userAddress === detail?.owner.address ? "Cancel Sell"
                     : +allowance <= +detail.price ? "Approve to buy" : "buy now"}
                   {loading && "..."}
-                </button>
+                </button></>}
                 <div className="creators_details">
                   <div className="row justify-content-between">
                     <div className="col">

@@ -104,7 +104,7 @@ const listNft = async (ctx, next) => {
   } = ctx.request.query;
   const conditions = [
     ['owner', owner],
-    ['status', status],
+    ['status', 'in', status ? status.split(",") : null],
     ['category_id', 'in', category ? category.split(",") : null],
     ['name', 'like', name ? `%${name}%` : null],
   ];

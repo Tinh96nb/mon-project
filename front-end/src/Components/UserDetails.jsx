@@ -3,13 +3,15 @@ import {Link} from 'react-router-dom'
 import Socials from './UI/Socials'
 import { displayAddress, getFile } from 'utils/hepler'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleFollow } from 'redux/userReducer'
+import { postLogin, toggleFollow } from 'redux/userReducer'
 import { getDetail } from 'redux/nftReducer'
+import toast from './Toast'
 
 const UserDetails = ({tokenId, owner}) => {
 
   const dispatch = useDispatch();
   const { userAddress } = useSelector((state) => state.home)
+  const { authChecked } = useSelector((state) => state.user )
   const avt = owner && owner.avatar ? getFile(owner.avatar) : '/assets/img/user/avatar.jpg';
 
   const isFollowed = owner?.followers.length && 
@@ -39,7 +41,18 @@ const UserDetails = ({tokenId, owner}) => {
                     <button
                       className={`follow_btn ${isFollowed ? 'active': ''}`}
                       disabled={userAddress === owner?.address}
-                      onClick={() => {
+                      onClick={async () => {
+                        if (!userAddress) return toast.error({message: "You must be connect metamask!"})
+                        if (!authChecked) {
+                          dispatch(postLogin((res) => {
+                            if (res) {
+                              dispatch(toggleFollow(owner.address, (ok) => {
+                                if (ok) dispatch(getDetail(tokenId));
+                              }))
+                            }
+                          }))
+                          return;
+                        }
                         dispatch(toggleFollow(owner.address, (res) => {
                           if (res) dispatch(getDetail(tokenId));
                         }))

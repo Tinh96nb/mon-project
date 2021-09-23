@@ -62,7 +62,7 @@ export function postLogin(cb) {
   return async (dispatch, getStore) => {
     const { web3 } = getStore().home;
     const { me } = getStore().user;
-    if (!web3 || !me) return cb(true);
+    if (!web3 || !me) return cb(false);
     try {
       const signature = await web3.eth.personal.sign(String(me.nonce), me.address, "");
       request({

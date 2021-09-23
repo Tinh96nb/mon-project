@@ -5,9 +5,10 @@ import { getListNFT } from "redux/nftReducer";
 import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
 import { Link , useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { detailUser, toggleFollow } from "redux/userReducer";
+import { detailUser, postLogin, toggleFollow } from "redux/userReducer";
 import Socials from "Components/UI/Socials";
 import LazyImage from "Components/LazyImage";
+import toast from "Components/Toast";
 
 export default function Creator() {
 
@@ -16,13 +17,13 @@ export default function Creator() {
 
   const { list, pagination } = useSelector((state) => state.nft);
   const { userAddress, priceToken } = useSelector((state) => state.home);
-  const { user } = useSelector((state) => state.user);
+  const { user, authChecked } = useSelector((state) => state.user);
 
   const [sort, setSort] = useState(null);
 
   useEffect(() => {
     if (sort) {
-      const query = { owner: user?.address, status: 2};
+      const query = { owner: user?.address, status: '1,2'};
       if (sort === "0") return dispatch(getListNFT(query));
       const [sort_by, order_by ] = sort.split("/")
       query.sort_by = sort_by;
@@ -38,13 +39,13 @@ export default function Creator() {
 
   useEffect(() => {
     if (user) {
-      const query = { owner: user.address, status: 2};
+      const query = { owner: user.address, status: '1,2'};
       dispatch(getListNFT(query));
     }
   }, [user])
 
   const loadMore = () => {
-    const query = { owner: user?.address, status: 2};
+    const query = { owner: user?.address, status: '1,2'};
     if (sort) {
       const [sort_by, order_by ] = sort.split("/")
       query.sort_by = sort_by;
@@ -82,7 +83,7 @@ export default function Creator() {
 
           <div className="portfolio_content">
             <h5>{nft.name}</h5>
-            <h1 className="portfolio_title">
+            {nft.status === 2 && <h1 className="portfolio_title">
               <img src="/assets/img/icons/main-icon.png" />{" "}
               {nft.price
                 ? toDisplayNumber(+parseFloat(nft.price).toFixed(2))
@@ -91,7 +92,7 @@ export default function Creator() {
               <span>
                 ${toDisplayNumber(nft ? +nft?.price * priceToken : 0)}
               </span>
-            </h1>
+            </h1>}
             <div className="author">
               <img src={avt} alt={nft.owner?.address} />
               <Link to={`/creator/${nft?.owner?.address}`}>
@@ -130,6 +131,17 @@ export default function Creator() {
                       className={`follow_btn ${isFollowed ? 'active': ''}`}
                       disabled={userAddress === user?.address}
                       onClick={() => {
+                        if (!userAddress) return toast.error({message: "You must be connect metamask!"})
+                        if (!authChecked) {
+                          dispatch(postLogin((res) => {
+                            if (res) {
+                              dispatch(toggleFollow(user.address, (ok) => {
+                                if (ok) dispatch(detailUser(user.address));
+                              }))
+                            }
+                          }))
+                          return;
+                        }
                         dispatch(toggleFollow(user.address, (res) => {
                           if (res) dispatch(detailUser(user.address));
                         }))
