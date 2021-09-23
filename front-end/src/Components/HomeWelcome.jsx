@@ -17,6 +17,9 @@ const HomeWelcome = ({nft, priceToken}) => {
         <Row>
           <Col lg="6 align-self-center">
             <div className="welcome-img">
+              <div className="bor-top"></div>
+              <div className="tg-left"></div>
+              <div className="tg-right"></div>
               {typeMedia === "image" ? (
                   <LazyImage src={media} alt={nft?.name} />
                 ) : (
@@ -37,7 +40,7 @@ const HomeWelcome = ({nft, priceToken}) => {
               <h1>{nft?.name}</h1>
               <h4>Current price</h4>
               <h2>
-                <img src={process.env.PUBLIC_URL + `/assets/img/icons/main-icon.png`} alt="" />
+                <img src={process.env.PUBLIC_URL + `/assets/img/icons/main-icon.svg`} alt="" />
                 {toDisplayNumber(nft?.price || 0)} MON
               </h2>
               <h5>${toDisplayNumber(nft ? +parseFloat((+nft?.price * priceToken).toString()).toFixed(2) : 0)}</h5>

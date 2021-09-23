@@ -223,7 +223,7 @@ const CreatorForm = () => {
                 <InputGroup className="mb-3">
                   <InputGroup.Prepend>
                     <InputGroup.Text>
-                      <img src="/assets/img/icons/main-icon.png" alt="icon" />
+                      <img src="/assets/img/icons/main-icon.svg" alt="icon" />
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl

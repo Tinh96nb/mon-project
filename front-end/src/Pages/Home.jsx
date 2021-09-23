@@ -70,7 +70,7 @@ export default function Marketplace() {
           <div className="portfolio_content">
             <h5>{nft.name}</h5>
             <h1 className="portfolio_title">
-              <img src="/assets/img/icons/main-icon.png" />{" "}
+              <img src="/assets/img/icons/main-icon.svg" />{" "}
               {nft.price
                 ? toDisplayNumber(+parseFloat(nft.price).toFixed(2))
                 : 0}{" "}
@@ -80,7 +80,7 @@ export default function Marketplace() {
               </span>
             </h1>
             <div className="author">
-              <LazyImage src={avt} alt={nft.owner?.address} />
+              <img src={avt} alt={nft.owner?.address} />
               <Link to={`/creator/${nft?.owner?.address}`}>
                 {nft?.owner?.username || displayAddress(nft?.owner?.address)}
               </Link>

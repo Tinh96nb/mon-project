@@ -45,7 +45,7 @@ const Portfolio = () => {
                     <div className="portfolio_content">
                       <h5>{nft.name}</h5>
                       <h1 className="portfolio_title">
-                        <img src="/assets/img/icons/main-icon.png" />{" "}
+                        <img src="/assets/img/icons/main-icon.svg" />{" "}
                         {nft.price
                           ? toDisplayNumber(+parseFloat(nft.price).toFixed(2))
                           : 0}{" "}

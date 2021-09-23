@@ -87,8 +87,8 @@ const DetailNFT = ({ detail }) => {
                 {detail?.status === 2 &&
                   <><h6 className="current_price">Current Price</h6>
                 <h2>
-                  <img src="/assets/img/icons/main-icon.png" alt="icon price" />
-                  {toDisplayNumber(detail?.price || 0)}
+                  <img src="/assets/img/icons/main-icon.svg" alt="icon price" />
+                  {toDisplayNumber(detail?.price || 0)} MON
                 </h2>
                 <h5>
                   ${toDisplayNumber(detail ? +parseFloat((+detail?.price * priceToken).toString()).toFixed(2) : 0)}

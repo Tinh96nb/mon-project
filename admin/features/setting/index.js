@@ -1,8 +1,7 @@
 const { listInit, listConfig, updateConfig } = require('./repository');
 
 async function updateSetting(req, res) {
-  const { nft = '', user } = req.body
-  await updateConfig({nft, user: user ? user.toString() : ''});
+  await updateConfig(req.body);
   req.session.messages = { success: "Update success config!" };
   return res.redirect('/system-config');
 }

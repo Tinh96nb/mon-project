@@ -84,7 +84,7 @@ export default function Creator() {
           <div className="portfolio_content">
             <h5>{nft.name}</h5>
             {nft.status === 2 && <h1 className="portfolio_title">
-              <img src="/assets/img/icons/main-icon.png" />{" "}
+              <img src="/assets/img/icons/main-icon.svg" />{" "}
               {nft.price
                 ? toDisplayNumber(+parseFloat(nft.price).toFixed(2))
                 : 0}{" "}

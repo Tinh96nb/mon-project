@@ -8,7 +8,7 @@ const getCategory = async (condition, limit = 1) => {
 };
 
 const getConfig = async () => {
-  return knex('system_config');
+  return knex('system_config').whereNotIn('name', ['nft', 'user']);
 };
 
 module.exports = {
