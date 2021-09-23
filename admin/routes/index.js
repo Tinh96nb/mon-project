@@ -12,7 +12,6 @@ const aclRoutes = require('../features/acl/routes');
 const homeRoutes = require('../features/dashboard');
 const settingRoutes = require('../features/setting/routes');
 
-
 router.use(aclMiddleware)
 router.use((req, res, next) => {
   if (req.session) {
