@@ -187,7 +187,6 @@ const Header = () => {
   const ref = useRef();
 
   useOnClickOutside(ref, () => {
-    console.log('run');
     if (mobileNav) mobileNavSet(false)
     if (search) searchSet(false)
   });
