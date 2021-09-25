@@ -1,7 +1,10 @@
 const knex = require('../../db/index');
 
-module.exports = router => {
-  router.get('/', async (req, res) => {
+module.exports = (router, middlewares) => {
+  router.get(
+    '/',
+    middlewares.map(middleware => middleware),
+    async (req, res) => {
 
     const newNFT = await knex('nfts').orderBy('created_at', 'DESC').limit(5);
     const trades = await knex('nft_histories').orderBy('created_at', 'DESC').where({type: 2}).limit(5);
