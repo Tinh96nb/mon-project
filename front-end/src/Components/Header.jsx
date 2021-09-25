@@ -187,6 +187,7 @@ const Header = () => {
   const ref = useRef();
 
   useOnClickOutside(ref, () => {
+    console.log('run');
     if (mobileNav) mobileNavSet(false)
     if (search) searchSet(false)
   });
@@ -263,7 +264,7 @@ const Header = () => {
           
         </div>
         {/* Mobile */}
-        <div ref={ref} className={mobileNav ? 'mobile-menu-assets active d-md-none' : 'mobile-menu-assets d-md-none'}>
+        <div ref={mobileNav ? ref : null} className={mobileNav ? 'mobile-menu-assets active d-md-none' : 'mobile-menu-assets d-md-none'}>
           <div className="close-btn" onClick={()=> mobileNavSet(false)}>
             <FaTimes />
           </div>
@@ -280,7 +281,7 @@ const Header = () => {
             />
         </div>
 
-        <div ref={ref} className={search ? 'mobile-search active d-md-none' : 'mobile-search d-md-none' }>
+        <div ref={search ? ref : null} className={search ? 'mobile-search active d-md-none' : 'mobile-search d-md-none' }>
           <div className="search-close" onClick={()=> searchSet(false)}>
             <FaTimes />
           </div>
