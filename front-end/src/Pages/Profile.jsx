@@ -290,7 +290,7 @@ export default function Creator() {
               {list.length ? (
                 list.map((nft, i) => renderNFT(nft, i))
               ) : (
-                <p className="mt-5 mb-5">No data</p>
+                <p className="m-center mt-5 mb-5">No data</p>
               )}
             </Row>
           </InfiniteScroll>

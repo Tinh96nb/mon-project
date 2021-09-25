@@ -936,7 +936,9 @@ img.smallImg {
   bottom: 0;
   animation: imageload 2s infinite;
 }
-
+.m-center {
+  margin: 0 auto;
+}
 @import 'Details';
 @import 'Marketplace';
 @import 'CreatorForm';

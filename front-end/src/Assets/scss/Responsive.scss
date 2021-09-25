@@ -122,13 +122,14 @@ span.menuLine:nth-child(2) {
 
 .mobile-menu-assets {
     position: fixed;
-    height: 100%;
+    height: auto;
     width: 100%;
     background: #fff;
     z-index: 999;
     padding: 20px;
     left: 0;
     top: 60px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 20px;
 }
 
 .close-btn {
@@ -147,16 +148,13 @@ span.menuLine:nth-child(2) {
 
 .mobile-search {
     margin-top: 30px;
-}
-
-.mobile-search {
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 20px;
     position: fixed;
     z-index: 99;
     background: #fff;
     width: 100%;
-    box-shadow: 0 4px 8px #f1f1f1;
     left: -200%;
-    top: 60px;
+    top: 30px;
     padding-top: 50px;
     transition: all .3s;
     visibility: hidden;
@@ -216,10 +214,6 @@ span.menuLine:nth-child(2) {
       border-top: 1px solid #000;
   }
 
-  .mobile-menu-assets li:last-child {
-      border-bottom: 1px solid #000;
-  }
-
   .userDetails{
     padding-left: 0;
     text-align: center;
@@ -275,7 +269,23 @@ span.menuLine:nth-child(2) {
       margin-top: 7px;
     }
   }
-
+  .section-padding2 {
+    .welcome-img {
+      border-top: none;
+      &::before {
+        display: none;
+      }
+      &::after {
+        display: none;
+      }
+      .tg-left, .tg-right {
+        display: none;
+      }
+    }
+  }
+  .usertables {
+    overflow-x: auto;
+  }
 }
 
 

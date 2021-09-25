@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -35,6 +35,7 @@ const providerOptions = {
       rpc: {
         1: REACT_APP_RPC,
         [REACT_APP_PORT_RPC]: REACT_APP_RPC,
+        56: REACT_APP_RPC,
       },
       network: "binance",
       chainId: REACT_APP_PORT_RPC,
@@ -183,6 +184,13 @@ const Header = () => {
     dispatch(logOut())
   }
 
+  const ref = useRef();
+
+  useOnClickOutside(ref, () => {
+    if (mobileNav) mobileNavSet(false)
+    if (search) searchSet(false)
+  });
+
   return (
     <>
       <div className={headerNav ? 'header black-bg header_sticky' : 'header black-bg'}>
@@ -223,7 +231,7 @@ const Header = () => {
                 </Col>
 
                 <Col xs="4" className="text-right align-self-center d-md-none">
-                  <div onClick={()=>searchSet(true)} className="mobile-search-icon">
+                  <div onClick={()=> searchSet(true)} className="mobile-search-icon">
                     <FaSearch />
                   </div>
                 </Col>
@@ -254,7 +262,8 @@ const Header = () => {
           </Container>
           
         </div>
-        <div className={mobileNav ? 'mobile-menu-assets active d-md-none' : 'mobile-menu-assets d-md-none'}>
+        {/* Mobile */}
+        <div ref={ref} className={mobileNav ? 'mobile-menu-assets active d-md-none' : 'mobile-menu-assets d-md-none'}>
           <div className="close-btn" onClick={()=> mobileNavSet(false)}>
             <FaTimes />
           </div>
@@ -265,11 +274,13 @@ const Header = () => {
                 setConnect(web3Modal)
                 mobileNavSet(false);
               }}
+              mobileNavSet={mobileNavSet}
+              mobileNav={mobileNav}
               logout={() => logout()}
             />
         </div>
 
-        <div className={search ? 'mobile-search active d-md-none' : 'mobile-search d-md-none' }>
+        <div ref={ref} className={search ? 'mobile-search active d-md-none' : 'mobile-search d-md-none' }>
           <div className="search-close" onClick={()=> searchSet(false)}>
             <FaTimes />
           </div>
@@ -297,6 +308,27 @@ const Header = () => {
           </div>
     </>
   )
+}
+
+function useOnClickOutside(ref, handler) {
+  useEffect(
+    () => {
+      const listener = (event) => {
+        // Do nothing if clicking ref's element or descendent elements
+        if (!ref.current || ref.current.contains(event.target)) {
+          return;
+        }
+        handler(event);
+      };
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+      return () => {
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
+      };
+    },
+    [ref, handler]
+  );
 }
 
 export default Header

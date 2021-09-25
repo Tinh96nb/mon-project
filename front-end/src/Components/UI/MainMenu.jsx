@@ -1,7 +1,8 @@
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { displayAddress, getFile, toDisplayNumber } from 'utils/hepler'
 
-const MainMenu = ({balance, me, setConnect, logout}) => {
+const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = false}) => {
 
   const renderUser = () => {
     const avt = me && me.avatar ? getFile(me.avatar) : '/assets/img/user/avatar.jpg';
@@ -15,14 +16,31 @@ const MainMenu = ({balance, me, setConnect, logout}) => {
         </div>
       </div>
       <div className="avt">
-          <Link className="clear-css" to="/profile"><img src={avt} /></Link>
+          <Link
+            className="clear-css" to="/profile"
+            onClick={() => {
+              if (mobileNav) mobileNavSet(false)
+            }}
+          >
+              <img src={avt} />
+          </Link>
           <div className="dropdown-content">
             <ul className="dropdown-list" >
-              <li><Link to="/profile">Profile</Link></li>
+              <li>
+                <Link
+                onClick={() => {
+                  if (mobileNav) mobileNavSet(false)
+                }}
+                to="/profile"
+                >
+                  Profile
+                </Link>
+              </li>
               <li>
                 <a
                   href=""
                   onClick={(e) => {
+                    if (mobileNav) mobileNavSet(false)
                     e.preventDefault();
                     logout()
                   }}
@@ -35,10 +53,29 @@ const MainMenu = ({balance, me, setConnect, logout}) => {
       </div>
     </div>
   }
+
   return (
     <ul className="mainNav">
-      <li><Link to="/marketplace">Marketplace</Link></li>
-      <li><Link to="/mint">Create</Link></li>
+      <li>
+        <Link
+          to="/marketplace"
+          onClick={() => {
+            if (mobileNav) mobileNavSet(false)
+          }}
+        >
+          Marketplace
+        </Link>
+        </li>
+      <li>
+        <Link
+          to="/mint"
+          onClick={() => {
+            if (mobileNav) mobileNavSet(false)
+          }}
+        >
+          Create
+        </Link>
+        </li>
       <li>
         {me?.address
         ? renderUser()
