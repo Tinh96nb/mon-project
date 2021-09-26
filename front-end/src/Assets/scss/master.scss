@@ -333,7 +333,7 @@ small.title-top {
   
 }
 
-a.cbtn {
+.cbtn {
   background: $blackBg;
   padding: 10px 50px;
   border-radius: 30px;
@@ -349,13 +349,13 @@ a.cbtn {
   margin-top: 45px;
 }
 
-a.cbtn.cbtn-black {
+.cbtn.cbtn-black {
   color: $whiteColor;
   border: 2px solid $blackColor;
   transition: all .3s;
 }
 
-a.cbtn.cbtn-white {
+.cbtn.cbtn-white {
   color: $blackColor;
   background: $whiteBg;
   border: 2px solid $blackColor;
@@ -368,7 +368,7 @@ a.cbtn.cbtn-white {
 }
 
 
-a.cbtn.cbtn-black{
+.cbtn.cbtn-black{
   &:hover {
     background: $whiteBg;
     color: $blackColor;

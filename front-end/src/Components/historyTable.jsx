@@ -29,7 +29,7 @@ const historyTable = ({ histories }) => {
                           return (
                             <tr key={i}>
                               <td>
-                                {history?.from && <img src={avtFrom} alt={history?.from?.username} />}
+                                {history?.from ? <img src={avtFrom} alt={history?.from?.username} /> : "NullAddress"}
                                 {history?.from?.username || displayAddress(history?.from?.address)}
                               </td>
                               <td>

@@ -1,9 +1,43 @@
+import { useEffect, useState } from 'react';
 import {Container, Row, Col} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import {Link, useHistory} from 'react-router-dom'
+import { getAllowance, getBalance, setMAxAllowance } from 'redux/userReducer';
 import { displayAddress, getFile, toDisplayNumber } from 'utils/hepler';
 import LazyImage from './LazyImage';
+import toast from './Toast';
 
 const HomeWelcome = ({nft, priceToken}) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const { userAddress, contractMarket, contractToken } = useSelector((state) => state.home);
+  const { allowance } = useSelector((state) => state.user);
+  
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    if (userAddress && contractToken) {
+      dispatch(getAllowance());
+    }
+  }, [userAddress, contractToken]);
+
+  const setBuy = () => {
+    contractMarket.methods
+      .purchase(nft.token_id)
+      .send({ from: userAddress })
+      .then((res) => {
+        setLoading(false);
+        toast.success("Buy NFT successfully!");
+        dispatch(getBalance());
+        history.push("/profile");
+      })
+      .catch((e) => {
+        setLoading(false);
+        toast.error({ message: "Buy NFT error!" });
+      });
+  };
+
   const media = nft?.media
     ? getFile(nft.media)
     : "/assets/img/portfolio/default.jpeg";
@@ -45,8 +79,27 @@ const HomeWelcome = ({nft, priceToken}) => {
               </h2>
               <h5>${toDisplayNumber(nft ? +parseFloat((+nft?.price * priceToken).toString()).toFixed(2) : 0)}</h5>
               <div className="button-group">
-                <Link className="cbtn cbtn-black" to={`/detail/${nft?.token_id}`}>Buy now</Link>
-                <Link className="cbtn cbtn-white" to={`/creator/${nft?.owner?.address}`}>View artwork</Link>
+                <button
+                  disabled={loading}
+                  className="cbtn cbtn-black"
+                  onClick={() => {
+                    setLoading(true)
+                    if (+allowance <= +nft.price) {
+                      const cb = (res) => {
+                        setLoading(false);
+                        if (res) setBuy();
+                        else
+                          toast.error({message: "You must be approve to buy NFT!"});
+                      };
+                      return dispatch(setMAxAllowance(cb));
+                    };
+                    setBuy();
+                  }}
+                >
+                  {loading && <div className="loader"></div>}
+                  Buy now
+                </button>
+                <Link className="cbtn cbtn-white" to={`/detail/${nft?.token_id}`}>View artwork</Link>
               </div>
             </div>
           </Col>
