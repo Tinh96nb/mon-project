@@ -170,6 +170,7 @@ const getNFTTop = async () => {
   } else {
     nft = await nftSalest();
   }
+  if (!nft) return null;
   return getByTokenId(nft.token_id);
 }
 
