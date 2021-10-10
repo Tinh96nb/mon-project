@@ -34,8 +34,7 @@ const providerOptions = {
     options: {
       rpc: {
         1: REACT_APP_RPC,
-        [REACT_APP_PORT_RPC]: REACT_APP_RPC,
-        56: REACT_APP_RPC,
+        [REACT_APP_PORT_RPC]: REACT_APP_RPC
       },
       network: "binance",
       chainId: REACT_APP_PORT_RPC,
