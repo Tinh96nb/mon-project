@@ -517,8 +517,33 @@ img.smallImg {
   
 }
 
+/* page not found */
+.page_404 {
+  padding: 40px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
+  margin-top: 50px;
+}
+.four_zero_four_bg h1 {
+  font-size: 80px;
+  font-weight: bold;
+}
+.four_zero_four_bg h2 {
+  font-size: 80px;
+}
+.four_zero_four_bg h3 {
+  font-size: 80px;
+}
 
-
+.four_zero_four_bg {
+  margin-bottom: 40px;
+}
+.contant_box_404 {
+  margin-bottom: 90px;
+}
+.infinite-scroll-component  {
+  overflow-x: hidden !important;
+}
 /*Footer area css*/
 
 .footer-area{

@@ -108,6 +108,7 @@ const CreatorForm = () => {
     if (!userAddress)
       return toast.error({ message: "Please connect wallet to create NFT!" });
     if (!file) return toast.error({ message: "File NFT is missing!" });
+    if (!price) return toast.error({ message: "Price for NFT is missing!" });
     setLoading(true);
     setTextStep("Creating...");
     const idToken = Math.round(new Date().getTime() / 1000);
