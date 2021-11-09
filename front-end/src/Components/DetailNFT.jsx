@@ -134,7 +134,7 @@ const DetailNFT = ({ detail }) => {
                       <p>
                         Metadata:
                         <a
-                          href={`${detail.metadata.replace(
+                          href={`${detail?.metadata?.replace(
                             "ipfs://",
                             "https://ipfs.io/ipfs/"
                           )}`}

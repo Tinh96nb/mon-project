@@ -1,20 +1,25 @@
 .edit-form-area {
-  padding: 80px 0;
+  padding: 30px 0;
 }
 
 .upload_logo.text-center p {
-  font-size: 13px;
-  font-weight: 400;
-  width: 75%;
+  font-size: 14px;
+  font-weight: 500;
   margin: 0 auto;
+  margin-bottom: 13px;
 }
 
-.upload_logo.text-center img {
-  margin-bottom: 20px;
-  height: 100px;
-  width: 100px;
+.demo-cover {
+  height: 235px;
+}
+.demo-avt {
+  margin-top: -52px;
+  border: 2px solid #fff;
+  width: 105px;
+  height: 105px;
   border-radius: 50%;
   object-fit: cover;
+  margin-left: 20px;
 }
 
 .upload_logo.text-center {

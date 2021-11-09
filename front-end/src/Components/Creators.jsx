@@ -21,7 +21,7 @@ const Portfolio = () => {
       <Container>
         <Row>
           <Col>
-          <Title title="Favorite Creators" />
+          <Title title="Favorite Creators" titleSpan="(View all)" linkSpan="/creators"/>
           </Col>
         </Row>
         <Row>

@@ -27,6 +27,7 @@ module.exports = function () {
   // for user
   router.put('/users', isAuth, userUploader.fields(userUpload), userController.updateUser);
   router.get('/users', userController.getList);
+  router.get('/users/all', userController.allUser);
   router.get('/users/:address', userController.getUser);
   router.post('/users/toggle-favorite', isAuth, userController.favorite);
 

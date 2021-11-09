@@ -9,6 +9,7 @@ const initialState = {
   authChecked: false,
   me: null,
   list: [],
+  all: [],
   user: null,
   balance: 0,
   allowance: 0,
@@ -53,6 +54,17 @@ export function fetchListUser() {
     .then(({ data }) => {
       if (data) {
         dispatch({type: SET_REDUX, payload: { list: data }})
+      }
+    })
+  }
+}
+
+export function fetchAllUser() {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.USER.ALL, data: {}})
+    .then(({ data }) => {
+      if (data) {
+        dispatch({type: SET_REDUX, payload: { all: data }})
       }
     })
   }

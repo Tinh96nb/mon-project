@@ -25,6 +25,7 @@ export default function EditProfile() {
   const dispatch = useDispatch();
 
   const [avatar, setAvatar] = useState("");
+  const [cover, setCover] = useState("");
   const [username, setUsername] = useState("");
   const [des, setDes] = useState("");
   const [face, setFace] = useState("");
@@ -36,7 +37,10 @@ export default function EditProfile() {
   const { me } = useSelector((store) => store.user);
   const avt =
     me && me.avatar ? getFile(me.avatar) : "/assets/img/user/avatar.jpg";
-
+  const coverImg = me?.cover
+    ? getFile(me.cover)
+    : "/assets/img/user/cover.jpeg";
+  
   const setImage = (event) => {
     if (event.target.files && event.target.files[0]) {
       const [type] = event.target.files[0].type.split("/");
@@ -52,6 +56,21 @@ export default function EditProfile() {
     }
   };
 
+  const setCoverImg = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const [type] = event.target.files[0].type.split("/");
+      if (!type || type !== "image") {
+        toast.error({ message: "Only support file type image!" });
+        return;
+      }
+      if (event.target.files[0].size >= 1024 * 1024 * 20) {
+        toast.error({ message: "Image too big!" });
+        return;
+      }
+      setCover(event.target.files[0]);
+    }
+  };
+
   const submit = async () => {
     setLoading(true);
     const formData = new FormData();
@@ -62,6 +81,7 @@ export default function EditProfile() {
     formData.append("twitter", tw);
     formData.append("instagram", ins);
     formData.append("avatar", avatar);
+    formData.append("cover", cover);
 
     const cb = (res) => {
       if (res) toast.success("Update successfully!")
@@ -87,11 +107,17 @@ export default function EditProfile() {
       <div className="edit-form-area">
         <Container>
           <Row>
-            <Col lg="6" className="m-auto">
-              <div className="form-uploads">
+            <div className="col-lg-4 col-sm-6 m-auto">
+            <img className="demo-cover" src={coverImg} />
+            <img className="demo-avt" src={avt} />
+            </div>
+            </Row>
+          <Row className="mt-4 justify-content-center">
+            <div className="col-md-8 col-sm-12">
+              <div className="row">
+              <div className="col-6">
                 <div className="upload_logo text-center">
-                  <img src={avt} />
-                  <p>We recommend an image of at least size 200x200.</p>
+                  <p>Set Avatar<br></br>(recommend size 200x200)</p>
                 </div>
 
                 <div className="upload_btn">
@@ -115,10 +141,32 @@ export default function EditProfile() {
                   </span>
                 </div>
               </div>
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <div className="col-md-8 col-sm-12">
+              <div className="col-6">
+                <div className="upload_logo text-center">
+                <p>Set Cover<br></br>(recommend size 450x300)</p>
+                </div>
+                <div className="upload_btn">
+                  <div className="file">
+                    <label>
+                      Choose file <FaRegImages />
+                    </label>
+                    <input
+                      className="file-input"
+                      type="file"
+                      onChange={setCoverImg}
+                    />
+                  </div>
+                  <span className="filename">
+                    {cover
+                      ? `${cover.name} (${(
+                          cover.size /
+                          (1024 * 1024)
+                        ).toFixed(2)} MB)`
+                      : ""}
+                  </span>
+                </div>
+              </div>
+              </div>
               <div className="edit_form">
                 <Form onSubmit={(e) => {
                   e.preventDefault();

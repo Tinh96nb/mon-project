@@ -9,6 +9,7 @@ const MintNFT = lazy(() => import("Pages/MintNFT"));
 const Details = lazy(() => import("Pages/Details"));
 const EditProfile = lazy(() => import("Pages/EditProfile"));
 const Marketplace = lazy(() => import("Pages/Marketplace"));
+const Users = lazy(() => import("Pages/Users"));
 const NotFound = lazy(() => import("Pages/404"));
 
 export default function Router() {
@@ -28,6 +29,7 @@ export default function Router() {
         <Route exact path="/detail/:tokenId" component={Details} />
         <Route exact path="/edit-profile" component={EditProfile} />
         <Route exact path="/marketplace" component={Marketplace} />
+        <Route exact path="/creators" component={Users} />
         <Route path="*"><NotFound /></Route>
       </Switch>
     </Suspense>

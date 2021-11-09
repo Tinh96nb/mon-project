@@ -67,6 +67,11 @@ const getList = async (ctx) => {
   ctx.body = users;
 }
 
+const allUser = async (ctx) => {
+  const users = await usersModel.allUser();
+  ctx.body = users;
+}
+
 const favorite = async (ctx) => {
   const { to } = ctx.request.body;
   if (!to) {
@@ -84,4 +89,4 @@ const favorite = async (ctx) => {
   ctx.body = res
 }
 
-module.exports = { updateUser, getUser, favorite, getList }
+module.exports = { updateUser, getUser, favorite, getList, allUser }
