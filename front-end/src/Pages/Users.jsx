@@ -1,11 +1,11 @@
 import { Container, Row, Col } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "redux/userReducer";
-import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
-import { Link, useLocation } from "react-router-dom";
+import { displayAddress, getFile } from "utils/hepler";
+import { Link } from "react-router-dom";
 import LazyImage from "Components/LazyImage";
-import { detailUser, postLogin, toggleFollow } from "redux/userReducer";
+import { postLogin, toggleFollow } from "redux/userReducer";
 import toast from "Components/Toast";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 
@@ -33,14 +33,14 @@ export default function Marketplace() {
     return (
       <Col sm="6" lg="4" key={i}>
         <div className="single_portfolio">
-          <Link to={`/detail/${user.address}`}>
+          <Link to={`/creator/${user.address}`}>
             <div className="cover">
               <LazyImage src={cover} alt={user.username} />
             </div>
           </Link>
           <div className="content-createtor">
             <div className="avt">
-              <Link to={`/detail/${user.address}`}>
+              <Link to={`/creator/${user.address}`}>
                 <LazyImage src={avt} alt={user.username} />
               </Link>
               <ul className="social">
@@ -108,7 +108,6 @@ export default function Marketplace() {
 
   return (
     <>
-      {/* <Creators /> */}
       <div className="portfolio-area">
         <Container>
           <Row>
