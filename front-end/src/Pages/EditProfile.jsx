@@ -87,6 +87,7 @@ export default function EditProfile() {
       if (res) toast.success("Update successfully!")
       else toast.error({message: "Error"})
       setAvatar("");
+      setCover("");
       setLoading(false);
     }
     dispatch(updateProfile(formData, cb));
