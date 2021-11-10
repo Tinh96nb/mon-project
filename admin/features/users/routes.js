@@ -16,6 +16,11 @@ module.exports = (router, middlewares = []) => {
     middlewares.map(middleware => middleware),
     usersPage.toggleUser
   );
+  router.post(
+    '/users/toggle-verify',
+    middlewares.map(middleware => middleware),
+    usersPage.toggleVerifyUser
+  );
 
   return router;
 };

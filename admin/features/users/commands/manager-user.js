@@ -5,13 +5,20 @@ async function listUser(req, res) {
   res.status(200).json({data: users});
 }
 
-async function toggleUser (req, res) {
+async function toggleUser(req, res) {
   const { id } = req.body;
   const rest = await repoUser.toggleUser(id);
   res.status(200).json(rest);
 }
 
+async function toggleVerifyUser(req, res) {
+  const { id } = req.body;
+  const rest = await repoUser.toggleVerify(id);
+  res.status(200).json(rest);
+}
+
 module.exports = {
   listUser,
-  toggleUser
+  toggleUser,
+  toggleVerifyUser
 }

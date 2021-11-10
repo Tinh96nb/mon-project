@@ -57,7 +57,37 @@ async function toggleUser(id) {
     };
   }
 }
+
+async function toggleVerify(id) {
+  try {
+    const user = await knex('users')
+      .where({id})
+      .first();
+    if (!user) {
+      return {
+        success: false,
+        message: 'Not found user!',
+        data: null,
+      };
+    }
+    await knex('users')
+      .where({id})
+      .update({verify: !user.verify});
+    return {
+      success: true,
+      message: 'Change verify successfuly!',
+      data: null,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Server error!',
+      data: error.message,
+    };
+  }
+}
 module.exports = {
   getList,
   toggleUser,
+  toggleVerify
 };

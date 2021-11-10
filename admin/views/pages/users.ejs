@@ -26,7 +26,8 @@
                     <th>NFT</th>
                     <th>Trade</th>
                     <th>Volumn</th>
-                    <th>action</th>
+                    <th>Verify</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -130,6 +131,21 @@
             toastr.error('Error!');
           });
       }
+      function toogleVerify(id) {
+        $.ajax({
+          type: 'POST',
+          url: '/users/toggle-verify',
+          data: { id },
+        })
+          .done(function(res) {
+            toastr.success(res.message);
+            datatable.ajax.reload();
+          })
+          .catch(function(error) {
+            datatable.ajax.reload();
+            toastr.error('Error!');
+          });
+      }
       var datatable = $('#table-user').DataTable({
         processing: true,
         pagingType: 'first_last_numbers',
@@ -157,6 +173,15 @@
           { data: 'amountNFT' },
           { data: 'numTrade' },
           { data: 'totalTrade' },
+          {
+            data: 'verify',
+            orderable: false,
+            render: function(data, type, row) {
+              if (data)
+                return `<button onclick="toogleVerify(${row.id})" class="action-user btn btn-warning btn-sm">UnVerify</button>`;
+              return `<button onclick="toogleVerify(${row.id})" class="action-user btn btn-success btn-sm">Verify</button>`;
+            },
+          },
           {
             data: 'status',
             orderable: false,
