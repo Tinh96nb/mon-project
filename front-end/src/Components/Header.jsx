@@ -68,6 +68,8 @@ const Header = () => {
   }
   window.addEventListener('scroll', changeMenuStyle);
 
+
+
   useEffect(() => {
     window.addEventListener("load", async () => {
       // if not logined

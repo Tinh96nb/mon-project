@@ -590,7 +590,6 @@ img.smallImg {
     }
   }
   .content-createtor {
-    position: relative;
     padding: 25px;
     h1 {
       font-size: 30px;
@@ -609,8 +608,9 @@ img.smallImg {
       margin-bottom: 0;
     }
     .avt {
+      position: relative;
       img {
-        margin-top: -25px;
+        margin-top: -15px;
         border: 2px solid #fff;
         width: 105px;
         height: 105px;
@@ -623,8 +623,8 @@ img.smallImg {
     list-style: none;
     display: inline-flex;
     position: absolute;
-    right: 4%;
-    top: 37%;
+    right: -10px;
+    top: 48%;
     li {
       margin-right: 10px;
       font-size: 20px;

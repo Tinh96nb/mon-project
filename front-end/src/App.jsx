@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './Assets/scss/master.scss'
 import Layout from 'Layout';
 
+document.addEventListener('contextmenu', (e) => e.preventDefault());
 function App() {
   return (
     <BrowserRouter>
