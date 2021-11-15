@@ -85,14 +85,20 @@ const listUser = async (limit = 7) => {
 
 const allUser = async () => {
   const [users] = await knex.raw(`
-    SELECT users.*, c2.numfa as favorite
-    FROM users
-    LEFT JOIN
-      ( SELECT favorites.to, COUNT(*) AS numfa
-        FROM favorites
-        GROUP BY favorites.to
-      ) c2 ON ( c2.to = users.address )
-    ORDER BY c2.numfa DESC;
+  SELECT users.*, c2.numfa as favorite, c3.numNFT as amount_nft
+  FROM users
+  LEFT JOIN
+    ( SELECT favorites.to, COUNT(*) AS numfa
+      FROM favorites
+      GROUP BY favorites.to
+    ) c2 ON ( c2.to = users.address )
+  LEFT JOIN
+    ( SELECT owner, COUNT('id') AS numNFT
+      FROM nfts
+      GROUP BY owner
+    ) c3 ON ( c3.owner = users.address )
+  WHERE status = 1 AND c3.numNFT > 0
+  ORDER BY c2.numfa DESC;
   `)
   const res = await Promise.all(users.map(async (user) => {
     const followers = await knex('favorites').where('to', user.address);
