@@ -22,6 +22,7 @@ async function init() {
   const data = await fs.readFile(fileName, 'utf8');
   const objBlock = JSON.parse(data);
   const latest = await web3.eth.getBlockNumber();
+  const stepBlock = 20;
   const {
     [EVENT.minNFT]: blockMint,
     [EVENT.buy]: blockBuy,
@@ -34,15 +35,16 @@ async function init() {
   if (+blockMint === 0) {
     objBlock[EVENT.minNFT] = latest;
     await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockMint !== +latest) {
+  } else if (+blockMint < +latest) {
+    const to = +blockMint + stepBlock > latest ? latest : +blockMint + stepBlock;
     contract().nft
-      .getPastEvents("Transfer", {
-        fromBlock: +blockMint+1,
-        toBlock: 'latest'
-      })
-      .then(async (events) => {
+    .getPastEvents("Transfer", {
+      fromBlock: +blockMint,
+      toBlock: to
+    })
+    .then(async (events) => {
         if (events.length) event.emit(EVENT.minNFT, events)
-        objBlock[EVENT.minNFT] = latest;
+        objBlock[EVENT.minNFT] = to+1;
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
@@ -51,15 +53,16 @@ async function init() {
   if (+blockBuy === 0) {
     objBlock[EVENT.buy] = latest;
     await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockBuy !== +latest) {
+  } else if (+blockBuy < +latest) {
+    const to = +blockBuy + stepBlock > latest ? latest : +blockBuy + stepBlock;
     contract().market 
       .getPastEvents("Purchased", {
-        fromBlock: +blockBuy+1,
-        toBlock: 'latest'
+        fromBlock: +blockBuy,
+        toBlock: to
       })
       .then(async (events) => {
         if (events.length) event.emit(EVENT.buy, events)
-        objBlock[EVENT.buy] = latest;
+        objBlock[EVENT.buy] = to+1;
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
@@ -68,15 +71,16 @@ async function init() {
   if (+blockSell === 0) {
     objBlock[EVENT.createSell] = latest;
     await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockSell !== +latest) {
+  } else if (+blockSell < +latest) {
+    const to = +blockSell + stepBlock > latest ? latest : +blockSell + stepBlock;
     contract().market 
       .getPastEvents("NewSellOrderCreated", {
-        fromBlock: +blockSell+1,
-        toBlock: 'latest'
+        fromBlock: +blockSell,
+        toBlock: to
       })
       .then(async (events) => {
         if (events.length) event.emit(EVENT.createSell, events)
-        objBlock[EVENT.createSell] = latest;
+        objBlock[EVENT.createSell] = to+1;
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
@@ -85,15 +89,16 @@ async function init() {
   if (+blockCancel === 0) {
     objBlock[EVENT.cancelOrder] = latest;
     await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockCancel !== +latest) {
+  } else if (+blockCancel < +latest) {
+    const to = +blockSell + stepBlock > latest ? latest : +blockSell + stepBlock;
     contract().market 
       .getPastEvents("CancelOrder", {
-        fromBlock: +blockCancel+1,
-        toBlock: 'latest'
+        fromBlock: +blockCancel,
+        toBlock: to
       })
       .then(async (events) => {
         if (events.length) event.emit(EVENT.cancelOrder, events)
-        objBlock[EVENT.cancelOrder] = latest;
+        objBlock[EVENT.cancelOrder] = to+1;
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
@@ -102,21 +107,20 @@ async function init() {
   if (+blockRoy === 0) {
     objBlock[EVENT.setRoy] = latest;
     await fs.writeFile(fileName, JSON.stringify(objBlock));
-  } else if (+blockRoy !== +latest) {
+  } else if (+blockRoy < +latest) {
+    const to = +blockRoy + stepBlock > latest ? latest : +blockRoy + stepBlock;
     contract().nft 
       .getPastEvents("SetFeeCoppyRight", {
-        fromBlock: +blockRoy+1,
-        toBlock: 'latest'
+        fromBlock: +blockRoy,
+        toBlock: to
       })
       .then(async (events) => {
         if (events.length) event.emit(EVENT.setRoy, events)
-        objBlock[EVENT.setRoy] = latest;
+        objBlock[EVENT.setRoy] = to+1;
         await fs.writeFile(fileName, JSON.stringify(objBlock));
       })
   }
-  
-  await sleep(3000);
-  init();
+  setTimeout(() => init(), 2500);
 };
 init();
 
