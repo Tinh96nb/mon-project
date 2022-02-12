@@ -6,7 +6,7 @@ const SET_REDUX = 'home/SET_REDUX'
 const initialState = {
   userAddress: null,
   web3: null,
-  priceToken: 0.5,
+  priceToken: 0,
   contractToken: null,
   contractNFT: null,
   contractMarket: null,
@@ -39,6 +39,17 @@ export function setEnvContract(obj) {
       payload: obj
     })
   }
+}
+
+export function getPriceToken() {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.PRICE, data: {} }).then(
+      ({ data }) => {
+        if (data)
+          dispatch({ type: SET_REDUX, payload: { priceToken: data } });
+      }
+    );
+  };
 }
 
 export function resetStore() {

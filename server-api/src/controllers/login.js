@@ -1,5 +1,6 @@
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
+const axios = require('axios');
 const jwtHelper = require('../helper/jwt');
 const usersModel = require('../models/users');
 const cateModel = require('../models/category');
@@ -48,4 +49,10 @@ const getConfig = async (ctx, next) => {
   ctx.body = revert;
 }
 
-module.exports = { login, getConfig };
+const getPrice = async (ctx, next) => {
+  const res = await axios("https://web-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=16147");
+  const price = res.data.data[16147].quote.USD.price;
+  ctx.body = parseFloat(price).toFixed(4);
+}
+
+module.exports = { login, getConfig, getPrice };

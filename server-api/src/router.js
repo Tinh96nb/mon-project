@@ -42,5 +42,7 @@ module.exports = function () {
   router.get('/categories', cateController.list);
   router.get('/categories/:id', cateController.detail);
 
+  router.get('/getprice', loginController.getPrice);
+
   return router;
 };

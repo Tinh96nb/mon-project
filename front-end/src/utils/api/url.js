@@ -8,6 +8,7 @@ const API_URL = {
     FOLLOW: "/users/toggle-favorite",
   },
   CONFIG: "/config",
+  PRICE: "/getprice",
   CATEGORY: {
     GET_ALL: "/categories"
   },
