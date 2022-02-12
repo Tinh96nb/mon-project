@@ -36,6 +36,8 @@ export default function Creator() {
   const [perRoy, setPerRoy] = useState(0);
   const [loadingRoy, setLoadingRoy] = useState(false);
 
+  const [loadingMin, setLoadingMint] = useState(false);
+
   useEffect(() => {
     if (sort || filstatus) {
       const query = { owner: me?.address };
@@ -151,6 +153,21 @@ export default function Creator() {
       })
   }
 
+  const mint = (tokenid, metadata) => {
+    contractNFT.methods
+      .mintToken(tokenid, metadata)
+      .send({ from: me.address })
+      .then((res) => {
+        setLoadingMint(false);
+        toast.success("Mint NFT successfully!");
+        dispatch(getListNFT({owner: me.address}));
+      })
+      .catch((error) => {
+        setLoadingMint(false);
+        toast.error({ message: "You not confirm transaction!" });
+      });
+  }
+
   const renderNFT = (nft, i) => {
     const typeMedia = nft?.mine_type?.split("/")[0];
     const media = nft.media
@@ -183,7 +200,7 @@ export default function Creator() {
                 : 0}{" "}
               MON{" "}
               <span>
-                ${toDisplayNumber(nft ? +nft?.price * priceToken : 0)}
+                ${toDisplayNumber(nft ? parseFloat((+nft?.price * priceToken).toString()).toFixed(2) : 0)}
               </span>
               <span className={`${statusNFt[nft?.status]?.color} float-right`}>
                 {statusNFt[nft?.status]?.text}
@@ -234,6 +251,19 @@ export default function Creator() {
                     }}
                   >
                     <BsGearFill /> Set Sell
+                  </button>
+                }
+                {(nft.status === 0) && 
+                  <button
+                    disabled={loadingMin === nft.token_id}
+                    className="btn btn-option"
+                    onClick={() => {
+                      setLoadingMint(nft.token_id)
+                      mint(nft.token_id, nft.metadata);
+                    }}
+                  >
+                    {loadingMin === nft.token_id && <div className="loader"></div>}
+                    <BsGearFill /> Mint
                   </button>
                 }
               </div>

@@ -51,7 +51,7 @@ const Portfolio = () => {
                           : 0}{" "}
                         MON{" "}
                         <span>
-                          ${toDisplayNumber(nft ? +nft?.price * priceToken : 0)}
+                          ${toDisplayNumber(nft ? parseFloat((+nft?.price * priceToken).toString()).toFixed(2) : 0)}
                         </span>
                       </h1>
                       <div className="author">

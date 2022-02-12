@@ -121,7 +121,6 @@ const CreatorForm = () => {
     formData.append("media", file);
     // push ipfs
     const client = new NFTStorage({ token: process.env.REACT_APP_IPFS });
-    console.log("run");
     const metadata = await client.store({
       name: name,
       description: des,
