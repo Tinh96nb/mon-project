@@ -1,3 +1,4 @@
+const { makeThumbnail } = require("../helper");
 const nftModel = require("../models/nft");
 const historyModel = require("../models/nft_history");
 
@@ -25,7 +26,9 @@ const mint = async (ctx, next) => {
     if (body[field] && body[field] !== undefined) data[field] = body[field];
   });
   if (file) {
-    data.media = "/nft/" + file.filename;
+    const filePath = "/nft/" + file.filename;
+    data.thumbnail = await makeThumbnail(file);
+    data.media = filePath;
     data.mine_type = file.mimetype;
   } else {
     ctx.body = { media: { param: "media", msg: "This field is required!" } };

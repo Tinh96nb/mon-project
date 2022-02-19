@@ -30,8 +30,9 @@ const Portfolio = () => {
               const avt = nft.owner?.avatar
                 ? getFile(nft.owner.avatar)
                 : "/assets/img/user/avatar.jpg";
-              const media = nft.media
-                ? getFile(nft.media)
+              let media = nft?.thumbnail ? nft.thumbnail : nft.media;
+              media = media
+                ? getFile(media)
                 : "/assets/img/portfolio/default.jpeg";
               return (
                 <Col sm="6" lg="4" key={i}>

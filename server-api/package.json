@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "migrate": "./node_modules/.bin/knex migrate:latest",
-    "start": "pm2 start src/index.js --watch --ignore-watch='public node_modules src/events' --name=mon-api",
+    "start": "pm2 start src/index.js --watch --ignore-watch=\"public node_modules src/events\" --name=mon-api",
+    "debug": "node src/index.js",
     "stop": "pm2 stop mon-api",
     "log": "pm2 log mon-api",
     "event": "pm2 start src/events/index.js --name=event --max-memory-restart 150M --cron-restart='0 * * * *'"
@@ -15,6 +16,7 @@
     "dotenv": "9.0.2",
     "eth-sig-util": "3.0.1",
     "ethereumjs-util": "7.1.0",
+    "jimp": "0.16.1",
     "jsonwebtoken": "8.5.1",
     "knex": "0.95.6",
     "koa": "2.13.1",
