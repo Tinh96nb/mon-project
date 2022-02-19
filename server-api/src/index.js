@@ -11,7 +11,9 @@ const koaStatic = require("koa-static");
 const router = require("./router")();
 
 const app = new Koa();
-const staticDist = koaStatic(path.resolve(__dirname, "../public"));
+const staticDist = koaStatic(path.resolve(__dirname, "../public"), {
+  maxage: 31536000000
+});
 
 app.use(cors());
 app.use(staticDist);
