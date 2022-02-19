@@ -38,8 +38,9 @@ const HomeWelcome = ({nft, priceToken}) => {
       });
   };
 
-  const media = nft?.media
-    ? getFile(nft.media)
+  let media = nft?.thumbnail ? nft?.thumbnail : nft?.media;
+  media = media
+    ? getFile(media)
     : "/assets/img/portfolio/default.jpeg";
   const typeMedia = nft?.mine_type?.split("/")[0];
   const avt = nft?.owner && nft?.owner?.avatar ? getFile(nft?.owner?.avatar) : '/assets/img/user/avatar.jpg';

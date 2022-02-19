@@ -60,8 +60,9 @@ export default function Creator() {
       ? getFile(nft.owner.avatar)
       : "/assets/img/user/avatar.jpg";
     const typeMedia = nft?.mine_type?.split("/")[0];
-    const media = nft.media
-      ? getFile(nft.media, typeMedia === "video")
+    let media = nft.thumbnail ? nft.thumbnail : nft.media;
+    media = media
+      ? getFile(media, typeMedia === "video")
       : "/assets/img/portfolio/default.jpeg";
     return (
       <Col sm="6" lg="4" key={i}>
