@@ -182,7 +182,7 @@ export default function Creator() {
                 <LazyImage src={media} alt={nft.name} />
               ) : (
                 <video
-                  autoPlay={true}
+                  autoPlay={false}
                   loop={true}
                   playsInline={true}
                   src={media}
