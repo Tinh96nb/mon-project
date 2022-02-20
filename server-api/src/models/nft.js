@@ -199,6 +199,9 @@ const getList = async (
       if (condition.length === 2) query.andWhere(condition[0], condition[1]);
       if (condition.length === 3) query.andWhere(condition[0], condition[1], condition[2]);
     }
+    if (condition[0] === 'collection_id' && condition[1]) {
+      query.andWhere('collection_id', condition[1]);
+    }
   });
   const total = await query.clone().count('id as amount').first();
   if (limit) query.limit(limit);

@@ -11,6 +11,8 @@ const initialState = {
   list: [],
   top: null,
   categories: [],
+  collections: [],
+  collection: null,
   histories: [],
   selectCate: null,
   pagination: null
@@ -70,6 +72,28 @@ export function getCategories() {
       ({ data }) => {
         if (data)
           dispatch({ type: SET_REDUX, payload: { categories: data } });
+      }
+    );
+  };
+}
+
+export function getCollection(slug) {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.COLLECTIONS.GET_DETAIL.replace(":slug", slug), data: {} }).then(
+      ({ data }) => {
+        if (data)
+          dispatch({ type: SET_REDUX, payload: { collection: data } });
+      }
+    );
+  };
+}
+
+export function getCollections() {
+  return (dispatch) => {
+    request({ method: "GET", url: API_URL.COLLECTIONS.GET_ALL, data: {} }).then(
+      ({ data }) => {
+        if (data)
+          dispatch({ type: SET_REDUX, payload: { collections: data } });
       }
     );
   };

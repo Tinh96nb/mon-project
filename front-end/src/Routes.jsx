@@ -2,6 +2,7 @@ import { lazy, Suspense, useLayoutEffect } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
 
 import Loading from "Components/Loading";
+const Collection = lazy(() => import("Pages/Collection"));
 const Home = lazy(() => import("Pages/Home"));
 const Profile = lazy(() => import("Pages/Profile"));
 const Creator = lazy(() => import("Pages/Creator"));
@@ -30,6 +31,7 @@ export default function Router() {
         <Route exact path="/edit-profile" component={EditProfile} />
         <Route exact path="/marketplace" component={Marketplace} />
         <Route exact path="/creators" component={Users} />
+        <Route exact path="/collections/:slug" component={Collection} />
         <Route path="*"><NotFound /></Route>
       </Switch>
     </Suspense>

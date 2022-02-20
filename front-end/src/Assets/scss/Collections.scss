@@ -1,0 +1,91 @@
+.container-cover {
+  display: flex;
+  min-height: 120px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background-color: rgb(229, 232, 234);
+}
+
+.collection-avatar {
+  margin-top: -60px;
+  position: relative;
+}
+
+.collection-avatar img {
+  height: 130px;
+  width: 130px;
+  background: rgb(229, 232, 235);
+  border: 2px solid rgb(229, 232, 235);
+  border-radius: 50%;
+}
+
+.collection-info {
+  // cursor: pointer;
+  padding: 10px 0px;
+  width: 144px;
+  height: 88px;
+}
+
+// .collection-info:hover {
+//   transition: all 0.2s ease 0s;
+//   box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+// }
+
+.collection-info > p:first-child {
+  margin: 0px;
+  font-weight: 600;
+  font-size: 24px;
+  color: rgb(4, 17, 29);
+}
+
+.collection-info > p:last-child {
+  color: rgb(138, 147, 155);
+  font-size: 14px;
+}
+
+.border-radius-right-10 {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.border-radius-left-10 {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.btn.btn-plus.btn-primary {
+  height: 50px;
+  padding: unset !important;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: auto;
+  margin-left: 1rem;
+  margin-top: auto !important;
+  &:hover, &:focus{
+    &:not([disabled]) {
+      transition: all .3;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+    }
+    & > svg {
+      fill: #000;
+    }
+  }
+}
+
+.collection-description {
+  color: rgb(112, 122, 131);
+}
+
+.btn.btn-secondary.btn-close {
+  border-radius: 7px;
+  border: none;
+  padding: 14px 50px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 0;
+}
