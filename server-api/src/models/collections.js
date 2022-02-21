@@ -5,7 +5,7 @@ const getCollections = async (condition, limit = 1) => {
   let query = knex('collections').select("collections.*").where(condition);
   if (limit) query.limit(limit);
   if (limit === 1) {
-    const withUserName = function (queryBuilder, foreignKey) {
+    const withUser = function (queryBuilder, foreignKey) {
       queryBuilder.leftJoin('users', foreignKey, 'users.id').select([
         'users.id as userId',
         'users.username',
@@ -13,7 +13,7 @@ const getCollections = async (condition, limit = 1) => {
         'users.email',
       ]);
     };
-    const collection = await query.modify(withUserName, 'user_id').first();
+    const collection = await query.modify(withUser, 'user_id').first();
     const nft = await knex('nfts').select(
       knex.raw(`
         count(*) as totalItems,

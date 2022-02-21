@@ -79,7 +79,7 @@ export function getCategories() {
 
 export function getCollection(slug) {
   return (dispatch) => {
-    request({ method: "GET", url: API_URL.COLLECTIONS.GET_DETAIL.replace(":slug", slug), data: {} }).then(
+    requestToken({ method: "GET", url: API_URL.COLLECTIONS.GET_DETAIL.replace(":slug", slug), data: {} }).then(
       ({ data }) => {
         if (data)
           dispatch({ type: SET_REDUX, payload: { collection: data } });
@@ -90,7 +90,7 @@ export function getCollection(slug) {
 
 export function getCollections() {
   return (dispatch) => {
-    request({ method: "GET", url: API_URL.COLLECTIONS.GET_ALL, data: {} }).then(
+    requestToken({ method: "GET", url: API_URL.COLLECTIONS.GET_ALL, data: {} }).then(
       ({ data }) => {
         if (data)
           dispatch({ type: SET_REDUX, payload: { collections: data } });

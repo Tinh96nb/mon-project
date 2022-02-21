@@ -24,7 +24,7 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
           >
               <img src={avt} />
           </Link>
-          <div className="dropdown-content">
+          <div className="dropdown-content" style={{ zIndex: 2 }}>
             <ul className="dropdown-list" >
               <li>
                 <Link
@@ -34,6 +34,16 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
                 to="/profile"
                 >
                   Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                onClick={() => {
+                  if (mobileNav) mobileNavSet(false)
+                }}
+                to="/collections"
+                >
+                  My Collections
                 </Link>
               </li>
               <li>

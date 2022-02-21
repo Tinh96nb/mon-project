@@ -55,8 +55,8 @@ module.exports = function () {
     ctx.checkBody(schema);
 
   }, collectionUploader.array(['img_cover', 'img_avatar']), collectionsController.create);
-  router.get('/collections', collectionsController.list);
-  router.get('/collections/:slug', collectionsController.detail);
+  router.get('/collections', isAuth, collectionsController.list);
+  router.get('/collections/:slug', isAuth, collectionsController.detail);
 
   router.get('/getprice', loginController.getPrice);
 

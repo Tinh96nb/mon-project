@@ -1,7 +1,9 @@
 const collectionsModel = require('../models/collections');
 
 const list = async (ctx, next) => {
-  const collections = await collectionsModel.getCollections({}, false);
+  const collections = await collectionsModel.getCollections({
+    user_id: ctx.state.user.id
+  }, false);
   ctx.body = collections
   return next();
 }

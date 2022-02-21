@@ -89,3 +89,40 @@
   font-weight: 600;
   margin-top: 0;
 }
+
+.card-collection {
+  cursor: pointer;
+  height: 445px;
+  border: 1px solid rgb(229, 232, 235);
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+.card-collection:hover {
+  box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+  transition: all 0.1s ease 0s;
+}
+
+.text-dot {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.btn-edit-collection {
+  z-index: 10;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  color: rgb(53, 56, 64);
+  overflow: hidden;
+  opacity: 0.9;
+  padding: 4px;
+  &:hover {
+    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+    opacity: 1;
+  }
+}

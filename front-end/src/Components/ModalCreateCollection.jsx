@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { FaRegImages } from "react-icons/fa";
@@ -7,6 +8,7 @@ const { Modal, Button } = require("react-bootstrap");
 function ModalCreateCollection({
   show,
   onHide,
+  collection = null,
 }) {
   const [cover, setCover] = useState(null);
   const [avatar, setAvatar] = useState(null);
@@ -17,10 +19,21 @@ function ModalCreateCollection({
     console.log("handleSubmit");
   }
 
+  useEffect(() => {
+    if (collection) {
+      setCover(collection.img_cover_url);
+      setAvatar(collection.img_avatar_url);
+      setName(collection.name);
+      setDescription(collection.description);
+    }
+  }, [collection]);
+
   return (
     <Modal size="lg" show={ show } onHide={ onHide }>
       <Modal.Header closeButton>
-        <Modal.Title>Create a collection</Modal.Title>
+        <Modal.Title>
+          { collection ? "Edit a Collection" : "Create a Collection" }
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div>
@@ -36,15 +49,59 @@ function ModalCreateCollection({
                 Logo Image *
               </label>
               <div className="creator-media-upload w-100 mt-0">
-                <div className="file w-100" style={{
+                <div className="file" style={ {
+                  height: "150px",
+                  width: "150px",
+                  overflow: "hidden",
+                  borderRadius: "50%",
+                  border: "1px solid #ccc",
+                } }>
+                  { avatar ? (
+                    <img
+                      src={ typeof avatar === "object" ? URL.createObjectURL(avatar) : avatar }
+                      alt="avatar"
+                      style={ {
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      } }
+                    />
+                  ) : (
+                    <label
+                      style={ {
+                        marginBottom: "0px",
+                        height: "150px",
+                        width: "150px",
+                      } }
+                    >
+                      <FaRegImages />
+                    </label>
+                  )
+                  }
+
+                  <input
+                    name="avatar"
+                    accept="image/png,image/jpeg"
+                    type="file"
+                    onChange={ (e) => setAvatar(e.target.files[0]) }
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="d-flex flex-column">
+              <label htmlFor="">
+                Banner Image *
+              </label>
+              <div className="creator-media-upload w-100 mt-0">
+                <div className="file w-100" style={ {
                   maxHeight: "200px",
 
                   overflow: "hidden",
                   border: "1px solid #ccc",
-                }}>
+                } }>
                   { cover ? (
                     <img
-                      src={ URL.createObjectURL(cover) }
+                      src={ typeof cover === "object" ? URL.createObjectURL(cover) : cover }
                       alt="cover"
                     />
                   ) : (
@@ -59,56 +116,12 @@ function ModalCreateCollection({
                     </label>
                   )
                   }
-                  
+
                   <input
                     name="cover"
                     accept="image/png,image/jpeg"
                     type="file"
                     onChange={ (e) => setCover(e.target.files[0]) }
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="d-flex flex-column">
-              <label htmlFor="">
-                Logo Image *
-              </label>
-              <div className="creator-media-upload w-100 mt-0">
-                <div className="file" style={{
-                  height: "150px",
-                  width: "150px",
-                  overflow: "hidden",
-                  borderRadius: "50%",
-                  border: "1px solid #ccc",
-                }}>
-                  { avatar ? (
-                    <img
-                      src={ URL.createObjectURL(avatar) }
-                      alt="avatar"
-                      style={{
-                        objectFit: "cover",
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    />
-                  ) : (
-                    <label
-                      style={ {
-                        marginBottom: "0px",
-                        height: "150px",
-                        width: "150px",
-                      } }
-                    >
-                      <FaRegImages />
-                    </label>
-                  )
-                  }
-                  
-                  <input
-                    name="avatar"
-                    accept="image/png,image/jpeg"
-                    type="file"
-                    onChange={ (e) => setAvatar(e.target.files[0]) }
                   />
                 </div>
               </div>
@@ -121,6 +134,7 @@ function ModalCreateCollection({
                 onChange={ (e) => setName(e.target.value) }
                 required={ true }
                 maxLength={ 50 }
+                value={ name }
               />
             </Form.Group>
             <Form.Group>
@@ -132,6 +146,7 @@ function ModalCreateCollection({
                 onChange={ (e) => setDescription(e.target.value) }
                 placeholder="Provide a detailed description of your collection. (max 300 characters)"
                 maxLength={ 300 }
+                value={ description }
               />
             </Form.Group>
           </form>
@@ -139,7 +154,7 @@ function ModalCreateCollection({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="primary" onClick={ handleSubmit }>
-          Create
+          { collection ? "Update" : "Create" }
         </Button>
       </Modal.Footer>
     </Modal>
