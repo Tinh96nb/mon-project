@@ -4,7 +4,7 @@ exports.up = async function(knex) {
     table.increments('id').primary();
     table.string('name', 50).notNullable().unique();
     table.string('slug', 50).notNullable().unique();
-    table.string('description').notNullable();
+    table.string('description', 500).notNullable();
     table.string('img_avatar_url').notNullable();
     table.string('img_cover_url').notNullable();
     table.integer('user_id', 10).notNullable().unsigned().references('id').inTable('users').onDelete('CASCADE');
