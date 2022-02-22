@@ -55,7 +55,7 @@ const create = async (ctx, next) => {
 }
 
 async function update(ctx, next) {
-  const collection = await knex('collections').where({ id: ctx.params.id }).first();
+  const collection = await knex('collections').where({ id: ctx.params.id, user_id: ctx.state.user.id }).first();
   if (!collection) {
     ctx.body = { message: 'Collection not found!' };
     ctx.status = 404;
@@ -94,7 +94,11 @@ async function update(ctx, next) {
   data.name = body.name;
   data.description = body.description;
 
-  const updatedCollection = await collectionsModel.update(ctx.params.id, data);
+  const updatedCollection = await collectionsModel.update(
+    ctx.params.id,
+    ctx.state.user.id,
+    data
+  );
 
   ctx.body = updatedCollection;
   return next();

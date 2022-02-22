@@ -2,7 +2,7 @@ const { statusNft } = require('../helper/const');
 const knex = require('./connect');
 
 const getCollections = async (condition, limit = 1) => {
-  let query = knex('collections').select("collections.*").orderBy("id", "desc").where(condition);
+  let query = knex('collections').select("collections.*").where(condition);
   if (limit) query.limit(limit);
   if (limit === 1) {
     const withUser = function (queryBuilder, foreignKey) {
@@ -51,13 +51,16 @@ const getCollections = async (condition, limit = 1) => {
 
     return collection;
   };
-  const withUser = function (queryBuilder, foreignKey) {
-    queryBuilder.leftJoin('users', foreignKey, 'users.id').select([
-      'users.username',
-      'users.address as userAddress',
-    ]);
-  };
-  const collections = await query.modify(withUser, 'user_id').orderBy("id", "desc").select();
+
+  query = query
+    .leftJoin('nfts', function() {
+      this.on('nfts.collection_id', '=', 'collections.id')
+        .andOn(knex.raw('nfts.status in (?,?)', [statusNft.verified, statusNft.selling]))
+    })
+    .select(knex.raw(`count(nfts.id) as totalItems`))
+    .groupBy('collections.id')
+    .orderBy("id", "desc");
+  const collections = await query;
   return collections;
 };
 
@@ -71,9 +74,9 @@ const create = async (data) => {
   return null;
 };
 
-const update = async (id, data) => {
+const update = async (id, userId, data) => {
   try {
-    const collection = await knex('collections').where({ id }).update(data);
+    const collection = await knex('collections').where({ id, user_id: userId }).update(data);
     return collection;
   } catch (error) {
     console.log(error);
