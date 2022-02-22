@@ -13,6 +13,8 @@ const API_URL = {
     GET_ALL: "/categories"
   },
   COLLECTIONS: {
+    CREATE: "/collections/create",
+    UPDATE: (id) => `/collections/${id}`,
     GET_ALL: "/collections",
     GET_DETAIL: "/collections/:slug",
   },

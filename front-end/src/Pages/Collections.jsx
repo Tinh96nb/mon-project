@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { getCollections } from "redux/nftReducer";
 import { AiFillEdit } from "react-icons/ai";
 import ModalCreateCollection from "Components/ModalCreateCollection";
+import { displayAddress, getFile } from "utils/hepler";
 
 
 function Collections() {
@@ -46,7 +47,7 @@ function Collections() {
                     objectFit: 'cover',
                   } }
                   variant="top"
-                  src={ collection.img_cover_url }
+                  src={ getFile(collection.img_cover_url) }
                   onClick={ () => {
                     history.push(`/collections/${collection.slug}`);
                   } }
@@ -67,7 +68,7 @@ function Collections() {
                       width: '100%',
                       height: '100%',
                     } }
-                    src={ collection.img_cover_url }
+                    src={ getFile(collection.img_avatar_url) }
                     alt="collection"
                   />
                 </div>
@@ -86,11 +87,13 @@ function Collections() {
                   <div className="text-center font-weight-bold">
                     { collection.name }
                   </div>
-                  <span className="text-muted"> by </span>
-                  <Link to={ `/${me.address}` }>you</Link>
+                  {/* <span className="text-muted"> by </span> */}
+                  {/* <Link to={ `/${me.address}` }>{me.address === collection.userAddress ? "you" : collection.username || displayAddress(collection.userAddress)}</Link> */}
                   <Card.Text
                     style={ { minHeight: "75px" } }
-                    className="text-muted mt-2 text-dot">
+                    className="text-muted mt-2 text-dot"
+                    title={ collection.description }
+                  >
                     { collection.description }
                   </Card.Text>
                   <small className="text-muted text-center w-100">

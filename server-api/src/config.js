@@ -5,6 +5,7 @@ module.exports = Object.freeze({
     client: 'mysql',
     connection: {
       host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || '3306',
       database: process.env.DB_NAME || 'root',
       user: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || 'xxx',

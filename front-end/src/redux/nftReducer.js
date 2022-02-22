@@ -99,6 +99,52 @@ export function getCollections() {
   };
 }
 
+export function postCollection(params, cb) {
+  return (dispatch) => {
+    requestToken({
+      method: "POST",
+      url: API_URL.COLLECTIONS.CREATE,
+      data: params
+    }).then(
+      ({ data }) => {
+        if (data) {
+          dispatch({
+            type: SET_REDUX,
+          });
+        }
+        toast.success("Create collection success!");
+        cb && cb(true);
+      }
+    ).catch(() => {
+      toast.error("Create collection failed!");
+      cb && cb(false);
+    });
+  };
+}
+
+export function putCollection(params, cb) {
+  return (dispatch) => {
+    requestToken({
+      method: "PUT",
+      url: API_URL.COLLECTIONS.UPDATE(params.id),
+      data: params.data
+    }).then(
+      ({ data }) => {
+        if (data) {
+          dispatch({
+            type: SET_REDUX,
+          });
+        }
+        toast.success("Update collection success!" );
+        cb && cb(true);
+      }
+    ).catch(() => {
+      toast.error("Update collection failed!");
+      cb && cb(false);
+    });
+  };
+}
+
 export function getDetail(tokenId) {
   return (dispatch) => {
     dispatch(setLoading(10));

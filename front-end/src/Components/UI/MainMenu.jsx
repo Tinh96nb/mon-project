@@ -24,7 +24,7 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
           >
               <img src={avt} />
           </Link>
-          <div className="dropdown-content" style={{ zIndex: 2 }}>
+          <div className="dropdown-content" style={{ zIndex: 20 }}>
             <ul className="dropdown-list" >
               <li>
                 <Link

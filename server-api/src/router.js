@@ -13,7 +13,7 @@ const { isAuth } = require('./middlewares/auth');
 
 const userUploader = upload('upload/user');
 const nftUploader = upload('upload/nft');
-const collectionUploader = upload('upload/collection');
+const collectionUploader = upload('upload/collections')
 
 const { userUpload } = require('./helper/const');
 const part = new koaPart(path.resolve(__dirname, "../public/upload/"))
@@ -45,17 +45,17 @@ module.exports = function () {
   router.get('/categories/:id', cateController.detail);
 
   // collections
-  router.post('/collections', isAuth, async (ctx, next) => {
-    const schema = {
-      img_cover: { notEmpty: true, errorMessage: 'This field is required!'},
-      img_avatar: { notEmpty: true, errorMessage: 'This field is required!'},
-      name: { notEmpty: true, errorMessage: 'This field is required!'},
-      description: { notEmpty: true, errorMessage: 'This field is required!'},
-    };
-    ctx.checkBody(schema);
-
-  }, collectionUploader.array(['img_cover', 'img_avatar']), collectionsController.create);
   router.get('/collections', isAuth, collectionsController.list);
+  router.post('/collections/create', isAuth, collectionUploader.fields([
+    { name: 'img_cover_url', maxCount: 1 },
+    { name: 'img_avatar_url', maxCount: 1 },
+  ]),
+  collectionsController.create);
+  router.put('/collections/:id', isAuth, collectionUploader.fields([
+    { name: 'img_cover_url', maxCount: 1 },
+    { name: 'img_avatar_url', maxCount: 1 },
+  ]),
+  collectionsController.update);
   router.get('/collections/:slug', isAuth, collectionsController.detail);
 
   router.get('/getprice', loginController.getPrice);

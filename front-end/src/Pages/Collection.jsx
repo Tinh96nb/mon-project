@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useRouteMatch } from "react-router-dom";
 import { getCollection, getListNFT } from "redux/nftReducer";
-import { nFormatter } from "utils/hepler";
+import { getFile, nFormatter } from "utils/hepler";
 
 const defaultCoverImg = "/assets/img/collections/default-top-black-cover.jpg";
 const defaultAvatarImg = "/assets/img/collections/default-avatar.jpg";
@@ -51,32 +51,13 @@ function Collection() {
 
   const coverImg = collection?.img_cover_url || defaultCoverImg;
   const avatarImg = collection?.img_avatar_url || defaultAvatarImg;
-  
-  const informations = [
-    {
-      title: "items",
-      value: collection?.totalItems,
-    },
-    {
-      title: "owners",
-      value: collection?.totalOwners,
-    },
-    {
-      title: "floor price",
-      value: collection?.floorPrice,
-    },
-    {
-      title: "volume traded",
-      value: collection?.volumeTraded,
-    },
-  ]
 
   return (
     <>
       <div>
         <div className="container-cover">
           <img
-            src={ coverImg }
+            src={ getFile(coverImg) }
             alt={ collection?.name }
             style={ { objectFit: "cover" } }
             className="w-100 h-100 img-cover"
@@ -86,7 +67,7 @@ function Collection() {
       <div>
         <div className="d-flex">
           <div className="collection-avatar d-flex flex-column justify-content-center align-items-center w-100">
-            <img src={ avatarImg } alt={ collection?.name } />
+            <img src={ getFile(avatarImg) } alt={ collection?.name } />
             <h1>{ collection?.name }</h1>
             <p>Created by <Link to={ `/creator/${collection?.userAddress}` }>{ collection?.username }</Link></p>
           </div>
