@@ -91,7 +91,7 @@ function Collection() {
           <p>volume traded</p>
         </div>
       </div>
-      <div className="d-flex justify-content-center mb-4 collection-description">
+      <div className="d-flex justify-content-center mb-4 collection-description container">
         {collection?.description}
       </div>
       <div className="collections-area">
