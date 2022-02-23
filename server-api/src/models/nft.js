@@ -153,7 +153,11 @@ const cancelOrder = async (tokenId) => {
 }
 
 const getByTokenId = async (tokenId) => {
-  const nfts = await knex('nfts').where('token_id', tokenId);
+  const nfts = await knex('nfts')
+    .select('nfts.*', 'collections.slug as collection_slug', 'collections.name as collection_name')
+    .where('token_id', tokenId)
+    .leftJoin('collections', 'nfts.collection_id', 'collections.id')
+    ;
   if (!nfts) return {};
   const result = await addProperty(nfts);
   return result.length ? result[0]: {};

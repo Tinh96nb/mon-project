@@ -97,11 +97,6 @@ function Collection() {
       <div className="collections-area">
         <Container>
           <Row>
-            <Col>
-              <div className="title">
-                <h1>Featured artworks</h1>
-              </div>
-            </Col>
             <Col md={ 2 }>
               <select
                 className="form-control mt-2"

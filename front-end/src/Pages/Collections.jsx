@@ -1,116 +1,53 @@
-import { useEffect, useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { useEffect } from "react";
+import { Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
-import { getCollections } from "redux/nftReducer";
-import { AiFillEdit } from "react-icons/ai";
-import ModalCreateCollection from "Components/ModalCreateCollection";
-import { displayAddress, getFile } from "utils/hepler";
+import { useHistory } from "react-router-dom";
+import { getCollections, getMoreCollections, resetCollections } from "redux/nftReducer";
+import CollectionItem from "Components/CollectionItem";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 function Collections() {
   const dispatch = useDispatch();
   const history = useHistory();
-
-  const [show, setShow] = useState(false);
-  const [collection, setCollection] = useState(null);
-
   const collections = useSelector((state) => state.nft.collections);
-  const me = useSelector((state) => state.user.me);
+  const pagination = useSelector((state) => state.nft.collectionPagination);
 
-  function handleEditCollection(collection) {
-    setCollection(collection);
-    setShow(true);
+  const loadMore = () => {
+    const query = {};
+    query.page = pagination.current_page + 1
+    dispatch(getMoreCollections(query));
   }
 
   useEffect(() => {
-    if (me) {
-      dispatch(getCollections());
+    dispatch(getCollections());
+    return () => {
+      dispatch(resetCollections());
     }
-  }, [dispatch, me]);
+  }, [dispatch]);
 
   return (
     <>
-      <Container>
-        <h1>My Collections</h1>
-        <Row>
+      <Container className="collections-screen">
+        <h1>Collections</h1>
 
-          { collections.map((collection) => (
-            <Col key={ collection.id } md={ 6 } lg={ 4 }>
-              <Card
-                className="d-flex justify-content-center align-items-center mb-4 card-collection"
-                style={ { width: '18rem' } }
-              >
-                <Card.Img
-                  height={ 200 }
-                  style={ {
-                    objectFit: 'cover',
-                  } }
-                  variant="top"
-                  src={ getFile(collection.img_cover_url) }
-                  onClick={ () => {
-                    history.push(`/collections/${collection.slug}`);
-                  } }
-                />
-                <div style={ {
-                  width: '44px',
-                  height: '44px',
-                  backgroundColor: "rgb(251, 253, 255)",
-                  border: "3px solid rgb(251, 253, 255)",
-                  boxShadow: "rgb(14 14 14 / 60%) 0px 0px 2px 0px",
-                  marginTop: "-22px",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                } }>
-                  <img
-                    style={ {
-                      objectFit: 'cover',
-                      width: '100%',
-                      height: '100%',
-                    } }
-                    src={ getFile(collection.img_avatar_url) }
-                    alt="collection"
-                  />
-                </div>
-                <button
-                  className="btn btn-light btn-edit-collection"
-                  onClick={ () => handleEditCollection(collection) }
-                >
-                  <AiFillEdit size={ 24 } />
-                </button>
-
-                <Card.Body className="text-center"
-                  onClick={ () => {
-                    history.push(`/collections/${collection.slug}`);
-                  } }
-                >
-                  <div className="text-center font-weight-bold">
-                    { collection.name }
-                  </div>
-                  {/* <span className="text-muted"> by </span> */}
-                  {/* <Link to={ `/${me.address}` }>{me.address === collection.userAddress ? "you" : collection.username || displayAddress(collection.userAddress)}</Link> */}
-                  <Card.Text
-                    style={ { minHeight: "75px" } }
-                    className="text-muted mt-2 text-dot"
-                    title={ collection.description }
-                  >
-                    { collection.description }
-                  </Card.Text>
-                  <small className="text-muted text-center w-100">
-                    <span>{ collection.totalItems || 0 }</span>
-                    <span> items</span>
-                  </small>
-                </Card.Body>
-              </Card>
-            </Col>
-          )) }
-        </Row>
+        {collections?.length ? (
+          <InfiniteScroll
+            dataLength={ collections.length || 0 }
+            next={ loadMore }
+            hasMore={ pagination?.current_page !== pagination?.last_page }
+            loader={ <h4>Loading...</h4> }
+          >
+            <Row>
+              { collections.map((collection) => (
+                <CollectionItem key={ collection.id } collection={ collection } history={ history } />
+              )) }
+            </Row>
+          </InfiniteScroll>
+        ) : (
+          <p>No data found!</p>
+        )}
       </Container>
-      <ModalCreateCollection
-        show={ show }
-        onHide={ () => setShow(false) }
-        collection={ collection }
-      />
     </>
   )
 }

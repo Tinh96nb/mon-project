@@ -45,7 +45,7 @@ module.exports = function () {
   router.get('/categories/:id', cateController.detail);
 
   // collections
-  router.get('/collections', isAuth, collectionsController.list);
+  router.get('/collections', collectionsController.list);
   router.post('/collections/create', isAuth, collectionUploader.fields([
     { name: 'img_cover_url', maxCount: 1 },
     { name: 'img_avatar_url', maxCount: 1 },

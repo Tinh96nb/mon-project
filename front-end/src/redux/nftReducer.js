@@ -88,14 +88,53 @@ export function getCollection(slug) {
   };
 }
 
-export function getCollections() {
+export function getCollections(params = {}) {
   return (dispatch) => {
-    requestToken({ method: "GET", url: API_URL.COLLECTIONS.GET_ALL, data: {} }).then(
+    requestToken({ method: "GET", url: API_URL.COLLECTIONS.GET_ALL, data: {}, params }).then(
       ({ data }) => {
         if (data)
-          dispatch({ type: SET_REDUX, payload: { collections: data } });
+          dispatch({
+            type: SET_REDUX,
+            payload: {
+              collections: data.collections,
+              collectionPagination: data.pagination
+            }
+          });
       }
     );
+  };
+}
+
+export function getMoreCollections(params) {
+  return (dispatch, getState) => {
+    request({
+      method: "GET",
+      url: API_URL.COLLECTIONS.GET_ALL,
+      data: {},
+      params
+    }).then(
+      ({ data }) => {
+        if (data) {
+          const state = getState();
+          const { collections } = state.nft;
+          dispatch({
+            type: SET_REDUX,
+            payload: {
+              collections: [...collections, ...data.collections],
+              collectionPagination: data.pagination,
+            }
+          });
+        }
+      }
+    );
+  };
+}
+
+export function resetCollections() {
+  return (dispatch) => {
+    dispatch({
+      type: SET_REDUX,
+      payload: { collections: [], collectionPagination: null } });
   };
 }
 

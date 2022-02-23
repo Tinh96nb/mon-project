@@ -2,16 +2,20 @@ const collectionsModel = require('../models/collections');
 const knex = require('../models/connect');
 
 const list = async (ctx, next) => {
-  const collections = await collectionsModel.getCollections({
-    user_id: ctx.state.user.id
-  }, false);
+  const { address, page, limit, user_id } = ctx.query;
+  const params = {
+    user_id: user_id,
+    page: parseInt(page, 10) || 1,
+    limit: parseInt(limit, 12) || 12,
+  };
+  const collections = await collectionsModel.getCollections(params, false);
   ctx.body = collections
   return next();
 }
 
 const detail = async (ctx, next) => {
   const { slug } = ctx.params;
-  const collection = await collectionsModel.getCollections({ slug }, 1);
+  const collection = await collectionsModel.getCollection({ slug });
   ctx.body = collection
   return next();
 }
