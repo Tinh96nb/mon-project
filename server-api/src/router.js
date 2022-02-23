@@ -56,7 +56,7 @@ module.exports = function () {
     { name: 'img_avatar_url', maxCount: 1 },
   ]),
   collectionsController.update);
-  router.get('/collections/:slug', isAuth, collectionsController.detail);
+  router.get('/collections/:slug', collectionsController.detail);
 
   router.get('/getprice', loginController.getPrice);
 
