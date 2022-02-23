@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { FaRegImages } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCollections, postCollection, putCollection } from "redux/nftReducer";
 import isEmpty from "lodash.isempty";
 
@@ -57,6 +57,7 @@ function ModalCreateCollection({
   });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
+  const me = useSelector((state) => state.user.me);
 
   const avatar = form.img_avatar_url;
   const cover = form.img_cover_url;
@@ -135,7 +136,7 @@ function ModalCreateCollection({
       setLoading(false);
       if (success) {
         onHide();
-        dispatch(getCollections());
+        dispatch(getCollections({ user_id: me.id }));
       }
     }));
   }
