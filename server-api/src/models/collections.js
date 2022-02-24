@@ -1,4 +1,4 @@
-const { statusNft } = require('../helper/const');
+const { statusNft, statusCollection } = require('../helper/const');
 const knex = require('./connect');
 
 const getCollections = async (params) => {
@@ -10,8 +10,21 @@ const getCollections = async (params) => {
 
   const offset = limit * (page - 1);
   if (user_id) {
-    query = query.andWhere('collections.user_id', user_id);
+    query = query
+      .andWhere('collections.user_id', user_id)
+      .andWhere(
+        'collections.status', 'in', [
+          statusCollection.draft,
+          statusCollection.publish,
+        ],
+      );
     subQuery = subQuery.andWhere('collections.user_id', user_id);
+  } else {
+    query = query.andWhere({
+      'collections.status': statusCollection.publish,
+    });
+    subQuery = subQuery
+      .andWhere('collections.status', statusCollection.publish);
   }
 
   query = query
@@ -20,8 +33,8 @@ const getCollections = async (params) => {
         .andOn(knex.raw('nfts.status in (?,?)', [statusNft.verified, statusNft.selling]))
     })
     .select(knex.raw(`count(nfts.id) as totalItems`))
-    .groupBy('collections.id')
-    .orderBy("id", "desc")
+    .groupBy("collections.id")
+    .orderBy("collections.id", "desc")
     .offset(offset)
     .limit(limit);
 
@@ -41,7 +54,12 @@ const getCollections = async (params) => {
 };
 
 const getCollection = async ({ slug }) => {
-  let query = knex('collections').select("collections.*").where("collections.slug", slug);
+  let query = knex('collections')
+    .select("collections.*")
+    .where({
+      "collections.slug": slug,
+      "collections.status": statusCollection.publish,
+    });
   const withUser = function (queryBuilder, foreignKey) {
     queryBuilder.leftJoin('users', foreignKey, 'users.id').select([
       'users.id as userId',

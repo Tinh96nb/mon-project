@@ -28,7 +28,7 @@ function Collections() {
 
   return (
     <>
-      <Container className="collections-screen">
+      <Container className="collections-screen py-50px">
         <h1>Collections</h1>
 
         {collections?.length ? (

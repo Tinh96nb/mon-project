@@ -41,7 +41,7 @@ function MyCollections() {
 
   return (
     <>
-      <Container id="collections" className="d-flex flex-column">
+      <Container id="collections" className="d-flex flex-column py-50px">
         <h1>My Collections</h1>
         <InfiniteScroll
           className="d-flex flex-column"
