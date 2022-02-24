@@ -5,6 +5,7 @@ const koaPart = require('koa-partial-content');
 const userController = require('./controllers/user');
 const nftController = require('./controllers/nft');
 const cateController = require('./controllers/category');
+const collectionsController = require('./controllers/collections');
 const loginController = require('./controllers/login');
 
 const { upload } = require('./middlewares/multer');
@@ -12,6 +13,7 @@ const { isAuth } = require('./middlewares/auth');
 
 const userUploader = upload('upload/user');
 const nftUploader = upload('upload/nft');
+const collectionUploader = upload('upload/collections')
 
 const { userUpload } = require('./helper/const');
 const part = new koaPart(path.resolve(__dirname, "../public/upload/"))
@@ -41,6 +43,20 @@ module.exports = function () {
   // categories
   router.get('/categories', cateController.list);
   router.get('/categories/:id', cateController.detail);
+
+  // collections
+  router.get('/collections', collectionsController.list);
+  router.post('/collections/create', isAuth, collectionUploader.fields([
+    { name: 'img_cover_url', maxCount: 1 },
+    { name: 'img_avatar_url', maxCount: 1 },
+  ]),
+  collectionsController.create);
+  router.put('/collections/:id', isAuth, collectionUploader.fields([
+    { name: 'img_cover_url', maxCount: 1 },
+    { name: 'img_avatar_url', maxCount: 1 },
+  ]),
+  collectionsController.update);
+  router.get('/collections/:slug', collectionsController.detail);
 
   router.get('/getprice', loginController.getPrice);
 

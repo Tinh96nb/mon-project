@@ -196,6 +196,7 @@ button {
 
 
 .main-menu .user-pro {
+  min-width: 120px;
   color: #fff;
   .info-tab {
     float: left;
@@ -1048,3 +1049,4 @@ img.smallImg {
 @import 'CreatorForm';
 @import 'ProfileForm';
 @import 'Responsive';
+@import 'Collections';

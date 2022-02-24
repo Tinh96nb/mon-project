@@ -6,7 +6,7 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
 
   const renderUser = () => {
     const avt = me && me.avatar ? getFile(me.avatar) : '/assets/img/user/avatar.jpg';
-    return <div className="user-pro">
+    return <div className="user-pro d-flex">
       <div className="info-tab">
         <div className="balance">
           {toDisplayNumber(+parseFloat(balance).toFixed(2))} MON
@@ -24,7 +24,7 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
           >
               <img src={avt} />
           </Link>
-          <div className="dropdown-content">
+          <div className="dropdown-content" style={{ zIndex: 20 }}>
             <ul className="dropdown-list" >
               <li>
                 <Link
@@ -34,6 +34,16 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
                 to="/profile"
                 >
                   Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                onClick={() => {
+                  if (mobileNav) mobileNavSet(false)
+                }}
+                to="/my-collections"
+                >
+                  My Collections
                 </Link>
               </li>
               <li>
@@ -74,6 +84,16 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
           }}
         >
           Create
+        </Link>
+        </li>
+        <li>
+        <Link
+          to="/collections"
+          onClick={() => {
+            if (mobileNav) mobileNavSet(false)
+          }}
+        >
+          Collections
         </Link>
         </li>
       <li>

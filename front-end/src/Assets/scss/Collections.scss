@@ -1,0 +1,142 @@
+.container-cover {
+  display: flex;
+  min-height: 120px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background-color: rgb(229, 232, 234);
+}
+
+.collection-avatar {
+  margin-top: -60px;
+  position: relative;
+}
+
+.collection-avatar img {
+  height: 130px;
+  width: 130px;
+  background: rgb(229, 232, 235);
+  border: 2px solid rgb(229, 232, 235);
+  border-radius: 50%;
+}
+
+.collection-info {
+  // cursor: pointer;
+  padding: 10px 0px;
+  width: 144px;
+  height: 88px;
+}
+
+// .collection-info:hover {
+//   transition: all 0.2s ease 0s;
+//   box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+// }
+
+.collection-info > p:first-child {
+  margin: 0px;
+  font-weight: 600;
+  font-size: 24px;
+  color: rgb(4, 17, 29);
+}
+
+.collection-info > p:last-child {
+  color: rgb(138, 147, 155);
+  font-size: 14px;
+}
+
+.border-radius-right-10 {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.border-radius-left-10 {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.btn.btn-plus.btn-primary {
+  height: 50px;
+  padding: unset !important;
+  width: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: auto;
+  margin-left: 1rem;
+  margin-top: auto !important;
+  &:hover, &:focus{
+    &:not([disabled]) {
+      transition: all .3;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+    }
+    & > svg {
+      fill: #000;
+    }
+  }
+}
+
+.collection-description {
+  color: rgb(112, 122, 131);
+}
+
+.btn.btn-secondary.btn-close {
+  border-radius: 7px;
+  border: none;
+  padding: 14px 50px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.card-collection {
+  cursor: pointer;
+  height: 445px;
+  border: 1px solid rgb(229, 232, 235);
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+.card-collection:hover {
+  box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+  transition: all 0.1s ease 0s;
+}
+
+.text-dot {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.btn-edit-collection {
+  z-index: 10;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  color: rgb(53, 56, 64);
+  overflow: hidden;
+  opacity: 0.9;
+  padding: 4px;
+  &:hover {
+    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+    opacity: 1;
+  }
+}
+
+.py-50px {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.collections-screen {
+  min-height: 100vh;
+}
+
+#collections {
+  min-height: 100vh;
+}

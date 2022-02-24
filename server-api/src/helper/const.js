@@ -22,4 +22,10 @@ const eventHistoryNFT = {
   sale: 2
 };
 
-module.exports = { userUpload, statusNft, eventHistoryNFT };
+const statusCollection = {
+  draft: 0,
+  publish: 1,
+  banned: 2,
+}
+
+module.exports = { userUpload, statusNft, eventHistoryNFT, statusCollection };

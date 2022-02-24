@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { getAllowance, getBalance, setMAxAllowance } from "redux/userReducer";
 import { displayAddress, getFile, toDisplayNumber } from "utils/hepler";
 import LazyImage from "./LazyImage";
@@ -82,7 +82,12 @@ const DetailNFT = ({ detail }) => {
             </Col>
             <Col xs="12" lg="6" className="align-self-center">
               <div className="detailsHeroDeta">
-                <h1>{detail?.name}</h1>
+                  <Link to={`/collections/${detail.collection_slug}`}>
+                    {detail.collection_name}
+                  </Link>
+                <h1>
+                  {detail?.name}
+                </h1>
                 <p>{detail?.description}.</p>
                 {detail?.status === 2 &&
                   <><h6 className="current_price">Current Price</h6>

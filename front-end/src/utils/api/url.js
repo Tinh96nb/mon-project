@@ -12,6 +12,12 @@ const API_URL = {
   CATEGORY: {
     GET_ALL: "/categories"
   },
+  COLLECTIONS: {
+    CREATE: "/collections/create",
+    UPDATE: (id) => `/collections/${id}`,
+    GET_ALL: "/collections",
+    GET_DETAIL: "/collections/:slug",
+  },
   NFT: {
     TOP: "/nfts/top",
     GET: "/nfts",

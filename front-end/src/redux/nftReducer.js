@@ -11,6 +11,8 @@ const initialState = {
   list: [],
   top: null,
   categories: [],
+  collections: [],
+  collection: null,
   histories: [],
   selectCate: null,
   pagination: null
@@ -72,6 +74,113 @@ export function getCategories() {
           dispatch({ type: SET_REDUX, payload: { categories: data } });
       }
     );
+  };
+}
+
+export function getCollection(slug) {
+  return (dispatch) => {
+    requestToken({ method: "GET", url: API_URL.COLLECTIONS.GET_DETAIL.replace(":slug", slug), data: {} }).then(
+      ({ data }) => {
+        if (data)
+          dispatch({ type: SET_REDUX, payload: { collection: data } });
+      }
+    );
+  };
+}
+
+export function getCollections(params = {}) {
+  return (dispatch) => {
+    requestToken({ method: "GET", url: API_URL.COLLECTIONS.GET_ALL, data: {}, params }).then(
+      ({ data }) => {
+        if (data)
+          dispatch({
+            type: SET_REDUX,
+            payload: {
+              collections: data.collections,
+              collectionPagination: data.pagination
+            }
+          });
+      }
+    );
+  };
+}
+
+export function getMoreCollections(params) {
+  return (dispatch, getState) => {
+    request({
+      method: "GET",
+      url: API_URL.COLLECTIONS.GET_ALL,
+      data: {},
+      params
+    }).then(
+      ({ data }) => {
+        if (data) {
+          const state = getState();
+          const { collections } = state.nft;
+          dispatch({
+            type: SET_REDUX,
+            payload: {
+              collections: [...collections, ...data.collections],
+              collectionPagination: data.pagination,
+            }
+          });
+        }
+      }
+    );
+  };
+}
+
+export function resetCollections() {
+  return (dispatch) => {
+    dispatch({
+      type: SET_REDUX,
+      payload: { collections: [], collectionPagination: null } });
+  };
+}
+
+export function postCollection(params, cb) {
+  return (dispatch) => {
+    requestToken({
+      method: "POST",
+      url: API_URL.COLLECTIONS.CREATE,
+      data: params
+    }).then(
+      ({ data }) => {
+        if (data) {
+          dispatch({
+            type: SET_REDUX,
+          });
+        }
+        toast.success("Create collection success!");
+        cb && cb(true);
+      }
+    ).catch(() => {
+      toast.error("Create collection failed!");
+      cb && cb(false);
+    });
+  };
+}
+
+export function putCollection(params, cb) {
+  return (dispatch) => {
+    requestToken({
+      method: "PUT",
+      url: API_URL.COLLECTIONS.UPDATE(params.id),
+      data: params.data
+    }).then(
+      ({ data }) => {
+        if (data) {
+          dispatch({
+            type: SET_REDUX,
+          });
+        }
+        toast.success("Update collection success!" );
+        cb && cb(true);
+      }
+    ).catch(() => {
+      toast.error("Update collection failed!");
+      cb && cb(false);
+    });
   };
 }
 

@@ -11,7 +11,8 @@ const mint = async (ctx, next) => {
     name: { notEmpty: true, errorMessage: 'This field is required!'},
     description: { notEmpty: true, errorMessage: 'This field is required!'},
     metadata: { notEmpty: true, errorMessage: 'This field is required!'},
-    category_id: {}
+    category_id: {},
+    collection_id: {},
   };
 
   ctx.checkBody(schema);
@@ -96,6 +97,7 @@ const nftHistory = async (ctx, next) => {
 
 const listNft = async (ctx, next) => {
   const {
+    collection_id,
     category,
     name,
     owner,
@@ -106,6 +108,7 @@ const listNft = async (ctx, next) => {
     order_by = "desc",
   } = ctx.request.query;
   const conditions = [
+    ['collection_id', collection_id],
     ['owner', owner],
     ['status', 'in', status ? status.split(",") : null],
     ['category_id', 'in', category ? category.split(",") : null],

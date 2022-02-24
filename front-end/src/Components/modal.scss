@@ -1,0 +1,9 @@
+button.btn.btn-primary.btn-submit {
+  border: 1px solid #fff;
+  &:hover {
+    transition: all 0.3;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+  }
+}

@@ -10,10 +10,34 @@ import {
 } from "react-bootstrap";
 import { FaRegImages } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategories, mintNFT } from "redux/nftReducer";
+import { getCategories, getCollections, mintNFT } from "redux/nftReducer";
 import toast from "Components/Toast";
 import { useHistory } from "react-router-dom";
 import { NFTStorage, File } from "nft.storage";
+import Select from "react-select";
+import ModalCreateCollection from "Components/ModalCreateCollection";
+
+const customStyles = {
+  container: (styles) => ({
+    ...styles,
+    padding: 0,
+    border: 0,
+    marginBottom: "60px",
+  }),
+  control: (styles) => ({
+    ...styles,
+    borderRadius: "0",
+  }),
+  valueContainer: (styles) => ({
+    ...styles,
+    paddingTop: "30px",
+    paddingBottom: "30px",
+  }),
+  menu: (styles) => ({
+    ...styles,
+    marginTop: "60px",
+  }),
+};
 
 const CreatorForm = () => {
   const dispatch = useDispatch();
@@ -23,15 +47,18 @@ const CreatorForm = () => {
   const [name, setName] = useState("");
   const [des, setDes] = useState("");
   const [category, setCategory] = useState("");
+  const [collection, setCollection] = useState(null);
   const [price, setPrice] = useState("");
   const [approveNFT, setApprove] = useState(false);
   const [fee, setFee] = useState(0);
   const [loading, setLoading] = useState(false);
   const [textStep, setTextStep] = useState("Create");
 
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
+
   const { userAddress, contractNFT, contractMarket, priceToken, web3 } =
     useSelector((store) => store.home);
-  const { categories } = useSelector((store) => store.nft);
+  const { categories, collections } = useSelector((store) => store.nft);
   const { me } = useSelector((store) => store.user);
 
   const setImage = (event) => {
@@ -51,6 +78,7 @@ const CreatorForm = () => {
 
   useEffect(() => {
     dispatch(getCategories());
+    dispatch(getCollections());
   }, []);
 
   useEffect(() => {
@@ -117,6 +145,7 @@ const CreatorForm = () => {
     formData.append("name", name);
     formData.append("description", des);
     formData.append("category_id", category);
+    formData.append("collection_id", collection);
     formData.append("owner", userAddress);
     formData.append("media", file);
     // push ipfs
@@ -140,9 +169,21 @@ const CreatorForm = () => {
     dispatch(mintNFT(formData, cb));
   };
 
+  function handleClose() {
+    setShowCollectionModal(false);
+  }
+
   const userReceived = +parseFloat(
     (+price - (+price / 100) * fee).toString()
   ).toFixed(2);
+
+  const collectionOptions = collections.map((collection) => (
+    {
+      value: collection.id,
+      label: collection.name,
+    }
+  ));
+
   return (
     <>
       <div className="creator-form-area">
@@ -163,40 +204,40 @@ const CreatorForm = () => {
                   <label>
                     Choose file <FaRegImages />
                   </label>
-                  <input name="media" type="file" onChange={setImage} />
+                  <input name="media" type="file" onChange={ setImage } />
                   <div className="file-info">
-                    {file
+                    { file
                       ? `${file.name} (${(file.size / (1024 * 1024)).toFixed(
-                          2
-                        )} MB)`
-                      : ""}
+                        2
+                      )} MB)`
+                      : "" }
                   </div>
                 </div>
               </div>
 
               <form
                 className="creator-form"
-                onSubmit={(e) => {
+                onSubmit={ (e) => {
                   e.preventDefault();
                   submit();
-                }}
+                } }
               >
                 <Form.Group>
                   <Form.Label>NFT name *</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Item name"
-                    onChange={(e) => setName(e.target.value)}
-                    required={true}
+                    onChange={ (e) => setName(e.target.value) }
+                    required={ true }
                   />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Description *</Form.Label>
                   <Form.Control
                     as="textarea"
-                    required={true}
-                    rows={10}
-                    onChange={(e) => setDes(e.target.value)}
+                    required={ true }
+                    rows={ 10 }
+                    onChange={ (e) => setDes(e.target.value) }
                     placeholder="Provide a detailed description of your item. (max 300 characters)"
                   />
                 </Form.Group>
@@ -204,21 +245,50 @@ const CreatorForm = () => {
                   <Form.Label>Category</Form.Label>
                   <Form.Control
                     as="select"
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={ (e) => setCategory(e.target.value) }
                   >
                     <option>Select category</option>
-                    {categories.map((cate, index) => {
+                    { categories.map((cate, index) => {
                       return (
-                        <option key={index} value={cate.id}>
-                          {cate.name}
+                        <option key={ index } value={ cate.id }>
+                          { cate.name }
                         </option>
                       );
-                    })}
+                    }) }
                   </Form.Control>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Collection</Form.Label>
+                  <div className="d-flex">
+                    <Form.Control
+                      as={ Select }
+                      options={ collectionOptions }
+                      onChange={ (value) => setCollection(value?.value) }
+                      styles={ customStyles }
+                      placeholder="Select collection"
+                      components={ {
+                        IndicatorSeparator: () => null
+                      } }
+                      // defaultMenuIsOpen={ true }
+                    >
+                      <option>Select collection</option>
+                      { collections.map((collection, index) => {
+                        return (
+                          <option key={ index } value={ collection.id }>
+                            { collection.name }
+                          </option>
+                        );
+                      }) }
+                    </Form.Control>
+                    <Button className="btn-plus" onClick={ () => setShowCollectionModal(true) }>
+                      <svg fill="#fff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px" fill-rule="evenodd"><path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z" /></svg>
+                    </Button>
+                  </div>
+
                 </Form.Group>
                 <label htmlFor="basic-url">
                   Price * <br /> Will be on sale until you transfer this item or
-                  cancel it.{" "}
+                  cancel it.{ " " }
                 </label>
                 <InputGroup className="mb-3">
                   <InputGroup.Prepend>
@@ -228,9 +298,9 @@ const CreatorForm = () => {
                   </InputGroup.Prepend>
                   <FormControl
                     type="number"
-                    required={true}
+                    required={ true }
                     placeholder="Amount"
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={ (e) => setPrice(e.target.value) }
                   />
                 </InputGroup>
 
@@ -240,12 +310,12 @@ const CreatorForm = () => {
                       <h1>Fees when sale</h1>
                       <ul>
                         <li>
-                          Service Fee: <span>{fee}%</span>
+                          Service Fee: <span>{ fee }%</span>
                         </li>
                         <li>
                           You will receive:
                           <span>
-                            {userReceived} MON - $
+                            { userReceived } MON - $
                             {
                               +parseFloat(
                                 (+userReceived * +priceToken).toString()
@@ -256,31 +326,32 @@ const CreatorForm = () => {
                       </ul>
                     </Col>
                   </Row>
-                  {me && me.status ? (
+                  { me && me.status ? (
                     <Button
                       className="Creator-submit-btn"
                       type="submit"
-                      disabled={loading}
+                      disabled={ loading }
                     >
-                      {loading && <div className="loader"></div>}
-                      {textStep}
+                      { loading && <div className="loader"></div> }
+                      { textStep }
                     </Button>
                   ) : (
                     <Button
                       className="Creator-submit-btn"
-                      onClick={() => {
+                      onClick={ () => {
                         toast.error({ message: "Account has been locked!" });
-                      }}
+                      } }
                     >
                       Create
                     </Button>
-                  )}
+                  ) }
                 </div>
               </form>
             </Col>
           </Row>
         </Container>
       </div>
+      <ModalCreateCollection show={showCollectionModal} onHide={handleClose} />
     </>
   );
 };
