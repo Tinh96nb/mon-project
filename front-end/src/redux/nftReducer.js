@@ -66,6 +66,16 @@ export function mintNFT(formData, callback = null) {
   };
 }
 
+export function putNft(id, formData, cb = null) {
+  return (dispatch) => {
+    requestToken({ method: "PUT", url: API_URL.NFT.UPDATE(id), data: formData }).then(
+      ({ data }) => {
+        cb && cb(data);
+      }
+    );
+  };
+}
+
 export function getCategories() {
   return (dispatch) => {
     request({ method: "GET", url: API_URL.CATEGORY.GET_ALL, data: {} }).then(
@@ -184,7 +194,7 @@ export function putCollection(params, cb) {
   };
 }
 
-export function getDetail(tokenId) {
+export function getDetail(tokenId, cb = null) {
   return (dispatch) => {
     dispatch(setLoading(10));
     request({
@@ -201,6 +211,7 @@ export function getDetail(tokenId) {
           data.price = data.price ? +parseFloat(data.price).toFixed(2) : 0
           dispatch({ type: SET_REDUX, payload: { detail: data } });
         }
+        cb && cb(data);
       }
     );
   };

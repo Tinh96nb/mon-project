@@ -38,6 +38,7 @@ module.exports = function () {
   router.post('/nfts/mint', isAuth, nftUploader.single('media'), nftController.mint);
   router.get('/nfts/top', nftController.getNFTTop);
   router.get('/nfts/:tokenId', nftController.detailNft);
+  router.put('/nfts/:tokenId', isAuth, nftController.editNft);
   router.get('/nfts/history/:tokenId', nftController.nftHistory);
 
   // categories

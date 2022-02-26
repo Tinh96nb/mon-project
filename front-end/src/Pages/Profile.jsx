@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListNFT } from "redux/nftReducer";
 import { getFile, toDisplayNumber } from "utils/hepler";
 import {BsLightningFill, BsFillXOctagonFill, BsGearFill} from "react-icons/bs";
-import { Link  } from "react-router-dom";
+import { Link, useHistory  } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HeadProfile from "Components/UI/HeadProfile";
 import toast from "Components/Toast";
 import LazyImage from "Components/LazyImage";
+import { AiFillEdit } from "react-icons/ai";
 
 const statusNFt = {
   0 : {color: "text-pendding", text: "Unconfirm"},
@@ -19,6 +20,7 @@ const statusNFt = {
 export default function Creator() {
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const { list, pagination } = useSelector((state) => state.nft);
   const { priceToken, contractMarket, web3, contractNFT } = useSelector((state) => state.home);
@@ -168,17 +170,26 @@ export default function Creator() {
       });
   }
 
+  function handleEditNft(item) {
+    history.push(`/detail/${item.token_id}/edit`);
+  }
+
   const renderNFT = (nft, i) => {
     const typeMedia = nft?.mine_type?.split("/")[0];
     let media = nft?.thumbnail ? nft.thumbnail : nft?.media
     media = media
       ? getFile(media, typeMedia === "video")
       : "/assets/img/portfolio/default.jpeg";
+    
+    const authorAddress = nft?.author?.address;
+    const ownerAddress = nft?.owner?.address;
+    
+    const canEdit = authorAddress === ownerAddress && !nft?.updated;
     return (
       <Col sm="6" lg="4" key={i}>
         <div className="single_portfolio">
-          <Link to={`/detail/${nft.token_id}`}>
-            <div className="portfolio_img">
+          <div className="portfolio_img">
+            <Link to={`/detail/${nft.token_id}`}>
               {typeMedia === "image" ? (
                 <LazyImage src={media} alt={nft.name} />
               ) : (
@@ -189,8 +200,17 @@ export default function Creator() {
                   src={media}
                 />
               )}
-            </div>
-          </Link>
+            </Link>
+            { canEdit && (
+              <button
+                className="btn btn-light btn-edit-collection"
+                onClick={ () => handleEditNft(nft) }
+              >
+                <AiFillEdit size={ 24 } />
+              </button>
+            ) }
+            
+          </div>
 
           <div className="portfolio_content">
             <h5>{nft.name}</h5>

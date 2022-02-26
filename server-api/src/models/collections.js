@@ -4,7 +4,6 @@ const knex = require('./connect');
 const getCollections = async (params) => {
   const { page = 1, user_id } = params;
   let limit = params.limit > 0 ? params.limit : 12;
-  limit = limit > 100 ? 100 : limit;
   let query = knex('collections').select("collections.*");
   let subQuery = knex('collections').count({ total: 'id' }).first()
 

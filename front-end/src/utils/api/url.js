@@ -22,6 +22,7 @@ const API_URL = {
     TOP: "/nfts/top",
     GET: "/nfts",
     CREATE: () => "/nfts/mint",
+    UPDATE: (tokenId) => `/nfts/${tokenId}`,
     DETAIL: (tokenId) => `/nfts/${tokenId}`,
     HISTORY_TRADE: (tokenId) => `/nfts/history/${tokenId}`,
   },

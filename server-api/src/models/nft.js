@@ -163,6 +163,44 @@ const getByTokenId = async (tokenId) => {
   return result.length ? result[0]: {};
 };
 
+const updateNftByTokenId = async (tokenId, data) => {
+  try {
+    const nft = await knex('nfts').where({ token_id: tokenId }).first();
+    if (!nft) {
+      return {
+        success: false,
+        message: 'Not found NFT!',
+        data: {tokenId},
+      };
+    }
+    if (!canUpdateNft(nft)) {
+      return {
+        success: false,
+        message: 'Can not update NFT!',
+        data: {tokenId},
+      };
+    }
+    await knex('nfts').where({ token_id: tokenId }).update({
+      name: data.name,
+      description: data.description,
+      collection_id: data.collection_id,
+      category_id: data.category_id,
+      updated: 1,
+    });
+    return {
+      success: true,
+      message: 'Update nft successfully!',
+      data: tokenId,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Error update nft!',
+      data: error.message,
+    };
+  }
+};
+
 const getNFTTop = async () => {
   let nft = null;
   const nftConfig = await knex('system_config').where({name: 'nft'}).first();
@@ -324,6 +362,14 @@ const setFeeCopyright = async (tokenId, fee) => {
   }
 }
 
+/**
+ * Check can update nft
+ * @param {object} nft 
+ */
+function canUpdateNft(nft) {
+  return nft.owner === nft.author && !nft.updated;
+}
+
 module.exports = {
   mintNft,
   getByTokenId,
@@ -334,5 +380,7 @@ module.exports = {
   confirmPriceSell,
   cancelOrder,
   getNFTTop,
-  setFeeCopyright
+  setFeeCopyright,
+  updateNftByTokenId,
+  canUpdateNft,
 };
