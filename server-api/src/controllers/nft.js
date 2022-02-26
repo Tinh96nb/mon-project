@@ -86,7 +86,8 @@ const detailNft = async (ctx) => {
 const editNft = async (ctx) => {
   const data = ctx.request.body;
   const { tokenId } = ctx.params;
-  const nft = await nftModel.updateNftByTokenId(tokenId, data);
+  const user = ctx.state.user;
+  const nft = await nftModel.updateNftByTokenId(user, tokenId, data);
   ctx.body = nft;
 };
 

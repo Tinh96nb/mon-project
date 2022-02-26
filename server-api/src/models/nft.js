@@ -163,9 +163,15 @@ const getByTokenId = async (tokenId) => {
   return result.length ? result[0]: {};
 };
 
-const updateNftByTokenId = async (tokenId, data) => {
+const updateNftByTokenId = async (user, tokenId, data) => {
   try {
-    const nft = await knex('nfts').where({ token_id: tokenId }).first();
+    const nft = await knex('nfts')
+      .where({
+        owner: user.address,
+        author: user.address,
+        token_id: tokenId,
+        updated: false,
+      }).first();
     if (!nft) {
       return {
         success: false,
