@@ -2,6 +2,7 @@ import { lazy, Suspense, useLayoutEffect } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
 
 import Loading from "Components/Loading";
+import EditNFT from "Components/EditNFT";
 const Collection = lazy(() => import("Pages/Collection"));
 const Collections = lazy(() => import("Pages/Collections"));
 const MyCollections = lazy(() => import("Pages/MyCollections"));
@@ -30,6 +31,7 @@ export default function Router() {
         <Route exact path="/creator/:address" component={Creator} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/detail/:tokenId" component={Details} />
+        <Route exact path="/detail/:tokenId/edit" component={EditNFT} />
         <Route exact path="/edit-profile" component={EditProfile} />
         <Route exact path="/marketplace" component={Marketplace} />
         <Route exact path="/creators" component={Users} />

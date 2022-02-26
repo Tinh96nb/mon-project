@@ -7,15 +7,16 @@ import {
   FormControl,
   Form,
   Button,
+  Modal,
 } from "react-bootstrap";
-import { FaRegImages } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategories, getCollections, mintNFT } from "redux/nftReducer";
+import { getCategories, getCollections, getDetail, putNft } from "redux/nftReducer";
 import toast from "Components/Toast";
-import { useHistory } from "react-router-dom";
-import { NFTStorage, File } from "nft.storage";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import Select from "react-select";
 import ModalCreateCollection from "Components/ModalCreateCollection";
+import LazyImage from "Components/LazyImage";
+import { canNftUdate, getFile } from "utils/hepler";
 
 const customStyles = {
   container: (styles) => ({
@@ -39,143 +40,57 @@ const customStyles = {
   }),
 };
 
-const CreatorForm = () => {
+const EditNFT = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const router = useRouteMatch();
+  const id = router.params.tokenId;
 
-  const [file, setFile] = useState("");
+  const [show, setShowConfirm] = useState(false);
   const [name, setName] = useState("");
   const [des, setDes] = useState("");
   const [category, setCategory] = useState("");
   const [collection, setCollection] = useState(null);
-  const [price, setPrice] = useState("");
-  const [approveNFT, setApprove] = useState(false);
-  const [fee, setFee] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [textStep, setTextStep] = useState("Create");
 
   const [showCollectionModal, setShowCollectionModal] = useState(false);
 
-  const { userAddress, contractNFT, contractMarket, priceToken, web3 } =
+  const detail = useSelector((state) => state.nft.detail);
+  const { userAddress } =
     useSelector((store) => store.home);
   const { categories, collections } = useSelector((store) => store.nft);
   const { me } = useSelector((store) => store.user);
 
-  const setImage = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const [type] = event.target.files[0].type.split("/");
-      if (type !== "image" && type !== "video") {
-        toast.error({ message: "Only support file type image or video!" });
-        return;
-      }
-      if (event.target.files[0].size >= 1024 * 1024 * 30) {
-        toast.error({ message: "File NFT too big!" });
-        return;
-      }
-      setFile(event.target.files[0]);
-    }
-  };
-
-  useEffect(() => {
-    dispatch(getCategories());
-    me && dispatch(getCollections({ user_id: me.id, limit: 999999999 }));
-  }, [me]);
-
-  useEffect(() => {
-    if (contractNFT && userAddress) {
-      contractNFT.methods
-        .isApprovedForAll(userAddress, process.env.REACT_APP_CONTRACT_MARKET)
-        .call()
-        .then((res) => setApprove(res));
-    }
-  }, [contractNFT, userAddress]);
-
-  useEffect(() => {
-    if (contractMarket) {
-      contractMarket.methods
-        .getFeePercent()
-        .call()
-        .then((res) => setFee(+res / 1000));
-    }
-  }, [contractMarket]);
-
-  const confirmSell = (tokenId) => {
-    const callContract = () => {
-      const realPrice = web3.utils.toWei(price, "ether");
-      contractMarket.methods
-        .createSellOrder(tokenId, realPrice)
-        .send({ from: userAddress })
-        .then((res) => {
-          toast.success("Creat NFT successfully!");
-          history.push(`/detail/${tokenId}`);
-        })
-        .catch(() => {
-          setLoading(false);
-          setTextStep("Create");
-          toast.error({ message: "You not confirm transaction!" });
-        });
-    };
-    if (!approveNFT) {
-      setTextStep("Approve...");
-      contractNFT.methods
-        .setApprovalForAll(process.env.REACT_APP_CONTRACT_MARKET, true)
-        .send({ from: userAddress })
-        .then((res) => {
-          setTextStep("Selling...");
-          callContract();
-        })
-        .catch(() => {
-          setLoading(false);
-          setTextStep("Create");
-          toast.error({ message: "You not confirm transaction!" });
-        });
-    } else callContract();
-  };
-
   const submit = async () => {
     if (!userAddress)
       return toast.error({ message: "Please connect wallet to create NFT!" });
-    if (!file) return toast.error({ message: "File NFT is missing!" });
-    if (!price) return toast.error({ message: "Price for NFT is missing!" });
+    if (!name) return toast.error({ message: "Please enter name!" });
+    if (!des) return toast.error({ message: "Please enter name!" });
     setLoading(true);
-    setTextStep("Creating...");
-    const idToken = Math.round(new Date().getTime() / 1000);
     const formData = new FormData();
-    formData.append("token_id", idToken.toString());
     formData.append("name", name);
     formData.append("description", des);
     formData.append("category_id", category);
     formData.append("collection_id", collection);
-    formData.append("owner", userAddress);
-    formData.append("media", file);
-    // push ipfs
-    const client = new NFTStorage({ token: process.env.REACT_APP_IPFS });
-    const metadata = await client.store({
-      name: name,
-      description: des,
-      image: new File([file], file.name, { type: file.type }),
-    });
-    formData.append("metadata", metadata?.url || "");
 
-    const cb = (tokenId) => {
-      if (tokenId) {
-        setTextStep("Selling...");
-        confirmSell(tokenId);
-      } else {
-        setLoading(false);
-        setTextStep("Create");
+    const cb = (resp) => {
+      const { success, message } = resp
+      console.log(resp);
+      setLoading(false);
+      if (!success) toast.error(message);
+      if (success) toast.success(message);
+      if (success) {
+        setTimeout(() => {
+          history.push(`/detail/${id}`);
+        }, 2000);
       }
     };
-    dispatch(mintNFT(formData, cb));
+    dispatch(putNft(id, formData, cb));
   };
 
   function handleClose() {
     setShowCollectionModal(false);
   }
-
-  const userReceived = +parseFloat(
-    (+price - (+price / 100) * fee).toString()
-  ).toFixed(2);
 
   const collectionOptions = collections.map((collection) => (
     {
@@ -184,6 +99,45 @@ const CreatorForm = () => {
     }
   ));
 
+  const typeMedia = detail?.mine_type?.split("/")[0];
+  const media = detail?.media
+    ? getFile(detail.media, typeMedia === "video")
+    : "/assets/img/portfolio/default.jpeg";
+
+  useEffect(() => {
+    if (id) {
+      const cb = (data) => {
+        if (!canNftUdate(data)) {
+          toast.error({ message: "Can not update this NFT!" });
+          setTimeout(() => {
+            history.push("/profile");
+          }, 300);
+        }
+      };
+      dispatch(getDetail(id, cb))
+      dispatch(getCategories());
+    }
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (me) {
+      dispatch(getCollections({ user_id: me.id }));
+    }
+  }, [dispatch, me]);
+
+  useEffect(() => {
+    if (detail) {
+      setName(detail.name);
+      setDes(detail.description);
+      setCategory(detail.category_id);
+      setCollection(detail.collection_id);
+    }
+  }, [detail]);
+
+  const selectedCollection = collectionOptions.find(
+    (option) => option.value === collection
+  );
+
   return (
     <>
       <div className="creator-form-area">
@@ -191,30 +145,24 @@ const CreatorForm = () => {
           <Row>
             <Col>
               <div className="creator-form-details">
-                <h1>Create a New item NFT</h1>
-                <h3>Image, Video, Audio, or 3D Model</h3>
-                <p>
-                  File type supported: JPG, JPEG, PNG, GIF, MP4, MP3, WAV... Max
-                  size: 30MB
-                </p>
+                <h1>Update item NFT</h1>
+                <p> * You can only update once time before sale.</p>
               </div>
 
-              <div className="creator-media-upload">
-                <div className="file">
-                  <label>
-                    Choose file <FaRegImages />
-                  </label>
-                  <input name="media" type="file" onChange={ setImage } />
-                  <div className="file-info">
-                    { file
-                      ? `${file.name} (${(file.size / (1024 * 1024)).toFixed(
-                        2
-                      )} MB)`
-                      : "" }
-                  </div>
+              <Col xs="12" lg="6" className="align-self-center pl-0 mb-4">
+                <div className="detailsHeroImg">
+                  { typeMedia === "image" ? (
+                    <LazyImage src={ media } alt={ detail?.name } />
+                  ) : (
+                    <video
+                      autoPlay={ true }
+                      loop={ true }
+                      playsInline={ true }
+                      src={ media }
+                    />
+                  ) }
                 </div>
-              </div>
-
+              </Col>
               <form
                 className="creator-form"
                 onSubmit={ (e) => {
@@ -229,6 +177,7 @@ const CreatorForm = () => {
                     placeholder="Item name"
                     onChange={ (e) => setName(e.target.value) }
                     required={ true }
+                    value={ name }
                   />
                 </Form.Group>
                 <Form.Group>
@@ -239,6 +188,7 @@ const CreatorForm = () => {
                     rows={ 10 }
                     onChange={ (e) => setDes(e.target.value) }
                     placeholder="Provide a detailed description of your item. (max 300 characters)"
+                    value={ des }
                   />
                 </Form.Group>
                 <Form.Group>
@@ -246,11 +196,13 @@ const CreatorForm = () => {
                   <Form.Control
                     as="select"
                     onChange={ (e) => setCategory(e.target.value) }
+                    value={ category }
                   >
                     <option>Select category</option>
-                    { categories.map((cate, index) => {
+                    { categories?.map((cate, index) => {
                       return (
-                        <option key={ index } value={ cate.id }>
+                        <option
+                          key={ index } value={ cate.id }>
                           { cate.name }
                         </option>
                       );
@@ -269,14 +221,18 @@ const CreatorForm = () => {
                       components={ {
                         IndicatorSeparator: () => null
                       } }
+                      value={ selectedCollection }
                       isClearable={ true }
-                      // defaultMenuIsOpen={ true }
+                    // defaultMenuIsOpen={ true }
                     >
                       <option>Select collection</option>
-                      { collections.map((collection, index) => {
+                      { collections?.map((_collection, index) => {
                         return (
-                          <option key={ index } value={ collection.id }>
-                            { collection.name }
+                          <option
+                            key={ index }
+                            value={ _collection.id }
+                          >
+                            { _collection.name }
                           </option>
                         );
                       }) }
@@ -288,8 +244,7 @@ const CreatorForm = () => {
 
                 </Form.Group>
                 <label htmlFor="basic-url">
-                  Price * <br /> Will be on sale until you transfer this item or
-                  cancel it.{ " " }
+                  Price *
                 </label>
                 <InputGroup className="mb-3">
                   <InputGroup.Prepend>
@@ -298,43 +253,22 @@ const CreatorForm = () => {
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl
+                    readOnly={ true }
                     type="number"
                     required={ true }
                     placeholder="Amount"
-                    onChange={ (e) => setPrice(e.target.value) }
+                    value={ detail?.price }
                   />
                 </InputGroup>
 
                 <div className="creator-btn-area">
-                  <Row>
-                    <Col lg="6">
-                      <h1>Fees when sale</h1>
-                      <ul>
-                        <li>
-                          Service Fee: <span>{ fee }%</span>
-                        </li>
-                        <li>
-                          You will receive:
-                          <span>
-                            { userReceived } MON - $
-                            {
-                              +parseFloat(
-                                (+userReceived * +priceToken).toString()
-                              ).toFixed(2)
-                            }
-                          </span>
-                        </li>
-                      </ul>
-                    </Col>
-                  </Row>
                   { me && me.status ? (
                     <Button
                       className="Creator-submit-btn"
-                      type="submit"
                       disabled={ loading }
+                      onClick={ () => setShowConfirm(true) }
                     >
-                      { loading && <div className="loader"></div> }
-                      { textStep }
+                      { loading ? <div className="loader" /> : "Update" }
                     </Button>
                   ) : (
                     <Button
@@ -343,18 +277,40 @@ const CreatorForm = () => {
                         toast.error({ message: "Account has been locked!" });
                       } }
                     >
-                      Create
+                      Update
                     </Button>
                   ) }
+
                 </div>
               </form>
             </Col>
           </Row>
         </Container>
       </div>
-      <ModalCreateCollection show={showCollectionModal} onHide={handleClose} />
+      <Modal show={show} onHide={() =>  setShowConfirm(false)}>
+        <Modal.Header closeButton className="border-bottom-0">
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="modal-body-content" style={{ fontSize: "1.25rem" }}>
+            Are you sure you want to update nft?
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-top-0">
+          <Button className="btn-confirm-no" variant="secondary" onClick={ () => setShowCollectionModal(false) }>
+            No
+          </Button>
+          <Button variant="primary" onClick={ () => {
+            setShowConfirm(false);
+            submit();
+          } }>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <ModalCreateCollection show={ showCollectionModal } onHide={ handleClose } />
     </>
   );
 };
 
-export default CreatorForm;
+export default EditNFT;

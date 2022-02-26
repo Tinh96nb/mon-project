@@ -83,6 +83,14 @@ const detailNft = async (ctx) => {
   ctx.body = nft;
 };
 
+const editNft = async (ctx) => {
+  const data = ctx.request.body;
+  const { tokenId } = ctx.params;
+  const user = ctx.state.user;
+  const nft = await nftModel.updateNftByTokenId(user, tokenId, data);
+  ctx.body = nft;
+};
+
 const getNFTTop = async (ctx) => {
   const nft = await nftModel.getNFTTop();
   ctx.body = nft;
@@ -123,4 +131,4 @@ const listNft = async (ctx, next) => {
   return next();
 };
 
-module.exports = { mint, nftHistory, detailNft, listNft, getNFTTop };
+module.exports = { mint, nftHistory, detailNft, listNft, getNFTTop, editNft };

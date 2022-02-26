@@ -5,6 +5,7 @@ import { FaRegImages } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getCollections, postCollection, putCollection } from "redux/nftReducer";
 import isEmpty from "lodash.isempty";
+import toast from "./Toast";
 
 import "./modal.scss";
 import { getFile } from "utils/hepler";
@@ -65,6 +66,10 @@ function ModalCreateCollection({
   const description = form.description;
 
   function createCollection() {
+    if (!me) {
+      toast.error({ message: "You must login to create collection" });
+      return;
+    }
     const errors = {};
     Object.keys(rules).forEach(field => {
       const ruleFns = rules[field];
@@ -354,7 +359,7 @@ function ModalCreateCollection({
       </Modal.Body>
       <Modal.Footer>
         <Button
-          disabled={ loading }
+          disabled={ loading || !me }
           variant="primary"
           className="btn-submit"
           onClick={ handleSubmit }

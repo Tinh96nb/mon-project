@@ -1044,6 +1044,15 @@ img.smallImg {
   margin-left: 5px;
 }
 
+.btn-confirm-no {
+  border-radius: 7px;
+  border: none;
+  padding: 14px 50px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 0;
+}
+
 @import 'Details';
 @import 'Marketplace';
 @import 'CreatorForm';

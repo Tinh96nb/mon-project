@@ -66,6 +66,10 @@ function nFormatter(num, digits = 1) {
   return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
 }
 
+function canNftUdate(nft) {
+  return nft && !nft.updated && nft.owner?.address === nft.author?.address;
+}
+
 export {
   toDisplayNumber,
   displayFromBNString,
@@ -75,4 +79,5 @@ export {
   displayAddress,
   UTCTimeToTime,
   nFormatter,
+  canNftUdate,
 };
