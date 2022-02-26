@@ -78,8 +78,8 @@ const CreatorForm = () => {
 
   useEffect(() => {
     dispatch(getCategories());
-    dispatch(getCollections());
-  }, []);
+    me && dispatch(getCollections({ user_id: me.id, limit: 999999999 }));
+  }, [me]);
 
   useEffect(() => {
     if (contractNFT && userAddress) {
