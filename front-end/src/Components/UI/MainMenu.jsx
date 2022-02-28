@@ -2,64 +2,64 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom'
 import { displayAddress, getFile, toDisplayNumber } from 'utils/hepler'
 
-const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = false}) => {
+const MainMenu = ({ balance, me, setConnect, logout, mobileNavSet, mobileNav = false }) => {
 
   const renderUser = () => {
     const avt = me && me.avatar ? getFile(me.avatar) : '/assets/img/user/avatar.jpg';
     return <div className="user-pro d-flex">
       <div className="info-tab">
         <div className="balance">
-          {toDisplayNumber(+parseFloat(balance).toFixed(2))} MON
+          { toDisplayNumber(+parseFloat(balance).toFixed(2)) } MON
         </div>
         <div className="info">
-          {displayAddress(me.address)}
+          { displayAddress(me.address) }
         </div>
       </div>
       <div className="avt">
-          <Link
-            className="clear-css" to="/profile"
-            onClick={() => {
-              if (mobileNav) mobileNavSet(false)
-            }}
-          >
-              <img src={avt} />
-          </Link>
-          <div className="dropdown-content" style={{ zIndex: 20 }}>
-            <ul className="dropdown-list" >
-              <li>
-                <Link
-                onClick={() => {
+        <Link
+          className="clear-css" to="/profile"
+          onClick={ () => {
+            if (mobileNav) mobileNavSet(false)
+          } }
+        >
+          <img src={ avt } />
+        </Link>
+        <div className="dropdown-content" style={ { zIndex: 20 } }>
+          <ul className="dropdown-list" >
+            <li>
+              <Link
+                onClick={ () => {
                   if (mobileNav) mobileNavSet(false)
-                }}
+                } }
                 to="/profile"
-                >
-                  Profile
-                </Link>
-              </li>
-              <li>
-                <Link
-                onClick={() => {
+              >
+                Profile
+              </Link>
+            </li>
+            <li>
+              <Link
+                onClick={ () => {
                   if (mobileNav) mobileNavSet(false)
-                }}
+                } }
                 to="/my-collections"
-                >
-                  My Collections
-                </Link>
-              </li>
-              <li>
-                <a
-                  href=""
-                  onClick={(e) => {
-                    if (mobileNav) mobileNavSet(false)
-                    e.preventDefault();
-                    logout()
-                  }}
-                >
-                  Logout
-                  </a>
-              </li>
-            </ul>
-          </div>
+              >
+                My Collections
+              </Link>
+            </li>
+            <li>
+              <a
+                href=""
+                onClick={ (e) => {
+                  if (mobileNav) mobileNavSet(false)
+                  e.preventDefault();
+                  logout()
+                } }
+              >
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   }
@@ -69,37 +69,37 @@ const MainMenu = ({balance, me, setConnect, logout, mobileNavSet, mobileNav = fa
       <li>
         <Link
           to="/marketplace"
-          onClick={() => {
+          onClick={ () => {
             if (mobileNav) mobileNavSet(false)
-          }}
+          } }
         >
           Marketplace
         </Link>
-        </li>
+      </li>
       <li>
         <Link
-          to="/mint"
-          onClick={() => {
-            if (mobileNav) mobileNavSet(false)
-          }}
-        >
-          Create
-        </Link>
-        </li>
-        <li>
-        <Link
           to="/collections"
-          onClick={() => {
+          onClick={ () => {
             if (mobileNav) mobileNavSet(false)
-          }}
+          } }
         >
           Collections
         </Link>
-        </li>
+      </li>
       <li>
-        {me?.address
-        ? renderUser()
-        : <a className="connect" style={{cursor: "pointer"}} onClick={() => setConnect()}>
+        <Link
+          to="/mint"
+          onClick={ () => {
+            if (mobileNav) mobileNavSet(false)
+          } }
+        >
+          Create
+        </Link>
+      </li>
+      <li>
+        { me?.address
+          ? renderUser()
+          : <a className="connect" style={ { cursor: "pointer" } } onClick={ () => setConnect() }>
             Connect
           </a>
         }

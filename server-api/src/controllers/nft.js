@@ -7,10 +7,10 @@ const mint = async (ctx, next) => {
   ctx.request.body = { ...body };
 
   const schema = {
-    token_id: { notEmpty: true, errorMessage: 'This field is required!'},
-    name: { notEmpty: true, errorMessage: 'This field is required!'},
-    description: { notEmpty: true, errorMessage: 'This field is required!'},
-    metadata: { notEmpty: true, errorMessage: 'This field is required!'},
+    token_id: { notEmpty: true, errorMessage: 'This field is required!' },
+    name: { notEmpty: true, errorMessage: 'This field is required!' },
+    description: { notEmpty: true, errorMessage: 'This field is required!' },
+    metadata: { notEmpty: true, errorMessage: 'This field is required!' },
     category_id: {},
     collection_id: {},
   };
@@ -38,6 +38,7 @@ const mint = async (ctx, next) => {
   }
   const { address } = ctx.state.user;
   data.owner = address;
+  data.collection_id = data.collection_id ? data.collection_id : 0;
   const res = await nftModel.mintNft(data);
   if (!res.success) {
     ctx.body = res;
