@@ -47,7 +47,7 @@ const CreatorForm = () => {
   const [name, setName] = useState("");
   const [des, setDes] = useState("");
   const [category, setCategory] = useState("");
-  const [collection, setCollection] = useState(null);
+  const [collection, setCollection] = useState(0);
   const [price, setPrice] = useState("");
   const [approveNFT, setApprove] = useState(false);
   const [fee, setFee] = useState(0);
@@ -270,7 +270,7 @@ const CreatorForm = () => {
                         IndicatorSeparator: () => null
                       } }
                       isClearable={ true }
-                      // defaultMenuIsOpen={ true }
+                    // defaultMenuIsOpen={ true }
                     >
                       <option>Select collection</option>
                       { collections.map((collection, index) => {
@@ -352,7 +352,7 @@ const CreatorForm = () => {
           </Row>
         </Container>
       </div>
-      <ModalCreateCollection show={showCollectionModal} onHide={handleClose} />
+      <ModalCreateCollection show={ showCollectionModal } onHide={ handleClose } />
     </>
   );
 };
