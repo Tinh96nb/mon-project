@@ -38,7 +38,9 @@ const mint = async (ctx, next) => {
   }
   const { address } = ctx.state.user;
   data.owner = address;
-  data.collection_id = data.collection_id ? data.collection_id : 0;
+  if (!data.collection_id) {
+    delete data.collection_id;
+  }
   const res = await nftModel.mintNft(data);
   if (!res.success) {
     ctx.body = res;
