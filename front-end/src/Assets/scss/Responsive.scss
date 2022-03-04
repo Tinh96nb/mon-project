@@ -256,6 +256,7 @@ span.menuLine:nth-child(2) {
     text-align: center;
   }
   .user-pro {
+    flex-direction: column;
     margin-top: 10px;
     .info-tab {
       float: right;

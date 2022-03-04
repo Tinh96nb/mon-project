@@ -12,7 +12,7 @@ function CollectionItem({
     <Col key={ collection.id } lg={ 4 } sm={ 6 }>
       <Card
         className="d-flex justify-content-center align-items-center mb-4 card-collection"
-        style={ { width: '18rem' } }
+        style={ { minWidth: '18rem' } }
       >
         <Card.Img
           height={ 200 }
