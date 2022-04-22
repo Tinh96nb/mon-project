@@ -62,7 +62,7 @@ module.exports = function () {
 
   router.get('/getprice', loginController.getPrice);
 
-  router.post("/signal", botController.pushEvent);
+  router.get("/signal", botController.pushEvent);
 
   return router;
 };
