@@ -7,6 +7,7 @@ const nftController = require('./controllers/nft');
 const cateController = require('./controllers/category');
 const collectionsController = require('./controllers/collections');
 const loginController = require('./controllers/login');
+const botController = require('./controllers/bot');
 
 const { upload } = require('./middlewares/multer');
 const { isAuth } = require('./middlewares/auth');
@@ -60,6 +61,8 @@ module.exports = function () {
   router.get('/collections/:slug', collectionsController.detail);
 
   router.get('/getprice', loginController.getPrice);
+
+  router.post("/signal", botController.pushEvent);
 
   return router;
 };
