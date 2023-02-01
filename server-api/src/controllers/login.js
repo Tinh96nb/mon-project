@@ -36,7 +36,7 @@ const login = async (ctx, next) => {
     ctx.status = 400;
     return;
   }
-  const token = await jwtHelper.generateToken({payload: {user}});
+  const token = await jwtHelper.generateToken({ payload: { user } });
   ctx.body = { token };
 };
 
@@ -44,15 +44,17 @@ const getConfig = async (ctx, next) => {
   const configs = await cateModel.getConfig();
   let revert = {};
   configs.forEach((config) => {
-    revert[config.name] = config
-  })
+    revert[config.name] = config;
+  });
   ctx.body = revert;
-}
+};
 
 const getPrice = async (ctx, next) => {
-  const res = await axios("https://web-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=16147");
+  const res = await axios(
+    'https://web-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=16147'
+  );
   const price = res.data.data[16147].quote.USD.price;
-  ctx.body = parseFloat(price).toFixed(4);
-}
+  ctx.body = parseFloat(price).toFixed(8);
+};
 
 module.exports = { login, getConfig, getPrice };
